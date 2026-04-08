@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_all.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_all.rng" type="application/xml"
+	schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0" xmlns:xf="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title>AHN 2026</title>
+                <title type="subtitle">Formation XForms</title>
+                <author>Josselin Morvan (université de Rouen Normandie)</author>
+            </titleStmt>
+            <publicationStmt>
+                <p>Document nativement numérique</p>
+            </publicationStmt>
+            <sourceDesc>
+                <p>Document nativement numérique</p>
+            </sourceDesc>
+        </fileDesc>
+    </teiHeader>
+    <text>
+        <body>
+            <div type="lesson">
+                <div type="slide">
+                    <head>AHN 2026</head>
+                    <p>Formation XForms</p>
+                    <p>Josselin Morvan (université de Rouen Normandie)</p>
+                </div>
+                <div type="slide">
+                    <head>Objectifs</head>
+                    <list>
+                        <item>Déployer une application XForms simple et maîtriser l’architecture MVC (<emph>Modèle Vue Contrôleur</emph>)</item>
+                        <item>déclarer une instance XML ;</item>
+                        <item>interagir avec le modèle de données ;</item>
+                        <item>contrôler et valider ses données ;</item>
+                        <item>enregistrer ses données ;</item>
+                    </list>
+                    <p><hi rend="bold">Comment ?</hi></p>
+                    <list>
+                        <item>ensemble ;)</item>
+                    </list>
+                    <p><hi rend="bold">Prérequis</hi> : connaissance des langages XHTML, XPath et XML.</p>
+                </div>
+                <div type="slide">
+                    <head>XForms quésaco ?</head>
+                    <p>XForms est un langage de balisage XML pour une nouvelle génération d’applications sur le Web. XForms n’est pas un type de document autonome, mais est destiné à être intégré à d’autres langages de balisage, tels que XHTML, ODF ou SVG.</p>
+                    <p>Une application basée sur XForms collecte et traite des données en utilisant une architecture qui sépare la présentation, la finalité et le contenu ; le traitement des données s’effectue via trois mécanismes :</p>
+                    <list>
+                        <item>un <hi rend="bold">modèle</hi> déclaratif composé de formules pour les calculs et contraintes, de déclarations de types de données et d’autres propriétés, ainsi que de paramètres pour la soumission des données ;</item>
+                        <item>une couche <hi rend="bold">vue</hi> composée de contrôles d’interface utilisateur basés sur l’intention ;</item>
+                        <item>un <hi rend="bold">contrôleur</hi> impératif pour orchestrer la manipulation des données, les interactions entre les couches modèle et vue, et la soumission des données.</item>
+                    </list>
+                    <p>Ainsi, XForms permet la réutilisation de composants, favorise une validation stricte des types de données, élimine les aller-retours inutiles avec le serveur, offre l’indépendance vis-à-vis des dispositifs et l’accessibilité, et réduit le besoin de scripts.</p>
+                    <p>source : <ref target="https://www.w3.org/community/xformsusers/wiki/XForms_2.0">XForms 2.0</ref></p>
+                </div>
+                <div type="slide">
+                    <head>Historique de XForms</head>
+                    <list>
+                        <item><ref target="http://www.w3.org/TR/xhtml-forms-req">XForms Requirements</ref> (4 avril 2001)</item>
+                        <item><ref target="http://www.w3.org/TR/2003/REC-xforms-20031014/">XForms 1.0</ref> (2003)</item>
+                        <item><ref target="http://www.w3.org/TR/xml-events">XML Events</ref> (2003)</item>
+                        <item rend="soft"><ref target="http://www.w3.org/TR/xhtml2">XHTML 2</ref> (Working Draft 2002, Working Group Note 2010)</item>
+                        <item rend="soft">Création du WHATWG en juin 2004</item>
+                        <item><ref target="http://www.w3.org/TR/2009/REC-xforms-20091020/">XForms 1.1</ref> (2009)</item>
+                        <item rend="soft">Non renouvellement du groupe de travail sur XHTML 2 par le W3C (2009)</item>
+                        <item><ref target="https://www.w3.org/MarkUp/Forms/wiki/XPath_Expressions_Module">XPath Expressions Module</ref> (à partir de 2011).</item>
+                        <item><ref target="https://www.w3.org/community/xformsusers/wiki/XForms_2.0">XForms 2</ref> (en cours depuis 2012)</item>
+                    </list>
+                </div>
+                <div type="slide">
+                    <head>Fonctionnement de XForms</head>
+                    <div>
+                        <head>Séparer les données de l’interface</head>
+                        <p>Le modèle est le lieu où l’on déclare les données et où on lie des propriétés aux valeurs</p>
+                        <head>Séparer les valeurs des contrôles</head>
+                        <p>Le modèle spécifie les valeurs collectées (l’instance) et leur logique</p>
+                        <list>
+                            <item>types, restrictions</item>
+                            <item>valeurs initiales, relations entre les valeurs</item>
+                        </list>
+                        <p>Le corps du document lie (<emph>bind</emph>) des contrôles de formulaires aux valeurs dans l’instance</p>
+                    </div>
+                    <div>
+                        <head>Des contrôles fondés sur l’intention</head>
+                        <p>Les contrôles de formulaires expriment leur fonction (sélectionner une valeur dans une liste, etc.) plutôt que ce à quoi les champs doivent ressembler (bouton radios, menus, etc.).</p>
+                        <p>Il est ainsi possible d’indiquer comment ils doivent être représentés sur différents terminaux.</p>
+                    </div>
+                    <figure>
+                        <graphic url="../assets/images/arch2.png"/>
+                    </figure>
+                </div>
+                <div type="slide">
+                    <head>XForms</head>
+                    <p>XForms est un dialecte XML spécialisé dans la création de formulaires web standardisé par le W3C à partir de 2006. Il s’appuie sur une architecture Modèle - Vue - Contrôleur (MVC). En distinguant fond et forme, cette technologie offre de nombreux avantages en termes de réutilisation des formulaires, de compatibilité avec les différents types de périphériques (ordinateurs, téléphones, tablettes, etc.), et d’accessibilité. Plus qu’un simple langage de formulaire, dans sa version 1.1 XForms est devenu un langage Turing-complet, qui adopte un modèle de programmation déclaratif, où l’on s’attache à décrire ce que l’on souhaite faire plutôt que comment, et capable de soutenir le développement d’applications à grande échelle.</p>
+                    <p>La création de formulaires avec XForms permet d’éditer des instances XML directement dans un navigateur, tout en embarquant des fonctionnalités avancées propres aux technologies XML. Elle constitue donc une solution de choix pour faciliter l’édition de documents XML. Elle présente ainsi un intérêt particulier pour les ingénieurs et les chercheurs qui souhaitent travailler dans l’environnement XML. En effet, XForms facilite la mise en place de formulaires dynamiques et très complexes, comportant par exemple des répétitions, des contrôles sur les valeurs ou des règles de contraintes avancées relativement rapidement.</p>
+                    <p>Malgré des qualités indéniables, cette recommandation du W3C n’a toutefois jamais été prise en charge par les navigateurs et nécessite donc l’utilisation d’un client pour s’exécuter. Pour cette leçon, nous utiliserons le client open source XSLTForms développé par Alain Couthures.</p>
+                </div>
+                <div type="slide">
+                    <head>Configuration</head>
+                    <p>Pour cette leçon nous utiliserons <ref target="">BaseX</ref> pour servir nos documents XForms.</p>
+                    <p>Décompresser l’archive <code>ethap2025-atelier3-xforms.zip</code> dans <ref target="https://docs.basex.org/main/Web_Application#services">le répertoire <code>static</code> de BaseX</ref></p>
+                    <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="shell">
+                        <![CDATA[
+chemin/vers/basex/webapp/static/
+                        ]]>
+                    </egXML>
+                    <p>Lancer BaseX et ouvrir le navigateur web à l’adresse <ref target="http://localhost/static/ethap2025-atelier3-xforms/">http://localhost/static/ethap2025-atelier3-xforms/</ref></p>
+                </div>
+                <div type="slide">
+                    <head>Structure</head>
+                    <p>The Structure of an XForm An XForm is an XHTML document with an extra element in the <code>&lt;head&gt;</code> element, called <code>&lt;model&gt;</code> that contains 'instances' of data and details of that data, such as types and relationships, and then a group of 'controls' in the body of the XHTML that use that data:</p>
+                    <egXML  xmlns="http://www.tei-c.org/ns/Examples" rend="xml">
+<![CDATA[
+	 <?xml-stylesheet href="../xsltforms/xsltforms.xsl" type="text/xsl"?>
+	 <html xmlns="http://www.w3.org/1999/xhtml"
+	       xmlns:h="http://www.w3.org/1999/xhtml"
+	       xmlns:ev="http://www.w3.org/2001/xml-events"
+	       xmlns:xf="http://www.w3.org/2002/xforms">
+	    <head>
+	       <title>Your title here</title>
+	       <style type="text/css">
+		  CSS is used for styling
+	       </style>
+	       <model xmlns="http://www.w3.org/2002/xforms">
+		  <instance>...</instance>
+		  <instance>...</instance>
+		  other stuff
+	       </model>
+	    </head>
+	    <body>
+	       <group xmlns="http://www.w3.org/2002/xforms">
+		  Controls go here.
+	       </group>
+	    </body>
+	 </html>
+]]>
+                    </egXML>
+                    <p>The file has to be served up as an XML type: the easiest way is to use the file extension ".xhtml".</p>
+                </div>
+                <div type="slide" subtype="xforms">
+                    <head>L’architecture MVC de XForms</head>
+                    <div type="model">
+                        <xf:model>
+                            <xf:instance>
+                                <data xmlns="">
+                                    <prenom/>
+                                </data>
+                            </xf:instance>
+                        </xf:model>
+                    </div>
+                    <div type="content">
+                        <head>L’architecture MVC de XForms</head>
+                        <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="xml" rendition="small">
+                            <![CDATA[
+<?xml-stylesheet href="xsltforms/xsltforms.xsl" type="text/xsl"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xf="http://www.w3.org/2002/xforms" lang="fr">
+   <head>
+      <title>Hello World with XForms</title>
+      <xf:model>
+         <xf:instance>
+            <data xmlns="">
+               <prenom/>
+            </data>
+         </xf:instance>
+      </xf:model>
+   </head>
+   <body>
+      <xf:input ref="/data/prenom" incremental="true">
+         <xf:label>Entrez votre prénom: </xf:label>
+      </xf:input>
+      <br />
+      <xf:output value="concat('Hello ', /data/prenom, '!')">
+         <xf:label>Résultat : </xf:label>
+      </xf:output>
+   </body>
+</html>
+                        ]]>
+                        </egXML>
+                        <div>
+                            <xf:input ref="/data/prenom" incremental="true">
+                                <xf:label>Entrez votre prénom:</xf:label>
+                            </xf:input>
+                            <lb/>
+                            <xf:output value="if(prenom[normalize-space(.)!=''], concat('Hello ', prenom, '!'), '')">
+                                <xf:label>
+                                    <xf:output value="if(prenom[normalize-space(.)!=''], 'Résultat : ', '')"/>
+                                </xf:label>
+                            </xf:output>
+                            <lb/>
+                            <xf:output value="if(prenom[normalize-space(.)!=''], serialize(.), '')">
+                                <xf:label>
+                                    <xf:output value="if(prenom[normalize-space(.)!=''], 'Sérialisation : ', '')"/>
+                                </xf:label>
+                            </xf:output>
+                        </div>
+                    </div>
+                </div>
+                <div type="slide" subtype="xforms">
+                    <div type="model"/>
+                    <div type="content"/>
+                </div>
+                <div type="slide">
+                    <head>The End</head>
+                    <p>&lt;merci/&gt;</p>
+                </div>
+            </div>
+            <!--https://homepages.cwi.nl/~steven/xforms/xforms-hands-on/tutorial.xhtml-->
+        </body>
+    </text>
+</TEI>
