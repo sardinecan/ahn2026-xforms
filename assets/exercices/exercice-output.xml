@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="../xsltforms/xsltforms.xsl" type="text/xsl"?>
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:xf="http://www.w3.org/2002/xforms"
+    xf:bogus="fix/Firefox/namespace/issue"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xs:bogus="fix/Firefox/namespace/issue"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xlink:bogus="fix/Firefox/namespace/issue"
+    xmlns:etp="http://ethap2025/ns/1.0"
+    etp:bogus="fix/Firefox/namespace/issue"
+    xmlns:tei="http://www.tei-c.org/ns/1.0"
+    tei:bogus="fix/Firefox/namespace/issue"
+    xmlns:x="http://www.w3.org/1999/xhtml"
+    lang="fr">
+    <head>
+        <meta charset="utf-8"/>
+        <title>exercice-input</title>
+        <link rel="stylesheet" href="../assets/css/main.css" type="text/css"/>
+        <link rel="stylesheet" href="../assets/css/tei.css" type="text/css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/atom-one-dark-reasonable.min.css" integrity="sha512-RwXJS3k4Z0IK6TGoL3pgQlA9g2THFhKL7z9TYWdAI8u6xK0AUuMWieJuWgTRayywC9A94ifUj1RzjDa1NIlUIg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js">/**/</script>
+        <script src="../assets/js/generateid.js"/>
+        <xf:model>
+            <xf:instance>
+                <data xmlns="">
+                    <nom>Victor Hugo</nom>
+                    <dateNaissance>1802-02-26</dateNaissance>
+                    <age/>
+                    <adresse/>
+                </data>
+            </xf:instance>
+            <xf:bind ref="age" type="integer"/>
+            <xf:bind ref="dateNaissance" type="date"/>
+        </xf:model>
+    </head>
+    <body>
+        <xf:group>
+            <xf:input ref="nom" incremental="true">
+                <xf:label>Nom de famille</xf:label>
+            </xf:input>
+            <br/>
+            <xf:input ref="dateNaissance" incremental="true">
+                <xf:label>Date de naissance</xf:label>
+            </xf:input>
+            <br/>
+        </xf:group>
+    </body>
+</html>

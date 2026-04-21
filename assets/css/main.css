@@ -1,51 +1,91 @@
 @import url('https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,100..900;1,100..900&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&family=Victor+Mono:ital,wght@0,100..700;1,100..700&display=swap');
 
-  :root {
-  --font-base: 'Source Serif 4', serif;
-  --font-heading: 'Libre Franklin', sans-serif;
-  --font-code: 'Victor Mono', monospace;
-  --font-size-base: 24px; /* Taille de base pour l'échelle typographique */
-  --line-height-base: 1.3; /* Hauteur de ligne pour la lisibilité */
-  --line-height-tight: 1.2; /* Hauteur de ligne pour la lisibilité */
-  --color-background: #FAFAFA; /* Couleur du background blanc */
-  --color-heading: #007ACC; /* Couleur principale du texte bleu foncé */
-  --color-text: #2E2E2E; /* Couleur principale du texte bleu foncé */
-  --color-accent: #2ECC71; /* Couleur bleu pour les puces de la timeline */
-  --color-code: #D33682;
-  --color-border: #AEAEAE; /* gris pour les bordures (old : D9D9D9) */
-  --scale-ratio: 1.25; /* Ratio typographique */
-  font-size: var(--font-size-base);
+:root {
+    --font-base: 'Source Serif 4', serif;
+    --font-heading: 'Libre Franklin', sans-serif;
+    --font-code: 'Victor Mono', monospace;
+    --font-size-base: 24px;
+    --line-height-base: 1.3; 
+    --line-height-tight: 1.2; 
+    /*--color-background: #eff1f5;*/
+    --color-background: #FFFFFF;
+    --color-background-pre: #eff1f5;
+    --color-heading: #8839ef;
+    --color-text: #4c4f69;
+    --color-accent: #fe640b;
+    --color-code: #ea76cb;
+    --color-border: #acb0be;
+    --scale-ratio: 1.25;
+    font-size: var(--font-size-base);
 }
 
+body {
+    margin: 0;
+}
 
-body:has(iframe) {
-  margin: auto;
-  max-width: 90%;
-  padding: 0;
+body:has(> main.slide) {
+    display:flex;
+    flex-direction: column;
+    min-height: calc(100vh - 2.5em);
+}
+
+#nav {
+    display: grid;
+    grid-template-areas: "l s r";
+    grid-template-columns: 100px 1fr 100px;
+    width: 80%;
+    height: 2em;
+    margin: auto;
+    align-items: center;
+    
+    #navLeft {
+        grid-area: l;
+    }
+    #navRight {
+        grid-area: r;
+        text-align: right;
+    }
+    #navSelect {
+        grid-area: s;
+        text-align:center;
+    }
+} 
+
+pre {
+    background: var(--color-background-pre);
+    overflow-x:scroll;
+}
+
+.titlePage {
+  height:80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.hidden {
+    display:none;
 }
 
 iframe {
   width: 100%;
-  height: 90vh;
-  margin-top: 1ex;
-  border: 1px solid #ccc;
-  overflow-y: scroll;
+  min-height: calc(100vh - 2.5em);
+  border: none
 }
 
-html {
-  height: 100%;
-}
-
-body.slide {
-  height: 100%;
-  margin: 0;
-  padding: 0;
+.slide {
+  flex: 1;
+  width: 80%;
+  margin: auto;
+  padding: 2em;
+  font-family: var(--font-base);
+  line-height: 1.6;
   background-color: var(--color-background);
   color: var(--color-text);
-
-  display: flex;
+  /*display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: center;*/
   /*justify-content: center;*/
 }
 
@@ -56,11 +96,6 @@ body.slide {
   justify-content: center;
 }*/
 
-main.slide {
-  padding: 2em;
-  font-family: var(--font-base);
-  line-height: 1.6;
-}
 
 main.slide h1,
 main.slide h2,
@@ -74,16 +109,22 @@ main.slide h6 {
   margin-bottom: 0.5em;
 }
 
+/*main.slide:not(.titlePage) h1 {
+    margin-bottom: 1.5em;
+}*/
+
+
 code {
   font-family: var(--font-code);
   font-size: .8em;
   color: var(--color-code);
 }
 
-.slide h1 {
+.slide.titlePage h1 {
   margin-top: 0;
   font-size: 3em;
 }
+
 .center {
   text-align: center;
 }
@@ -172,6 +213,47 @@ xforms-dialog {
 }
 
 figure {
-    img {max-width: 100%;}
+    margin:auto;
+    max-width: 70%;
+    img {
+        width: 100%;
+    }
     figcaption {text-align: center;}
+}
+
+.positif {
+  color: green
+}
+
+.negatif {
+  background-color: red;
+  color: white
+}
+
+[xf-invalid] xforms-alert {
+  display: inline;
+}
+
+.slide > xforms-group {
+  border: 1px solid;
+  font-size: .8em;
+  padding: .5em;
+  font-family: var(--font-code);
+}
+
+pre {
+    line-height: normal;
+}
+
+details[open] > *:not(summary) {
+  margin: 0 0 0 20px;
+  padding-left: 15px;
+  border-left: 3px solid var(--color-border);
+}
+
+summary {
+  cursor: pointer;
+  font-weight: 600;
+  padding: 0.5rem 0;
+  margin-bottom: 0.5rem;
 }

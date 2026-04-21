@@ -6,6 +6,7 @@
     xmlns:tei="http://www.tei-c.org/ns/1.0"
     xmlns:eg="http://www.tei-c.org/ns/Examples"
     xmlns:xf="http://www.w3.org/2002/xforms"
+    xmlns:x="http://www.w3.org/1999/xhtml"
     xmlns="http://www.w3.org/1999/xhtml"
     exclude-result-prefixes="xs tei eg"
     version="3.0">
@@ -20,7 +21,7 @@
     <xsl:variable name="title" select="/tei:TEI/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:title"/>
     
     <xsl:template match="tei:TEI" mode="form">
-        <xsl:result-document href="index.xhtml">
+        <xsl:result-document href="../build/index.xhtml">
             <xsl:processing-instruction name="xml-stylesheet" >href="../assets/xsltforms/xsltforms.xsl" type="text/xsl"</xsl:processing-instruction>
             <html
                 xmlns="http://www.w3.org/1999/xhtml"
@@ -32,8 +33,8 @@
                 xs:bogus="fix/Firefox/namespace/issue"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xlink:bogus="fix/Firefox/namespace/issue"
-                xmlns:etp="http://ethap2025/ns/1.0"
-                etp:bogus="fix/Firefox/namespace/issue"
+                xmlns:ahn="http://ahn2026/ns/1.0"
+                ahn:bogus="fix/Firefox/namespace/issue"
                 xmlns:tei="http://www.tei-c.org/ns/1.0"
                 tei:bogus="fix/Firefox/namespace/issue"
                 xmlns:x="http://www.w3.org/1999/xhtml"
@@ -95,8 +96,8 @@
                         <action ev:event="xforms-value-changed"> <!-- Only for the value of 'show' -->
                             <send submission="save"/> <!-- if it succeeds great; if it fails, too bad -->
                         </action>
-                        <group>
-                            <trigger ref="instance('tutorial')/entry[file=instance('nav')/file]/preceding-sibling::entry[1]">
+                        <group id="nav">
+                            <trigger ref="instance('tutorial')/entry[file=instance('nav')/file]/preceding-sibling::entry[1]" id="navLeft">
                                 <label>←<!--🡰--></label>
                                 <hint>
                                     <output ref="title"/>
@@ -105,13 +106,13 @@
                                     value="context()/file"
                                     ev:event="DOMActivate"/>
                             </trigger>
-                            <select1 ref="instance('nav')/file" appearance="{{instance('nav')/appearance}}">
+                            <select1 ref="instance('nav')/file" appearance="{{instance('nav')/appearance}}" id="navSelect">
                                 <itemset ref="instance('tutorial')/entry">
                                     <label ref="title"/>
                                     <value value="file"/>
                                 </itemset>
                             </select1>
-                            <trigger ref="instance('tutorial')/entry[file=instance('nav')/file]/following-sibling::entry">
+                            <trigger ref="instance('tutorial')/entry[file=instance('nav')/file]/following-sibling::entry" id="navRight">
                                 <label>→<!--🡲--></label>
                                 <hint>
                                     <output ref="title"/>
@@ -136,17 +137,19 @@
         <xsl:variable name="n">
             <xsl:number count="tei:div[@type='slide']" from="tei:body" level="any"/>
         </xsl:variable>
-        <xsl:result-document href="slide{$n}.xhtml" method="xhtml" doctype-public="'-//W3C//DTD XHTML 1.0 Strict//EN'" doctype-system="'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'">
+        <xsl:result-document href="../build/slide{$n}.xhtml" method="xhtml" doctype-public="'-//W3C//DTD XHTML 1.0 Strict//EN'" doctype-system="'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'">
             <html xmlns="http://www.w3.org/1999/xhtml">
                 <head>
                     <meta charset="utf-8"/>
                     <title><xsl:apply-templates select="$title"/></title>
                     <link rel="stylesheet" href="../assets/css/main.css" type="text/css"/>
-                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/atom-one-dark-reasonable.min.css" integrity="sha512-RwXJS3k4Z0IK6TGoL3pgQlA9g2THFhKL7z9TYWdAI8u6xK0AUuMWieJuWgTRayywC9A94ifUj1RzjDa1NIlUIg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+                    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/atom-one-light.min.css" integrity="sha512-o5v54Kh5PH0dgnf9ei0L+vMRsbm5fvIvnR/XkrZZjN4mqdaeH7PW66tumBoQVIaKNVrLCZiBEfHzRY4JJSMK/Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />-->
+                    <link rel="stylesheet" href="//unpkg.com/@catppuccin/highlightjs@1.0.1/css/catppuccin-latte.css"/>
+                    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/atom-one-dark-reasonable.min.css" integrity="sha512-RwXJS3k4Z0IK6TGoL3pgQlA9g2THFhKL7z9TYWdAI8u6xK0AUuMWieJuWgTRayywC9A94ifUj1RzjDa1NIlUIg==" crossorigin="anonymous" referrerpolicy="no-referrer" />-->
                     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js">/**/</script>
                 </head>
                 <body>
-                    <main class="slide">
+                    <main class="slide {if(@rend = 'titlePage') then 'titlePage' else ''}">
                         <xsl:apply-templates/>
                     </main>
                     <script>hljs.highlightAll();</script>
@@ -159,7 +162,7 @@
         <xsl:variable name="n">
             <xsl:number count="tei:div[@type='slide']" from="tei:body" level="any"/>
         </xsl:variable>
-        <xsl:result-document href="slide{$n}.xhtml">
+        <xsl:result-document href="../build/slide{$n}.xhtml">
             <xsl:processing-instruction name="xml-stylesheet" >href="../assets/xsltforms/xsltforms.xsl" type="text/xsl"</xsl:processing-instruction>
             <html
                 xmlns="http://www.w3.org/1999/xhtml"
@@ -170,8 +173,8 @@
                 xs:bogus="fix/Firefox/namespace/issue"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xlink:bogus="fix/Firefox/namespace/issue"
-                xmlns:etp="http://ethap2025/ns/1.0"
-                etp:bogus="fix/Firefox/namespace/issue"
+                xmlns:ahn="http://ahn2026/ns/1.0"
+                ahn:bogus="fix/Firefox/namespace/issue"
                 xmlns:tei="http://www.tei-c.org/ns/1.0"
                 tei:bogus="fix/Firefox/namespace/issue"
                 xmlns:x="http://www.w3.org/1999/xhtml"
@@ -181,13 +184,14 @@
                     <title><xsl:apply-templates select="$title"/></title>
                     <link rel="stylesheet" href="../assets/css/main.css" type="text/css"/>
                     <link rel="stylesheet" href="../assets/css/tei.css" type="text/css"/>
-                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/atom-one-dark-reasonable.min.css" integrity="sha512-RwXJS3k4Z0IK6TGoL3pgQlA9g2THFhKL7z9TYWdAI8u6xK0AUuMWieJuWgTRayywC9A94ifUj1RzjDa1NIlUIg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+                    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/atom-one-dark-reasonable.min.css" integrity="sha512-RwXJS3k4Z0IK6TGoL3pgQlA9g2THFhKL7z9TYWdAI8u6xK0AUuMWieJuWgTRayywC9A94ifUj1RzjDa1NIlUIg==" crossorigin="anonymous" referrerpolicy="no-referrer" />-->
+                    <link rel="stylesheet" href="//unpkg.com/@catppuccin/highlightjs@1.0.1/css/catppuccin-latte.css"/>
                     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js">/**/</script>
                     <script src="../assets/js/generateid.js"/>
                     <xsl:apply-templates select="tei:div[@type='model']"/>
                 </head>
                 <body>
-                    <main class="slide">
+                    <main class="slide {if(@rend = 'titlePage') then 'titlePage' else ''}">
                         <xsl:apply-templates select="tei:div[@type='content']"/>
                     </main>
                     <script>hljs.highlightAll();</script>
@@ -204,6 +208,14 @@
         <xsl:apply-templates/>
     </xsl:template>
     
+    <xsl:template match="tei:div[@type='details'] | tei:note[@type='details']">
+        <details><xsl:apply-templates/></details>
+    </xsl:template>
+    
+    <xsl:template match="tei:div[@type='details']/tei:label | tei:note[@type='details']/tei:label">
+        <summary><xsl:apply-templates/></summary>
+    </xsl:template>
+    
     <xsl:template match="tei:div">
         <div>
             <xsl:if test="@type">
@@ -217,13 +229,12 @@
         <xsl:copy-of select="."/>
     </xsl:template>
     
+    <xsl:template match="x:*">
+        <xsl:copy-of select="."/>
+    </xsl:template>
+    
     <xsl:template match="eg:egXML">
-        <pre>
-            <code class="language-{./@rend}">
-                <!--<xsl:copy-of select="node()"/>-->
-                <xsl:value-of disable-output-escaping="no" select="./node()"/>
-            </code>
-        </pre>
+        <pre><code class="language-{./@rend}"><xsl:value-of disable-output-escaping="no" select="./node()"/></code></pre>
     </xsl:template>
     
     <xsl:template match="tei:code">
@@ -260,7 +271,7 @@
     </xsl:template>
     
     <xsl:template match="tei:ref">
-        <a href="{@target}"><xsl:apply-templates/></a>
+        <a href="{@target}" target="_blank"><xsl:apply-templates/></a>
     </xsl:template>
     
     <xsl:template match="tei:figure">
@@ -279,11 +290,22 @@
         <xsl:choose>
             <xsl:when test="ancestor::tei:div[@subtype='xforms']">
                 <xsl:variable name="level" select="count(ancestor::tei:div[not(descendant::tei:div[@type='content'])])"/>
-                <xsl:element name="h{$level}"><xsl:apply-templates/></xsl:element>
+                <xsl:element name="h{$level}">
+                    <xsl:if test="@rend">
+                        <xsl:attribute name="class" select="@rend"/>
+                    </xsl:if>
+                    <xsl:attribute name="class"></xsl:attribute>
+                    <xsl:apply-templates/>
+                </xsl:element>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:variable name="level" select="count(ancestor::tei:div[not(descendant::tei:div[@type='slide'])])"/>
-                <xsl:element name="h{$level}"><xsl:apply-templates/></xsl:element>
+                <xsl:element name="h{$level}">
+                    <xsl:if test="@rend">
+                        <xsl:attribute name="class" select="@rend"/>
+                    </xsl:if>
+                    <xsl:apply-templates/>
+                </xsl:element>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>

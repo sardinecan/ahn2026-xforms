@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="../xsltforms/xsltforms.xsl" type="text/xsl"?>
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:xf="http://www.w3.org/2002/xforms"
+    xf:bogus="fix/Firefox/namespace/issue"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xs:bogus="fix/Firefox/namespace/issue"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xlink:bogus="fix/Firefox/namespace/issue"
+    xmlns:etp="http://ethap2025/ns/1.0"
+    etp:bogus="fix/Firefox/namespace/issue"
+    xmlns:tei="http://www.tei-c.org/ns/1.0"
+    tei:bogus="fix/Firefox/namespace/issue"
+    xmlns:x="http://www.w3.org/1999/xhtml"
+    lang="fr">
+    <head>
+        <meta charset="utf-8"/>
+        <title>exercice-</title>
+        <xf:model>
+            <xf:instance>
+                
+            </xf:instance>
+        </xf:model>
+    </head>
+    <body>
+    </body>
+</html>

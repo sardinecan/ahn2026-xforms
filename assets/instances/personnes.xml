@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<personnes xmlns="">
+    <person>
+        <name>Victor Hugo</name>
+        <birthDate>1802</birthDate>
+        <deathDate>1885</deathDate>
+        <age/>
+    </person>
+    <person>
+        <name>Émile Zola</name>
+        <birthDate>1840</birthDate>
+        <deathDate>1902</deathDate>
+        <age/>
+    </person>
+</personnes>
