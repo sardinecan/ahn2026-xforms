@@ -23,108 +23,108 @@
       <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js">/**/</script>
       <script src="../assets/js/generateid.js"/>
       <xf:model xmlns="http://www.tei-c.org/ns/1.0">
-         <xf:instance id="text-from-jd">
+         <xf:instance>
             <data xmlns="">
-               <text/>
+               <counter>0</counter>
             </data>
          </xf:instance>
-         <xf:submission resource="https://juliettedrouet.univ-rouen.fr/lettres/jd.entry.3808/source"
-                        serialization="none"
-                        method="get"
-                        replace="instance"
-                        instance="text-from-jd"
-                        id="gettext"/>
-         <xf:submission resource="https://juliettedrouet.univ-rouen.fr/lettres/jd.entry.3808"
-                        serialization="none"
-                        method="get"
-                        replace="all"
-                        id="getview"/>
+         <xf:instance id="urlParam">
+            <data xmlns="">
+               <q>art002e009287</q>
+            </data>
+         </xf:instance>
       </xf:model>
    </head>
    <body>
       <main class="slide ">
-         <h1 class="">Soumission - <code>xf:submission</code>
-         </h1>
-         <p>Le module de soumission d’XForms est très complet et couvre un large éventail d’actions pour collecter, envoyer et stocker des données.</p>
-         <p>Il permet notamment de définir :</p>
-         <ul>
-            <li>1) ce qu’on souhaite envoyer</li>
-            <li>2) où on souhaite l’envoyer</li>
-            <li>3) ce qu'on veut faire du résultat</li>
-         </ul>
-         <p>Tout ces paramètres sont définis avec l’élément <code>xf:submission</code> placé dans l'élément <code>xf:model</code>.</p>
-         <ul>
-            <li>L’attribut <code>@ref</code> précise l’instance (ou le segment d’instance) qu'on souhaite envoyer (sans indication, il s’agit de l’instance par défaut) ; si on ne souhaite envoyer aucune donnée mais simplement en récupérer, on utilise l’attribut <code>@serialization="none"</code> ;</li>
-            <li>l’attribut <code>@resource</code> indique où envoyer et d’où recevoir les données ;</li>
-            <li>
-                                Enfin l’attribut <code>@replace</code> permet de spécifier ce qu'il faut faire des données reçues :
-                                <ul>
-                  <li>
-                     <code>@replace="none"</code> : ne rien faire</li>
-                  <li>
-                     <code>@replace="instance"</code> : remplacer une instance. L’instance à remplacer est alors indiquée avec l’attribut <code>@instance="idInstance"</code>
-                  </li>
-                  <li>
-                     <code>@replace="all"</code> : remplace toute la page</li>
-               </ul>
-            </li>
-         </ul>
+         <h1 class="">Les boutons (<code>xf:trigger</code>)</h1>
+         <p>Un <code>xf:trigger</code> est un bouton qui déclenche un évènement <code>DOMActivate</code> lorsque l’on clique dessus.</p>
          <pre>
             <code class="language-xml">
-&lt;xf:submission resource="https://juliettedrouet.univ-rouen.fr/lettres/jd.entry.3808/source"
-    serialization="none" 
-    method="get"
-    replace="instance"
-    instance="text-from-jd"/&gt;
-                        </code>
-         </pre>
-         <pre>
-            <code class="language-xml">
-&lt;xf:submission
-    resource="https://juliettedrouet.univ-rouen.fr/lettres/jd.entry.3808"
-    serialization="none"
-    method="get"
-    replace="all"/&gt;
-                        </code>
-         </pre>
-         <p>On peut même avoir plusieurs processus de soumission au sein d’un même modèle. Il est alors nécessaire de leur attribuer un identifiant avec l’attribut <code>@id</code> :</p>
-         <pre>
-            <code class="language-xml">
-&lt;xf:submission id="gettext" ...
-                        </code>
-         </pre>
-         <p>Pour déclencher une soumission, on a généralement recours à l’élément <code>xf:submit</code> :</p>
-         <pre>
-            <code class="language-xml">
-&lt;xf:submit&gt;
-    &lt;xf:label&gt;Récupérer le fichier TEI&lt;/xf:label&gt;
-&lt;/xf:submit&gt;
-&lt;xf:submit submission="getview"&gt;
-    &lt;xf:label&gt;Voir en ligne&lt;/xf:label&gt;
-&lt;/xf:submit&gt;
-                        </code>
-         </pre>
-         <p>Mais on peut aussi utiliser un <code>xf:trigger</code> :</p>
-         <pre>
-            <code class="language-xml">
+&lt;xf:instance&gt;
+    &lt;data xmlns=""&gt;
+        &lt;counter&gt;0&lt;/counter&gt;
+    &lt;/data&gt;
+&lt;/xf:instance&gt;
+[…]
 &lt;xf:trigger&gt;
-    &lt;xf:label&gt;Voir en ligne&lt;/xf:label&gt;
+    &lt;xf:label&gt;+ 1&lt;/xf:label&gt;
     &lt;xf:action ev:event="DOMActivate"&gt;
-        &lt;xf:send submission="getview"/&gt;
+        &lt;xf:setvalue ref="counter" value=". + 1"/&gt;
     &lt;/xf:action&gt;
 &lt;/xf:trigger&gt;
                         </code>
          </pre>
          <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:submit submission="gettext">
-               <xf:label>Récupérer le fichier TEI</xf:label>
-            </xf:submit>
+            <xf:trigger>
+               <xf:label>+ 1</xf:label>
+               <xf:action ev:event="DOMActivate">
+                  <xf:setvalue ref="counter" value=". + 1"/>
+               </xf:action>
+            </xf:trigger>
             <x:br/>
-            <xf:submit submission="getview">
-               <xf:label>Voir en ligne</xf:label>
-            </xf:submit>
-            <x:br/>
-            <xf:output value="serialize(.)"/>
+            <xf:output ref="counter">
+               <xf:label>Nombre de clics : </xf:label>
+            </xf:output>
+         </xf:group>
+         <p>Mais on peut s’en servir pour plein d’autres de choses, par exemple, avec <code>xf:load</code> on peut mimer des liens hypertextes :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:trigger&gt;
+    &lt;xf:label&gt;There is no dark side of the moon!&lt;/xf:label&gt;
+    &lt;xf:action ev:event="DOMActivate"&gt;
+        &lt;xf:load resource="https://images.nasa.gov/details/art002e009287" show="new"/&gt;
+    &lt;/xf:action&gt;
+&lt;/xf:trigger&gt;
+                        </code>
+         </pre>
+         <xf:trigger xmlns="http://www.tei-c.org/ns/1.0">
+            <xf:label>There is no dark side of the moon!</xf:label>
+            <xf:action ev:event="DOMActivate">
+               <xf:load resource="https://images.nasa.gov/details/art002e009287" show="new"/>
+            </xf:action>
+         </xf:trigger>
+         <p>Par défaut, la ressource est chargée dans la fenêtre courante, sauf si on utilise l’attribut <code>@show="new"</code>.</p>
+         <p>L'attribut <code>@appearance</code> permet de changer la manière dont est représenté le bouton.</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:trigger appearance="minimal"&gt;
+    &lt;xf:label&gt;There is no dark side of the moon!&lt;/xf:label&gt;
+    &lt;xf:action ev:event="DOMActivate"&gt;
+        &lt;xf:load resource="https://images.nasa.gov/details/art002e009287" show="new"/&gt;
+    &lt;/xf:action&gt;
+&lt;/xf:trigger&gt;
+                        </code>
+         </pre>
+         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
+            <xf:trigger appearance="minimal">
+               <xf:label>There is no dark side of the moon!</xf:label>
+               <xf:action ev:event="DOMActivate">
+                  <xf:load resource="https://images.nasa.gov/details/art002e009287" show="new"/>
+               </xf:action>
+            </xf:trigger>
+         </xf:group>
+         <p>Si l’url doit être construite à partir des données du formulaire, l’attribut <code>@source</code> peut être remplacé par l’élément <code>xf:resource</code> :</p>
+         <pre>
+            <code class="language-">
+&lt;xf:instance id="urlParam"&gt;
+    &lt;data xmlns=""&gt;
+        &lt;q&gt;art002e009287&lt;/q&gt;
+    &lt;/data&gt;
+&lt;/xf:instance&gt;
+
+&lt;xf:load show="new"&gt;
+    &lt;xf:resource value="concat('https://images.nasa.gov/details/',instance('urlParam')/q)"/&gt;
+&lt;/xf:load&gt;
+                        </code>
+         </pre>
+         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
+            <xf:trigger>
+               <xf:label>There is still no dark side of the moon!</xf:label>
+               <xf:load show="new" ev:event="DOMActivate">
+                  <xf:resource value="concat('https://images.nasa.gov/details/', instance('urlParam')/q)"/>
+               </xf:load>
+            </xf:trigger>
          </xf:group>
       </main>
       <script>hljs.highlightAll();</script>

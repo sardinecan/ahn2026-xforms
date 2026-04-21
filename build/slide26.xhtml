@@ -24,59 +24,73 @@
       <script src="../assets/js/generateid.js"/>
       <xf:model xmlns="http://www.tei-c.org/ns/1.0">
          <xf:instance>
-            <personnes xmlns="">
-               <person dead="true">
-                  <name>Victor Hugo</name>
-                  <birthDate>1802</birthDate>
-                  <deathDate>1885</deathDate>
-               </person>
-               <person dead="false">
-                  <name>Annie Ernaux</name>
-                  <birthDate>1940</birthDate>
-                  <deathDate/>
-               </person>
-            </personnes>
+            <person xmlns="" edit="">
+               <name edit="">Victor Hugo</name>
+               <birthDate>1802</birthDate>
+               <deathDate>1885</deathDate>
+               <age/>
+            </person>
          </xf:instance>
-         <xf:bind nodeset="person/birthDate|person/deathDate|person/age" type="integer"/>
-         <xf:bind nodeset="person/@dead" type="boolean"/>
-         <xf:bind nodeset="person/deathDate" relevant="../@dead = 'true'"/>
-         <xf:submission id="save"
-                        method="put"
-                        resource="file:personnes.xml"
-                        replace="none"/>
+         <xf:bind nodeset="birthDate|deathDate|age" type="integer"/>
+         <xf:bind nodeset="age" calculate="../deathDate - ../birthDate"/>
+         <xf:bind nodeset="name" readonly="parent::person/@edit != true()"/>
+         <xf:bind nodeset="@edit" type="boolean"/>
       </xf:model>
    </head>
    <body>
       <main class="slide ">
-         <h1 class="">Relevance (Pertinence)</h1>
-         <p>Vous pouvez spécifier les conditions dans lesquelles certaines données sont pertinentes. Par exemple, la date de décès n'est pertinente que si la personne est décédée :</p>
+         <h1 class="">Lecture seule - <code>@readonly</code>
+         </h1>
+         <p>Lorsqu'une valeur est associée à une propriété <code>calculate</code>, elle passe automatiquement en lecture seule (<code>readonly</code>).</p>
          <pre>
             <code class="language-xml">
-&lt;xf:bind nodeset="deathDate" relevant="../@dead = 'true'"/&gt;
+&lt;xf:instance&gt;
+    &lt;person xmlns=""&gt;
+        &lt;name&gt;Victor Hugo&lt;/name&gt;
+        &lt;birthDate&gt;1802&lt;/birthDate&gt;
+        &lt;deathDate&gt;1885&lt;/deathDate&gt;
+        &lt;age/&gt;
+    &lt;/person&gt;
+&lt;/xf:instance&gt;
+&lt;xf:bind nodeset="birthDate|deathDate|age" type="integer"/&gt;
+&lt;xf:bind nodeset="age" calculate="../deathDate - ../birthDate"/&gt;
                         </code>
          </pre>
-         <p>La pertinence a deux effets principaux : un contrôle lié à une valeur non pertinente n'est pas affiché, et lors d'une soumission, par défaut les éléments non pertinents ne sont pas inclus dans les données (vous pouvez modifier ce comportement avec <code>relevant="false"</code> sur l'élément submission). Essayez de cocher/décocher "Décédé" :</p>
+         <p>Cela signifie que même si on attache ce nœud à un contrôle <code>xf:input</code>, il sera impossible de modifier sa valeur :</p>
          <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:repeat nodeset="person">
-               <xf:input ref="name">
-                  <xf:label>Nom</xf:label>
-               </xf:input>
-               <xf:input ref="birthDate" incremental="true">
-                  <xf:label>Année de naissance</xf:label>
-               </xf:input>
-               <xf:input ref="@dead">
-                  <xf:label>Décédé</xf:label>
-               </xf:input>
-               <xf:input ref="deathDate" incremental="true">
-                  <xf:label>Année de décès</xf:label>
-               </xf:input>
-            </xf:repeat>
-            <xf:submit submission="save">
-               <xf:label>Sauvegarder</xf:label>
-            </xf:submit>
+            <xf:input ref="age">
+               <xf:label>Âge : </xf:label>
+            </xf:input>
          </xf:group>
-         <p>En sauvegardant, vérifiez le fichier <code>personnes.xml</code>.</p>
-         <p>Il est important de noter qu'il existe également un autre type de pertinence : si un contrôle est lié à un élément qui n'existe tout simplement pas (par exemple s'il a été supprimé), le contrôle n'est pas non plus affiché. Si l'élément est réinséré, le contrôle réapparaîtra.</p>
+         <p>S’il s'agit du comportement par défaut pour <code>calculate</code>, il est possible de placer d’autres valeurs en lecture seule si nécessaire. Soit de façon permanente :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:bind nodeset="name" readonly="true()"/&gt;
+                        </code>
+         </pre>
+         <p>soit de façon conditionnelle :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:bind nodeset="name" readonly="parent::person/@edit != true()"/&gt;
+                        </code>
+         </pre>
+         <p>Il devient alors très aisé de mettre en place des verrous :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:input ref="@edit"&gt;&lt;xf:label&gt;Autoriser modification&lt;/xf:label&gt;&lt;/xf:input&gt;
+&lt;xf:input ref="name"&gt;&lt;xf:label&gt;Nom&lt;/xf:label&gt;&lt;/xf:input&gt;
+                        </code>
+         </pre>
+         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
+            <xf:input ref="@edit">
+               <xf:label>Autoriser modification</xf:label>
+            </xf:input>
+            <xf:input ref="name" incremental="true">
+               <xf:label>Nom</xf:label>
+            </xf:input>
+         </xf:group>
+         <p>NB : on remarquera que le type <code>boolean</code> transforme notre <code>xf:input</code> en case à cocher !</p>
+         <p>NB bis : lorsqu’un nœud est en lecture seul, alors les nœuds descendants ou les attributs qu’il possède héritent de cette propriété.</p>
       </main>
       <script>hljs.highlightAll();</script>
    </body>

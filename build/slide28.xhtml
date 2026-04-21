@@ -25,138 +25,111 @@
       <xf:model xmlns="http://www.tei-c.org/ns/1.0">
          <xf:instance>
             <personnes xmlns="">
-               <person>
+               <person dead="true">
                   <name>Victor Hugo</name>
                   <birthDate>1802</birthDate>
                   <deathDate>1885</deathDate>
-                  <age/>
-               </person>
-               <person>
-                  <name>Émile Zola</name>
-                  <birthDate>1840</birthDate>
-                  <deathDate>1902</deathDate>
-                  <age/>
                </person>
             </personnes>
          </xf:instance>
-         <xf:instance id="blank">
-            <data xmlns="">
-               <person>
-                  <name/>
-                  <birthDate/>
-                  <deathDate/>
-                  <age/>
-               </person>
-            </data>
+         <xf:bind nodeset="person/@dead" type="boolean"/>
+         <xf:bind nodeset="person/birthDate"
+                  type="integer"
+                  constraint=". &gt; 1500 and . &lt; 2026"/>
+         <xf:bind nodeset="person/deathDate"
+                  type="integer"
+                  relevant="../@dead = 'true'"
+                  constraint=". &gt; ../birthDate and . &lt; 2026"/>
+         <xf:bind nodeset="person/name" required="true()"/>
+         <xf:instance id="two">
+            <person xmlns="">
+               <name/>
+               <birthDate/>
+            </person>
          </xf:instance>
-         <xf:bind nodeset="person/birthDate|person/deathDate|person/age" type="integer"/>
-         <xf:bind nodeset="person/age" calculate="../deathDate - ../birthDate"/>
-         <xf:submission id="save" method="put" resource="personnes.xml" replace="none">
-            <xf:message ev:event="xforms-submit-error">
-                                    Erreur de soumission. 
-                                    error-type: <xf:output value="event('error-type')"/> 
-                                    error-message: <xf:output value="event('error-message')"/> 
-                                    response-status-code: <xf:output value="event('response-status-code')"/> 
-                                    response-reason-phrase: <xf:output value="event('response-reason-phrase')"/> 
-                                    resource-uri: <xf:output value="event('resource-uri')"/>
-            </xf:message>
-         </xf:submission>
-         <xf:submission id="restore"
-                        method="get"
-                        resource="../assets/instances/personnes.xml"
-                        replace="instance"
-                        serialization="none"/>
-         <xf:submission id="saveLocal"
-                        method="put"
-                        resource="file:personnes.xml"
-                        mediatype="application/xml">
-            <xf:action ev:event="xforms-submit-done">
-               <xf:message>
-                  <xf:output value="'Données sauvegardées'"/>
-               </xf:message>
-            </xf:action>
-         </xf:submission>
+         <xf:bind nodeset="instance('two')/name" required="true()"/>
+         <xf:bind nodeset="instance('two')/birthDate" type="integer"/>
       </xf:model>
    </head>
    <body>
       <main class="slide ">
-         <h1 class="">Sauvegarder des données</h1>
-         <p>Pour sauvegarder des données, on utilise la <code>@method="put"</code> au lieu de <code>@method="get"</code> :</p>
+         <h1 class="">Validation des données</h1>
+         <p>Il existe 3 mécanismes de validation des données proposés par XForms. Nous en avons déjà vu un avec l’attribut <code>@type</code> associé à un élément <code>xf:bind</code> :</p>
          <pre>
             <code class="language-xml">
-&lt;xf:submission id="save" method="put" resource="personnes.xml" replace="none"&gt;
-    &lt;xf:message ev:event="xforms-submit-error"&gt;
-        Erreur lors de la sauvegarde.
-    &lt;/xf:message&gt;
-&lt;/xf:submission&gt;
+&lt;xf:bind nodeset="birthDate" type="integer"/&gt;
                         </code>
          </pre>
-         <p>Et pour restaurer les données, nous avons vu que nous pouvions utiliser :</p>
+         <p>La seconde méthode consiste à rendre une donnée obligatoire avec l’attribut <code>@required</code> :</p>
          <pre>
             <code class="language-xml">
-&lt;xf:submission id="restore" method="get" resource="personnes.xml"
-    replace="instance"
-    serialization="none"&gt;
-    &lt;xf:message ev:event="xforms-submit-error"&gt;
-        Erreur lors de la restauration.
-    &lt;/xf:message&gt;
-&lt;/xf:submission&gt;
-
+&lt;xf:bind nodeset="name" required="true()"/&gt;
+&lt;xf:bind nodeset="deathDate" required="../@dead = 'true'"/&gt;
+                        </code>
+         </pre>
+         <p>Si une valeur est requise et n'a pas de valeur, elle est affichée différemment. Par défaut, on ne peut pas soumettre des données contenant des valeurs requises vides. On peut toutefois modifier ce comportement avec l’attribut <code>@validate="false"</code> sur l'élément <code>xf:submission</code>.</p>
+         <xf:group xmlns="http://www.tei-c.org/ns/1.0" ref="instance('two')">
+            <xf:input ref="name" incremental="true">
+               <xf:label>Nom</xf:label>
+            </xf:input>
+            <xf:input ref="birthDate" incremental="true">
+               <xf:label>Année de naissance</xf:label>
+            </xf:input>
+         </xf:group>
+         <p>La propriété <code>@relevant</code> est prioritaire sur <code>@required</code> : si une valeur est requise mais non pertinente, ce n'est pas un problème si elle n'a pas de valeur.</p>
+         <p>Enfin, la troisième méthode de validation porte sur la contrainte des valeurs (<code>@constraint</code>) :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:bind nodeset="birthDate" type="integer" constraint=". &gt; 1500 and . &lt; 2026"/&gt;
+&lt;xf:bind nodeset="deathDate" type="integer" constraint=". &gt; ../birthDate and . &lt; 2026"/&gt;
+                        </code>
+         </pre>
+         <p>Ces trois propriétés déterminent si une valeur est valide ou non. Si une valeur n'est pas valide, les contrôles qui y sont attachés seront affichés en conséquence :</p>
+         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
+            <xf:repeat nodeset="person">
+               <xf:input ref="name" incremental="true">
+                  <xf:label>Nom</xf:label>
+               </xf:input>
+               <xf:input ref="birthDate" incremental="true">
+                  <xf:label>Année de naissance</xf:label>
+               </xf:input>
+               <xf:input ref="deathDate" incremental="true">
+                  <xf:label>Année de décès</xf:label>
+               </xf:input>
+            </xf:repeat>
+         </xf:group>
+         <p>Les données qui contiennent des valeurs non valides ne peuvent pas être soumises (sauf si on ajoute <code>@validate="false"</code> à l'élément <code>xf:submission</code>).</p>
+         <p>Tout contrôle lié à une valeur peut inclure un élément <code>xf:alert</code> pour avertir des problèmes de validité :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:input ref="birthDate" incremental="true"&gt;
+    &lt;xf:label&gt;Année de naissance&lt;/xf:label&gt;
+    &lt;xf:alert&gt;Doit être un entier entre 1500 et 2026&lt;/xf:alert&gt;
+&lt;/xf:input&gt;
+&lt;xf:input ref="deathDate" incremental="true"&gt;
+    &lt;xf:label&gt;Année de décès&lt;/xf:label&gt;
+    &lt;xf:alert&gt;Doit être postérieure à &lt;xf:output ref="../birthDate"/&gt; et avant 2026&lt;/xf:alert&gt;
+&lt;/xf:input&gt;
                         </code>
          </pre>
          <xf:group xmlns="http://www.tei-c.org/ns/1.0">
             <xf:repeat nodeset="person">
-               <xf:input class="inline" incremental="true" ref="name">
+               <xf:input ref="name" incremental="true">
                   <xf:label>Nom</xf:label>
+                  <xf:alert>Le nom est requis</xf:alert>
                </xf:input>
-               <xf:input class="inline" incremental="true" ref="birthDate">
-                  <xf:label>Naissance</xf:label>
+               <x:br/>
+               <xf:input ref="birthDate" incremental="true">
+                  <xf:label>Année de naissance</xf:label>
+                  <xf:alert>Doit être un entier entre 1500 et 2026</xf:alert>
                </xf:input>
-               <xf:input class="inline" incremental="true" ref="deathDate">
-                  <xf:label>Décès</xf:label>
+               <x:br/>
+               <xf:input ref="deathDate" incremental="true">
+                  <xf:label>Année de décès</xf:label>
+                  <xf:alert>Doit être postérieure à <xf:output class="inline" ref="../birthDate"/> et avant 2026</xf:alert>
                </xf:input>
-               <xf:output class="inline" ref="age">
-                  <xf:label>Âge</xf:label>
-               </xf:output>
-               <xf:trigger>
-                  <xf:label>×</xf:label>
-                  <xf:hint>Supprimer</xf:hint>
-                  <xf:action ev:event="DOMActivate">
-                     <xf:delete nodeset="."/>
-                  </xf:action>
-               </xf:trigger>
             </xf:repeat>
-            <xf:trigger>
-               <xf:label>+</xf:label>
-               <xf:hint>Ajouter une personne</xf:hint>
-               <xf:action ev:event="DOMActivate">
-                  <xf:insert nodeset="person" origin="instance('blank')/person"/>
-               </xf:action>
-            </xf:trigger>
-            <xf:submit submission="save">
-               <xf:label>Sauvegarder</xf:label>
-            </xf:submit>
-            <xf:submit submission="restore">
-               <xf:label>Restaurer</xf:label>
-            </xf:submit>
          </xf:group>
-         <p>
-            <strong>Attention :</strong> tous les serveurs n'acceptent pas la méthode PUT. <br/>Alternativement on peut utiliser l'API <code>file:</code>
-         </p>
-         <pre>
-            <code class="language-">
-&lt;xf:submission id="saveLocal" method="put" resource="file:personnes.xml" mediatype="application/xml"&gt;
-    &lt;xf:action ev:event="xforms-submit-done"&gt;
-        &lt;xf:message&gt;
-            &lt;xf:output value="'Données sauvegardées'"/&gt;
-        &lt;/xf:message&gt;
-    &lt;/xf:action&gt;
-&lt;/xf:submission&gt;
-                        </code>
-         </pre>
-         <xf:submit xmlns="http://www.tei-c.org/ns/1.0" submission="saveLocal">
-            <xf:label>Sauvegarder localement</xf:label>
-         </xf:submit>
       </main>
       <script>hljs.highlightAll();</script>
    </body>

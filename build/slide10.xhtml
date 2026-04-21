@@ -68,6 +68,18 @@
 &lt;xf:instance src="https://experts.huma-num.fr/xpr/biographies/xpr0027"/&gt;
                         </code>
          </pre>
+         <p>Il est impératif d’associer un espace de nom, même vide, aux instances sous peine de les voir interprétées comme des éléments XHTML.</p>
+         <p>Pour éviter les bugs avec Firefox (qui ne prend pas bien en charge les espaces de nom…), il convient de procéder avec <code>*:bogus</code> :</p>
+         <pre>
+            <code class="language-xml">
+&lt;html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:xf="http://www.w3.org/2002/xforms"
+    xmlns:tei="http://www.tei-c.org/ns/1.0"
+    xf:bogus="fix/Firefox/namespace/issue"
+    xs:bogus="fix/Firefox/namespace/issue"
+    tei:bogus="fix/Firefox/namespace/issue"/&gt;</code>
+         </pre>
       </main>
       <script>hljs.highlightAll();</script>
    </body>

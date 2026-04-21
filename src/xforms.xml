@@ -2,9 +2,7 @@
 <?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_all.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_all.rng" type="application/xml"
 	schematypens="http://purl.oclc.org/dsdl/schematron"?>
-
 <!-- Contrôle = élément de formulaire -->
-<!-- @todo current() ; xsltforms ; espaces de nom -->
 <?xml-stylesheet type="text/xsl" href="tei2slide.xsl"?>
 <TEI
     xmlns="http://www.tei-c.org/ns/1.0"
@@ -123,24 +121,24 @@
                     </list>
                     <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="xml">
 <![CDATA[<?xml-stylesheet href="../xsltforms/xsltforms.xsl" type="text/xsl"?>
-    <html xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:h="http://www.w3.org/1999/xhtml"
-        xmlns:ev="http://www.w3.org/2001/xml-events"
-        xmlns:xf="http://www.w3.org/2002/xforms">
-        <head>
-            <title>XForms</title>
-            <xf:model>
-                <xf:instance>
-                    <!-- Une donnée -->
-                </xf:instance>
-                <!-- binding, soumission, etc. -->
-             </xf:model>
-        </head>
-        <body>
-            <xf:group xmlns="http://www.w3.org/2002/xforms">
-                <!-- 'Contrôles' du formulaire : champs, boutons, afficage des données, etc. -->
-            </xf:group>
-        </body>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://www.w3.org/1999/xhtml"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:xf="http://www.w3.org/2002/xforms">
+    <head>
+        <title>XForms</title>
+        <xf:model>
+            <xf:instance>
+                <!-- Une donnée -->
+            </xf:instance>
+            <!-- binding, soumission, etc. -->
+        </xf:model>
+    </head>
+    <body>
+        <xf:group xmlns="http://www.w3.org/2002/xforms">
+            <!-- 'Contrôles' du formulaire : champs, boutons, afficage des données, etc. -->
+        </xf:group>
+    </body>
 </html>]]></egXML>
                     <p>L’ensemble doit être servi comme un document XML (extension <code>.xml</code> ou <code>.xhtml</code>).</p>
                 </div>
@@ -239,6 +237,16 @@
 <![CDATA[<xf:instance src="victorHugo.xml"/>
 <xf:instance src="https://experts.huma-num.fr/xpr/biographies/xpr0027"/>]]>
                         </egXML>
+                        <p>Il est impératif d’associer un espace de nom, même vide, aux instances sous peine de les voir interprétées comme des éléments XHTML.</p>
+                        <p>Pour éviter les bugs avec Firefox (qui ne prend pas bien en charge les espaces de nom…), il convient de procéder avec <code>*:bogus</code> :</p>
+                        <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="xml">
+<![CDATA[<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:xf="http://www.w3.org/2002/xforms"
+    xmlns:tei="http://www.tei-c.org/ns/1.0"
+    xf:bogus="fix/Firefox/namespace/issue"
+    xs:bogus="fix/Firefox/namespace/issue"
+    tei:bogus="fix/Firefox/namespace/issue"/>]]></egXML>
                     </div>
                 </div>
                 <div type="slide" subtype="xforms">
@@ -563,6 +571,65 @@
                             <xf:output ref="name"/>
                         </xf:group>
                         <p>soit en précisant le contexte directement sur certains éléments comme <code>xf:insert</code>, mais nous verrons cela un peu plus loin.</p>
+                    </div>
+                </div>
+                <div type="slide" subtype="xforms">
+                    <head>current()</head>
+                    <div type="model">
+                        <xf:model xmlns="">
+                            <xf:instance id="museum">
+                                <museum>
+                                    <artists>
+                                        <artist id="a1"><name>Artemisia Gentileschi</name></artist>
+                                        <artist id="a2"><name>Goya</name></artist>
+                                    </artists>
+                                    <artworks>
+                                        <artwork artist="a1"><title>Judith décapitant Holopherne</title></artwork>
+                                        <artwork artist="a2"><title>El tres de mayo de 1808 en Madrid</title></artwork>
+                                        <artwork artist="a2"><title>Saturne dévorant un de ses fils</title></artwork>
+                                    </artworks>
+                                </museum>
+                            </xf:instance>
+                        </xf:model>
+                    </div>
+                    <div type="content">
+                        <head><code>current()</code></head>
+                        <p>La fonction <code>current()</code> renvoie le nœud du contexte (par exemple l’item d’un repeat). Cette fonction est très utile pour écrire des expressions avec imbrication des contextes.</p>
+                        <egXML xmlns="http://www.tei-c.org/ns/Examples">
+<![CDATA[<xf:instance id="museum">
+    <museum xmlns="">
+        <artists>
+            <artist id="a1"><name>Artemisia Gentileschi</name></artist>
+            <artist id="a2"><name>Goya</name></artist>
+        </artists>
+        <artworks>
+            <artwork artist="a1"><title>Judith décapitant Holopherne</title></artwork>
+            <artwork artist="a2"><title>El tres de mayo de 1808 en Madrid</title></artwork>
+            <artwork artist="a2"><title>Saturne dévorant un de ses fils</title></artwork>
+        </artworks>
+    </museum>
+</xf:instance>
+
+<xf:repeat nodeset="instance('museum')/artists/artist">
+    <xf:output value="concat(
+        name,
+        ', nombre d’oeuvres dans la collection : ',
+        count(instance('museum')/artworks/artwork[@artist = current()/@id]))"/>
+</xf:repeat>]]></egXML>
+                        <xf:group>
+                            <xf:repeat nodeset="instance('museum')/artists/artist">
+                                <xf:output value="concat(
+                                    name,
+                                    ', nombre d’oeuvres dans la collection : ',
+                                    count(instance('museum')/artworks/artwork[@artist = current()/@id]))"/>
+                            </xf:repeat>
+                        </xf:group>
+                        <list>
+                            <item>Le <code>xf:repeat</code> parcourt les artistes</item>
+                            <item><code>current()</code> désigne l’artiste de la ligne en cours</item>
+                            <item>On peut alors compter les oeuvres dont l’attribut <code>@artist</code> correspond à l’artiste courant</item>
+                        </list>
+                        <p>Sans <code>current()</code>, la comparaison perdrait le bon contexte.</p>
                     </div>
                 </div>
                 <div type="slide" subtype="xforms">
@@ -967,6 +1034,11 @@
                                     <counter>0</counter>
                                 </data>
                             </xf:instance>
+                            <xf:instance id="urlParam">
+                                <data xmlns="">
+                                    <q>art002e009287</q>
+                                </data>
+                            </xf:instance>
                         </xf:model>
                     </div>
                     <div type="content">
@@ -1030,6 +1102,26 @@
                                 </xf:action>
                             </xf:trigger>
                         </xf:group>
+                        <p>Si l’url doit être construite à partir des données du formulaire, l’attribut <code>@source</code> peut être remplacé par l’élément <code>xf:resource</code> :</p>
+                        <egXML xmlns="http://www.tei-c.org/ns/Examples">
+<![CDATA[<xf:instance id="urlParam">
+    <data xmlns="">
+        <q>art002e009287</q>
+    </data>
+</xf:instance>
+
+<xf:load show="new">
+    <xf:resource value="concat('https://images.nasa.gov/details/',instance('urlParam')/q)"/>
+</xf:load>]]>
+                        </egXML>
+                        <xf:group>
+                            <xf:trigger>
+                                <xf:label>There is still no dark side of the moon!</xf:label>
+                                <xf:load show="new" ev:event="DOMActivate">
+                                    <xf:resource value="concat('https://images.nasa.gov/details/', instance('urlParam')/q)"/>
+                                </xf:load>
+                            </xf:trigger>
+                        </xf:group>
                     </div>
                 </div>
                 <div type="slide" subtype="xforms">
@@ -1090,6 +1182,15 @@
     serialization="none"
     method="get"
     replace="all"/>]]>
+                        </egXML>
+                        <p>Tout comme avec l’élément <code>xf:load</code>, si l’url à atteindre doit être construite, on peut remplacer l’attribut <code>@resource</code> par l’élément <code>xf:resource</code>.</p>
+                        <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="xml">
+<![CDATA[<xf:submission
+    serialization="none"
+    method="get"
+    replace="all">
+    <xf:resource value="concat('https://juliettedrouet.univ-rouen.fr/lettres/', 'jd.entry.3808')"/>
+</xf:submission>]]>
                         </egXML>
                         <p>On peut même avoir plusieurs processus de soumission au sein d’un même modèle. Il est alors nécessaire de leur attribuer un identifiant avec l’attribut <code>@id</code> :</p>
                         
@@ -2161,7 +2262,7 @@
                     </div>
                     <div type="content">
                         <head>Visibilité</head>
-                        <p>Avec XForms, il existe plusieurs méthode pour afficher ou masquer des contrôles ou des données. Nous avons déjà vu que nous pouvions utiliser la propriété <code>@relevant</code>, : les contrôles qui ne sont pas pertinents ne sont pas affichés.</p>
+                        <p>Avec XForms, il existe plusieurs méthode pour afficher ou masquer des contrôles ou des données. Nous avons déjà vu que nous pouvions utiliser la propriété <code>@relevant</code> : les contrôles qui ne sont pas pertinents ne sont pas affichés.</p>
                         <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="xml">
 <![CDATA[<xf:instance>
     <personnes xmlns="">
@@ -2279,7 +2380,7 @@
     ... etc ...
 </xf:switch>]]>
                         </egXML>
-                        <p>Notez le raccourci qui a été utilisé ici : si un élément <code>xf:action</code> ne contient qu'une seule action, alors on peut se passier de ce dernier :</p>
+                        <p>Notez le raccourci qui a été utilisé ici : si un élément <code>xf:action</code> ne contient qu'une seule action, alors on peut se passer de ce dernier :</p>
                         <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="xml">
 <![CDATA[<xf:action ev:event="DOMActivate">
     <xf:toggle case="tous"/>
@@ -2287,6 +2388,39 @@
 <!-- devient -->
 <xf:toggle case="tous" ev:event="DOMActivate"/>]]>
                         </egXML>
+                        <p>Il existe également un système de fenêtres modales très simple à utiliser, avec l’élément <code>xf:dialog</code> et les actions <code>xf:show</code> et <code>xf:hide</code>.</p>
+                        <p>On peut, par exemple, y placer des formulaires secondaires afin de mettre à jour une instance, enregistrer les données, et recharger l’instance depuis la base de données.</p>
+                        <egXML xmlns="http://www.tei-c.org/ns/Examples">
+<![CDATA[<xf:dialog id="myDialog">
+    <xf:repeat nodeset="person">
+        <xf:output ref="name"/>
+    </xf:repeat>
+    <xf:trigger>
+        <xf:label>Fermer</xf:label>
+        <xf:hide ev:event="DOMActivate" dialog="myDialog"/>
+    </xf:trigger>
+</xf:dialog>
+
+<xf:trigger>
+    <xf:label>ouvrir une modale</xf:label>
+    <xf:show ev:event="DOMActivate" dialog="myDialog"/>
+</xf:trigger>]]>
+                        </egXML>
+                        <xf:group>
+                            <xf:dialog id="myDialog">
+                                <xf:repeat nodeset="person">
+                                    <xf:output ref="name"/>
+                                </xf:repeat>
+                                <xf:trigger>
+                                    <xf:label>Fermer</xf:label>
+                                    <xf:hide ev:event="DOMActivate" dialog="myDialog"/>
+                                </xf:trigger>
+                            </xf:dialog>
+                            <xf:trigger>
+                                <xf:label>ouvrir une modale</xf:label>
+                                <xf:show ev:event="DOMActivate" dialog="myDialog"/>
+                            </xf:trigger>
+                        </xf:group>
                     </div>
                 </div>
                 <div type="slide" subtype="xforms">
@@ -2411,9 +2545,67 @@
                                 </xf:output>
                             </xf:group>
                         </div>
+                    </div>
+                </div>
+                <div type="slide" subtype="xforms">
+                    <head>Miscelanea</head>
+                    <div type="model">
+                        <xf:model>
+                            <xf:instance>
+                                <person xmlns="">
+                                    <name>Victor Hugo</name>
+                                    <birthDate>1802</birthDate>
+                                    <deathDate>1885</deathDate>
+                                </person>
+                            </xf:instance>
+                        </xf:model>
+                    </div>
+                    <div type="content">
+                        <head>Miscelanea</head>
+                        <p>XSLTForms implémente une série d’instruction et d’éléments qui ne font pas partie du standard XForms 1.1, mais qui peuvent être utiles.</p>
                         <div>
-                            <head>Exercice</head>
+                            <head><code>xf:var</code></head>
+                            <p>Les variables sont un ajout de XForms 2.0 :<code>xf:var</code></p>
+                            <egXML xmlns="http://www.tei-c.org/ns/Examples">
+<![CDATA[<xf:var name="name" value="name"/>
+<xf:output value="concat('Nom : ', $name)"/>]]>
+                            </egXML>
+                            <xf:group>
+                                <xf:var name="name" value="name"/>
+                                <xf:output value="concat('Nom : ', $name)"/>
+                            </xf:group>
                         </div>
+                        <div>
+                            <head>XForms Debugger</head>
+                            <p>Accessible depuis la touche <code>f1</code>, on bénéficie, depuis le navigateur, d’une console XPath pour contrôler les instances de données. Il est aussi possible d’activer Fleur, un processeur XQuery en Javascript, mais ces fonctionnalités sont mal documentées.</p>
+                            <egXML xmlns="http://www.tei-c.org/ns/Examples">
+<![CDATA[<xf:var name="name" value="name"/>
+<xf:output value="concat('Nom : ', $name)"/>]]>
+                            </egXML>
+                            <xf:group>
+                                <xf:var name="name" value="name"/>
+                                <xf:output value="concat('Nom : ', $name)"/>
+                            </xf:group>
+                        </div>
+                        <div>
+                            <head><code>serialize()</code></head>
+                            <p>Pour visualiser la sérialisation d’une donnée</p>
+                        </div>
+                        <div>
+                            <head><code>transform()</code></head>
+                            <p><code>transform()</code> pour transformer une instance à l’aide d’un feuille XSLT</p>
+                            <egXML xmlns="http://www.tei-c.org/ns/Examples">
+<![CDATA[<xf:output value="transform(instance('text'),'../assets/xsl/tei2html.xsl', false)" mediatype="text/html"/>]]>
+                            </egXML>
+                        </div>
+                        <div>
+                            <head><code>is-valid()</code></head>
+                            <p>La fonction <code>is-valid()</code> permet d’évaluer la validité d’un nœud. Un nœud est valide si les nœuds descendants sont valides également.</p>
+                            <egXML xmlns="http://www.tei-c.org/ns/Examples">
+<![CDATA[<div class="{ if(is-valid(.), 'valid', 'invalid') }">…</div>]]>
+                            </egXML>
+                        </div>
+                        
                     </div>
                 </div>
                 <div type="slide">

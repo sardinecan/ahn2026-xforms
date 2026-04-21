@@ -24,24 +24,23 @@
       <script src="../assets/js/generateid.js"/>
       <xf:model xmlns="http://www.tei-c.org/ns/1.0">
          <xf:instance>
-            <person xmlns="" edit="">
-               <name edit="">Victor Hugo</name>
+            <person xmlns="">
+               <name>Victor Hugo</name>
                <birthDate>1802</birthDate>
                <deathDate>1885</deathDate>
                <age/>
             </person>
          </xf:instance>
          <xf:bind nodeset="birthDate|deathDate|age" type="integer"/>
+         <xf:bind nodeset="name" readonly="true()"/>
          <xf:bind nodeset="age" calculate="../deathDate - ../birthDate"/>
-         <xf:bind nodeset="name" readonly="parent::person/@edit != true()"/>
-         <xf:bind nodeset="@edit" type="boolean"/>
       </xf:model>
    </head>
    <body>
       <main class="slide ">
-         <h1 class="">Lecture seule - <code>@readonly</code>
+         <h1 class="">Valeurs calculées - <code>@calculate</code>
          </h1>
-         <p>Lorsqu'une valeur est associée à une propriété <code>calculate</code>, elle passe automatiquement en lecture seule (<code>readonly</code>).</p>
+         <p>Il est possible de spécifier qu’une valeur dépend d’une ou plusieurs autres valeurs. Dès que l’une de ces valeurs change, la valeur <strong>calculée</strong> est alors automatiquement mise à jour :</p>
          <pre>
             <code class="language-xml">
 &lt;xf:instance&gt;
@@ -52,45 +51,29 @@
         &lt;age/&gt;
     &lt;/person&gt;
 &lt;/xf:instance&gt;
-&lt;xf:bind nodeset="birthDate|deathDate|age" type="integer"/&gt;
+                        </code>
+         </pre>
+         <p>À partir des dates de naissance et de mort, il devient très facile de déterminer l’age d’une personne par exemple :</p>
+         <pre>
+            <code class="language-xml">
 &lt;xf:bind nodeset="age" calculate="../deathDate - ../birthDate"/&gt;
                         </code>
          </pre>
-         <p>Cela signifie que même si on attache ce nœud à un contrôle <code>xf:input</code>, il sera impossible de modifier sa valeur :</p>
          <xf:group xmlns="http://www.tei-c.org/ns/1.0">
+            <xf:input ref="birthDate" incremental="true">
+               <xf:label>Année de naissance</xf:label>
+            </xf:input>
+            <x:br/>
+            <xf:input ref="deathDate" incremental="true">
+               <xf:label>Année de décès</xf:label>
+            </xf:input>
+            <x:br/>
             <xf:input ref="age">
-               <xf:label>Âge : </xf:label>
+               <xf:label>Âge</xf:label>
             </xf:input>
          </xf:group>
-         <p>S’il s'agit du comportement par défaut pour <code>calculate</code>, il est possible de placer d’autres valeurs en lecture seule si nécessaire. Soit de façon permanente :</p>
-         <pre>
-            <code class="language-xml">
-&lt;xf:bind nodeset="name" readonly="true()"/&gt;
-                        </code>
-         </pre>
-         <p>soit de façon conditionnelle :</p>
-         <pre>
-            <code class="language-xml">
-&lt;xf:bind nodeset="name" readonly="parent::person/@edit != true()"/&gt;
-                        </code>
-         </pre>
-         <p>Il devient alors très aisé de mettre en place des verrous :</p>
-         <pre>
-            <code class="language-xml">
-&lt;xf:input ref="@edit"&gt;&lt;xf:label&gt;Autoriser modification&lt;/xf:label&gt;&lt;/xf:input&gt;
-&lt;xf:input ref="name"&gt;&lt;xf:label&gt;Nom&lt;/xf:label&gt;&lt;/xf:input&gt;
-                        </code>
-         </pre>
-         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:input ref="@edit">
-               <xf:label>Autoriser modification</xf:label>
-            </xf:input>
-            <xf:input ref="name" incremental="true">
-               <xf:label>Nom</xf:label>
-            </xf:input>
-         </xf:group>
-         <p>NB : on remarquera que le type <code>boolean</code> transforme notre <code>xf:input</code> en case à cocher !</p>
-         <p>NB bis : lorsqu’un nœud est en lecture seul, alors les nœuds descendants ou les attributs qu’il possède héritent de cette propriété.</p>
+         <p>Sur l’élément <code>xf:bind</code>, l’attribut <code>@nodeset</code> établit un contexte pour <code>@calculate</code>.</p>
+         <p>On n’est bien évidemment pas limité aux calculs arithmétiques, toutes les fonctions XPath peuvent être utilisées : <code>concat()</code>, <code>substring()</code>, etc.</p>
       </main>
       <script>hljs.highlightAll();</script>
    </body>

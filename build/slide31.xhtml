@@ -24,55 +24,206 @@
       <script src="../assets/js/generateid.js"/>
       <xf:model xmlns="http://www.tei-c.org/ns/1.0">
          <xf:instance>
-            <person xmlns="">
-               <name>Victor Hugo</name>
-               <birthDate>1802</birthDate>
-               <deathDate>1885</deathDate>
-               <age/>
-            </person>
+            <personnes xmlns="">
+               <person dead="true">
+                  <name>Victor Hugo</name>
+                  <birthDate>1802</birthDate>
+                  <deathDate>1885</deathDate>
+                  <age/>
+               </person>
+               <person dead="false">
+                  <name>Annie Ernaux</name>
+                  <birthDate>1940</birthDate>
+                  <deathDate/>
+                  <age/>
+               </person>
+               <visible>yes</visible>
+            </personnes>
          </xf:instance>
-         <xf:bind nodeset="birthDate|deathDate|age" type="integer"/>
-         <xf:bind nodeset="name" readonly="true()"/>
-         <xf:bind nodeset="age" calculate="../deathDate - ../birthDate"/>
+         <xf:bind nodeset="person/birthDate|person/deathDate|person/age" type="integer"/>
+         <xf:bind nodeset="person/@dead" type="boolean"/>
+         <xf:bind nodeset="person/deathDate" relevant="../@dead = 'true'"/>
+         <xf:bind nodeset="person/age"
+                  relevant="../@dead = 'true'"
+                  calculate="../deathDate - ../birthDate"/>
+         <xf:bind nodeset="visible" relevant=". = 'yes'"/>
       </xf:model>
    </head>
    <body>
       <main class="slide ">
-         <h1 class="">Attribute Value Templates (AVT)</h1>
-         <p>Outre <code>xf:output</code> qui permet d’insérer du texte dans la page web, XForms permet aussi d’interagir avec les attributs HTML par l’intermédiaire de l’<em>Attribute Value Templates</em> :</p>
+         <h1 class="">Visibilité</h1>
+         <p>Avec XForms, il existe plusieurs méthode pour afficher ou masquer des contrôles ou des données. Nous avons déjà vu que nous pouvions utiliser la propriété <code>@relevant</code> : les contrôles qui ne sont pas pertinents ne sont pas affichés.</p>
          <pre>
             <code class="language-xml">
-&lt;style type="text/css"&gt;
-    .positif {color: green}
-    .negatif {background-color: red; color: white}
-&lt;/style&gt;
+&lt;xf:instance&gt;
+    &lt;personnes xmlns=""&gt;
+        &lt;visible&gt;yes&lt;/visible&gt;
+    &lt;/personnes&gt;
+&lt;/xf:instance&gt;
+&lt;xf:bind nodeset="visible" relevant=". = 'yes'"/&gt;
+&lt;xf:group ref="visible"&gt;
+    Tout le contenu de ce groupe n'est visible que lorsque 'visible' a la valeur 'yes'.
+&lt;/xf:group&gt;
+&lt;xf:trigger&gt;
+    &lt;xf:label&gt;&lt;xf:output value="if(visible = 'yes', 'Masquer', 'Afficher')"/&gt;&lt;/xf:label&gt;
+    &lt;xf:action ev:event="DOMActivate"&gt;
+        &lt;xf:setvalue ref="visible" value="if(. = 'yes', 'no', 'yes')"/&gt;
+    &lt;/xf:action&gt;
+&lt;/xf:trigger&gt;
                         </code>
          </pre>
-         <p>L’AVT permet d’évaluer une expression à l’intérieur d’un attribut. Il s’agit d’une expression placée entre accolades <code>{ }</code> à l'intérieur d'un attribut :</p>
-         <pre>
-            <code class="language-xml">
-&lt;span class="{if(age &amp;lt; 0, 'negatif', 'positif')}"&gt;
-    Âge au décès : &lt;xf:output ref="age"/&gt;
-&lt;/span&gt;
-                        </code>
-         </pre>
-         <p>Essayez-le en inversant les dates pour obtenir un âge négatif :</p>
          <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:output ref="name">
-               <xf:label>Nom</xf:label>
-            </xf:output>
-            <x:br/>
-            <xf:input ref="birthDate" incremental="true">
-               <xf:label>Année de naissance</xf:label>
-            </xf:input>
-            <x:br/>
-            <xf:input ref="deathDate" incremental="true">
-               <xf:label>Année de décès</xf:label>
-            </xf:input>
-            <x:br/>
-            <x:span class="{if(age &lt; 0, 'negatif', 'positif')}">
-                                Âge au décès : <xf:output ref="age"/>
-            </x:span>
+            <xf:group ref="visible">
+               <p>Tout le contenu de ce groupe n'est visible que lorsque 'visible' a la valeur 'yes'.</p>
+            </xf:group>
+            <xf:trigger>
+               <xf:label>
+                  <xf:output value="if(visible = 'yes', 'Masquer', 'Afficher')"/>
+               </xf:label>
+               <xf:action ev:event="DOMActivate">
+                  <xf:setvalue ref="visible" value="if(. = 'yes', 'no', 'yes')"/>
+               </xf:action>
+            </xf:trigger>
+         </xf:group>
+         <p>Mais ce n’est pas la seule méthode, on peut également s’appuyer sur l’élément <code>xf:switch</code> :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:switch&gt;
+    &lt;xf:case id="tous"&gt;
+        ...
+    &lt;/xf:case&gt;
+    &lt;xf:case id="decedes"&gt;
+        ...
+    &lt;/xf:case&gt;
+    ...
+&lt;/xf:switch&gt;
+                        </code>
+         </pre>
+         <p>Ce système permet de mettre en place facilement un système d’onglets. Chaque élément <code>xf:case</code> correspond à un onglet que l’on peut activer avec un <code>xf:trigger</code> et l’action <code>xf:toggle case="..."</code> :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:trigger&gt;
+    &lt;xf:label&gt;Tous&lt;/xf:label&gt;
+    &lt;xf:action ev:event="DOMActivate"&gt;
+        &lt;xf:toggle case="tous"/&gt;
+    &lt;/xf:action&gt;
+&lt;/xf:trigger&gt;
+                        </code>
+         </pre>
+         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
+            <xf:trigger id="toggletous">
+               <xf:label>Tous</xf:label>
+               <xf:toggle case="tous" ev:event="DOMActivate"/>
+            </xf:trigger>
+            <xf:trigger id="toggledecedes">
+               <xf:label>Décédés</xf:label>
+               <xf:toggle case="decedes" ev:event="DOMActivate"/>
+            </xf:trigger>
+            <xf:trigger id="togglevivants">
+               <xf:label>Vivants</xf:label>
+               <xf:toggle case="vivants" ev:event="DOMActivate"/>
+            </xf:trigger>
+            <xf:trigger id="togglestats">
+               <xf:label>Statistiques</xf:label>
+               <xf:toggle case="stats" ev:event="DOMActivate"/>
+            </xf:trigger>
+            <xf:switch>
+               <xf:case id="tous">
+                  <xf:label>Tous</xf:label>
+                  <xf:repeat nodeset="person">
+                     <xf:output ref="name"/>
+                  </xf:repeat>
+               </xf:case>
+               <xf:case id="decedes">
+                  <xf:label>Décédés</xf:label>
+                  <xf:repeat nodeset="person[@dead='true']">
+                     <xf:output ref="name"/>
+                  </xf:repeat>
+               </xf:case>
+               <xf:case id="vivants">
+                  <xf:label>Vivants</xf:label>
+                  <xf:repeat nodeset="person[@dead='false']">
+                     <xf:output ref="name"/>
+                  </xf:repeat>
+               </xf:case>
+               <xf:case id="stats">
+                  <xf:label>Statistiques</xf:label>
+                                    Total : <xf:output value="count(person)"/>
+                  <x:br/>
+                                    Décédés : <xf:output value="count(person[@dead='true'])"/>
+                  <x:br/>
+                                    Vivants : <xf:output value="count(person[@dead='false'])"/>
+               </xf:case>
+            </xf:switch>
+         </xf:group>
+         <pre>
+            <code class="language-xml">
+&lt;xf:trigger id="toggletous" appearance="minimal"&gt;
+    &lt;xf:label&gt;Tous&lt;/xf:label&gt;
+    &lt;xf:toggle case="tous" ev:event="DOMActivate"/&gt;
+&lt;/xf:trigger&gt;
+&lt;xf:trigger id="toggledecedes" appearance="minimal"&gt;
+    &lt;xf:label&gt;Décédés&lt;/xf:label&gt;
+    &lt;xf:toggle case="decedes" ev:event="DOMActivate"/&gt;
+&lt;/xf:trigger&gt;
+... etc ...
+&lt;xf:switch&gt;
+    &lt;xf:case id="tous"&gt;
+        &lt;xf:label&gt;Tous&lt;/xf:label&gt;
+        &lt;!--Liste de toutes les personnes...--&gt;
+    &lt;/xf:case&gt;
+    &lt;xf:case id="decedes"&gt;
+        &lt;xf:label&gt;Décédés&lt;/xf:label&gt;
+        &lt;!--Personnes décédées uniquement...--&gt;
+    &lt;/xf:case&gt;
+    ... etc ...
+&lt;/xf:switch&gt;
+                        </code>
+         </pre>
+         <p>Notez le raccourci qui a été utilisé ici : si un élément <code>xf:action</code> ne contient qu'une seule action, alors on peut se passer de ce dernier :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:action ev:event="DOMActivate"&gt;
+    &lt;xf:toggle case="tous"/&gt;
+&lt;/xf:action&gt;
+&lt;!-- devient --&gt;
+&lt;xf:toggle case="tous" ev:event="DOMActivate"/&gt;
+                        </code>
+         </pre>
+         <p>Il existe également un système de fenêtres modales très simple à utiliser, avec l’élément <code>xf:dialog</code> et les actions <code>xf:show</code> et <code>xf:hide</code>.</p>
+         <p>On peut, par exemple, y placer des formulaires secondaires afin de mettre à jour une instance, enregistrer les données, et recharger l’instance depuis la base de données.</p>
+         <pre>
+            <code class="language-">
+&lt;xf:dialog id="myDialog"&gt;
+    &lt;xf:repeat nodeset="person"&gt;
+        &lt;xf:output ref="name"/&gt;
+    &lt;/xf:repeat&gt;
+    &lt;xf:trigger&gt;
+        &lt;xf:label&gt;Fermer&lt;/xf:label&gt;
+        &lt;xf:hide ev:event="DOMActivate" dialog="myDialog"/&gt;
+    &lt;/xf:trigger&gt;
+&lt;/xf:dialog&gt;
+
+&lt;xf:trigger&gt;
+    &lt;xf:label&gt;ouvrir une modale&lt;/xf:label&gt;
+    &lt;xf:show ev:event="DOMActivate" dialog="myDialog"/&gt;
+&lt;/xf:trigger&gt;
+                        </code>
+         </pre>
+         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
+            <xf:dialog id="myDialog">
+               <xf:repeat nodeset="person">
+                  <xf:output ref="name"/>
+               </xf:repeat>
+               <xf:trigger>
+                  <xf:label>Fermer</xf:label>
+                  <xf:hide ev:event="DOMActivate" dialog="myDialog"/>
+               </xf:trigger>
+            </xf:dialog>
+            <xf:trigger>
+               <xf:label>ouvrir une modale</xf:label>
+               <xf:show ev:event="DOMActivate" dialog="myDialog"/>
+            </xf:trigger>
          </xf:group>
       </main>
       <script>hljs.highlightAll();</script>

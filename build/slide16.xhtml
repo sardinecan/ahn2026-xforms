@@ -24,85 +24,121 @@
       <script src="../assets/js/generateid.js"/>
       <xf:model xmlns="http://www.tei-c.org/ns/1.0">
          <xf:instance>
-            <person xmlns="">
-               <name>Victor Hugo</name>
-               <date type="">1802</date>
-               <date type="">1885</date>
-            </person>
+            <listPerson xmlns="">
+               <person>
+                  <name>Victor Hugo</name>
+                  <birthDate>1802</birthDate>
+                  <deathDate>1885</deathDate>
+               </person>
+               <person>
+                  <name>Juliette Drouet</name>
+                  <birthDate>1806</birthDate>
+                  <deathDate>1883</deathDate>
+               </person>
+               <person>
+                  <name>Alexandre Dumas</name>
+                  <birthDate>1802</birthDate>
+                  <deathDate>1870</deathDate>
+               </person>
+               <person>
+                  <name>George Sand</name>
+                  <birthDate>1804</birthDate>
+                  <deathDate>1876</deathDate>
+               </person>
+               <person>
+                  <name>Honoré de Balzac</name>
+                  <birthDate>1799</birthDate>
+                  <deathDate>1850</deathDate>
+               </person>
+               <person>
+                  <name>Gustave Flaubert</name>
+                  <birthDate>1821</birthDate>
+                  <deathDate>1880</deathDate>
+               </person>
+               <person>
+                  <name>Charles Baudelaire</name>
+                  <birthDate>1821</birthDate>
+                  <deathDate>1867</deathDate>
+               </person>
+               <person>
+                  <name>Alphonse de Lamartine</name>
+                  <birthDate>1790</birthDate>
+                  <deathDate>1869</deathDate>
+               </person>
+               <person>
+                  <name>Alfred de Musset</name>
+                  <birthDate>1810</birthDate>
+                  <deathDate>1857</deathDate>
+               </person>
+               <person>
+                  <name>Stendhal</name>
+                  <birthDate>1783</birthDate>
+                  <deathDate>1842</deathDate>
+               </person>
+               <person>
+                  <name>Théophile Gautier</name>
+                  <birthDate>1811</birthDate>
+                  <deathDate>1872</deathDate>
+               </person>
+               <person>
+                  <name>Gérard de Nerval</name>
+                  <birthDate>1808</birthDate>
+                  <deathDate>1855</deathDate>
+               </person>
+            </listPerson>
+         </xf:instance>
+         <xf:instance id="search">
+            <search xmlns="">
+               <q/>
+            </search>
          </xf:instance>
       </xf:model>
    </head>
    <body>
       <main class="slide ">
-         <h1 class="">Les éléments <code>xf:select</code> et <code>xf:select1</code>
-         </h1>
-         <p>Ces deux éléments permettent de proposer à l’utilisateur de choisir parmi un ensemble de valeurs prédéfinies :</p>
-         <ul>
-            <li>
-               <code>xf:select</code> : choix multiple</li>
-            <li>
-               <code>xf:select1</code> : choix unique</li>
-         </ul>
-         <p>Concernant leur mise en place, <code>xf:select</code> et <code>xf:select1</code> sont tout-à-fait similaires :</p>
+         <h1 class="">Multiples instances</h1>
+         <p>Il est possible de déclarer plusieurs instances au sein d’un même modèle. Dans ce cas, il est nécessaire de leur attribuer un identifiant à l’aide d’un attribut <code>@id</code>.</p>
          <pre>
             <code class="language-xml">
-&lt;xf:select1 ref="date[1]/@type"&gt;
-    &lt;xf:label&gt;Type de date&lt;/xf:label&gt;
-    &lt;xf:item&gt;
-        &lt;xf:label&gt;Naissance&lt;/xf:label&gt;
-        &lt;xf:value&gt;birth&lt;/xf:value&gt;
-    &lt;/xf:item&gt;
-    &lt;xf:item&gt;
-        &lt;xf:label&gt;Décès&lt;/xf:label&gt;
-        &lt;xf:value&gt;death&lt;/xf:value&gt;
-    &lt;/xf:item&gt;
-&lt;/xf:select1&gt;
+&lt;xf:instance id="listPerson" resource="listPerson.xml"/&gt;
+&lt;xf:instance id="search"&gt;
+    &lt;search xmlns=""&gt;
+        &lt;q/&gt;
+    &lt;/search&gt;
+&lt;/xf:instance&gt;
                         </code>
          </pre>
-         <p>Chaque item de la liste est placé dans un élément <code>xf:item</code> comprenant un label (<code>xf:label</code>) et une valeur (<code>xf:value</code>) qui sera insérée dans l’instance. Dans le cas d’un champ à choix multiple, une <strong>espace</strong> est utilisée comme séparateur entre les valeurs… qui ne doivent donc pas en contenir !</p>
-         <p>Ces champs peuvent s’afficher de 3 manières différentes :</p>
+         <p>Pour faire référence à une instance particulière on utilise la fonction <code>instance()</code>. Cette fonction prend un unique argument : l’identifiant de l’instance.</p>
          <pre>
             <code class="language-xml">
-&lt;xf:select1 ref="result" appearance="full"/&gt;
-&lt;xf:select1 ref="result" appearance="compact"/&gt;
-&lt;xf:select1 ref="result" appearance="minimal"/&gt;
+&lt;xf:input ref="instance('search')/q"&gt;&lt;xf:label&gt;Recherche : &lt;/xf:label&gt;&lt;/xf:input&gt;
                         </code>
          </pre>
          <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:select1 ref="date[1]/@type" appearance="minimal">
-               <xf:label>Type de date</xf:label>
-               <xf:item>
-                  <xf:label>Naissance</xf:label>
-                  <xf:value>birth</xf:value>
-               </xf:item>
-               <xf:item>
-                  <xf:label>Décès</xf:label>
-                  <xf:value>death</xf:value>
-               </xf:item>
-            </xf:select1>
-            <xf:select1 ref="date[1]/@type" appearance="compact">
-               <xf:label>Type de date</xf:label>
-               <xf:item>
-                  <xf:label>Naissance</xf:label>
-                  <xf:value>birth</xf:value>
-               </xf:item>
-               <xf:item>
-                  <xf:label>Décès</xf:label>
-                  <xf:value>death</xf:value>
-               </xf:item>
-            </xf:select1>
-            <xf:select1 ref="date[1]/@type" appearance="full">
-               <xf:label>Type de date</xf:label>
-               <xf:item>
-                  <xf:label>Naissance</xf:label>
-                  <xf:value>birth</xf:value>
-               </xf:item>
-               <xf:item>
-                  <xf:label>Décès</xf:label>
-                  <xf:value>death</xf:value>
-               </xf:item>
-            </xf:select1>
+            <xf:input ref="instance('search')/q">
+               <xf:label>Recherche</xf:label>
+            </xf:input>
          </xf:group>
+         <p>La première instance est l’instance par défaut, il n'est donc pas nécessaire d’utiliser la fonction <code>instance()</code> avec cette dernière.</p>
+         <p>Avec ce mécanisme, il devient très facile de filtrer des nœuds au regard de la valeur d’une donnée par exemple. :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:repeat nodeset="person[contains(lower-case(.), lower-case(instance('search')))]"&gt;
+     &lt;xf:output value="concat(name, ' (', birthDate, ' - ', deathDate, ')')"/&gt;
+&lt;/xf:repeat&gt;
+                        </code>
+         </pre>
+         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
+            <xf:input ref="instance('search')/q" incremental="true">
+               <xf:label>Rechercher un auteur : </xf:label>
+            </xf:input>
+            <x:br/>
+            <xf:repeat nodeset="person[contains(lower-case(.), lower-case(instance('search')))]">
+               <xf:output value="concat(name, ' (', birthDate, ' - ', deathDate, ')')"/>
+            </xf:repeat>
+         </xf:group>
+         <p>Avec ce filtre, seuls sont répétés les éléments <code>person</code> contenant le segment indiqué dans l’instance <code>search</code>
+         </p>
       </main>
       <script>hljs.highlightAll();</script>
    </body>

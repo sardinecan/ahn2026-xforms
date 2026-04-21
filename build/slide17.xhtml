@@ -23,130 +23,85 @@
       <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js">/**/</script>
       <script src="../assets/js/generateid.js"/>
       <xf:model xmlns="http://www.tei-c.org/ns/1.0">
-         <xf:instance id="choice">
-            <data xmlns="">
-               <choice/>
-               <collection/>
-            </data>
-         </xf:instance>
-         <xf:instance id="listPerson">
-            <listPerson xmlns="">
-               <person>
-                  <name>Victor Hugo</name>
-                  <birthDate>1802</birthDate>
-                  <deathDate>1885</deathDate>
-               </person>
-               <person>
-                  <name>Alexandre Dumas</name>
-                  <birthDate>1802</birthDate>
-                  <deathDate>1870</deathDate>
-               </person>
-               <person>
-                  <name>George Sand</name>
-                  <birthDate>1804</birthDate>
-                  <deathDate>1876</deathDate>
-               </person>
-               <person>
-                  <name>Honoré de Balzac</name>
-                  <birthDate>1799</birthDate>
-                  <deathDate>1850</deathDate>
-               </person>
-            </listPerson>
+         <xf:instance>
+            <person xmlns="">
+               <name>Victor Hugo</name>
+               <date type="">1802</date>
+               <date type="">1885</date>
+            </person>
          </xf:instance>
       </xf:model>
    </head>
    <body>
       <main class="slide ">
-         <h1 class="">L’élément <code>xf:itemset</code>
+         <h1 class="">Les éléments <code>xf:select</code> et <code>xf:select1</code>
          </h1>
-         <p>Il est également possible de créer une liste de choix directement à partir d’une instance.</p>
+         <p>Ces deux éléments permettent de proposer à l’utilisateur de choisir parmi un ensemble de valeurs prédéfinies :</p>
+         <ul>
+            <li>
+               <code>xf:select</code> : choix multiple</li>
+            <li>
+               <code>xf:select1</code> : choix unique</li>
+         </ul>
+         <p>Concernant leur mise en place, <code>xf:select</code> et <code>xf:select1</code> sont tout-à-fait similaires :</p>
          <pre>
             <code class="language-xml">
-&lt;xf:instance id="listPerson"&gt;
-    &lt;listPerson xmlns=""&gt;
-        &lt;person&gt;
-            &lt;name&gt;Victor Hugo&lt;/name&gt;
-            &lt;birthDate&gt;1802&lt;/birthDate&gt;
-            &lt;deathDate&gt;1885&lt;/deathDate&gt;
-        &lt;/person&gt;
-        &lt;person&gt;
-            &lt;name&gt;Alexandre Dumas&lt;/name&gt;
-            &lt;birthDate&gt;1802&lt;/birthDate&gt;
-            &lt;deathDate&gt;1870&lt;/deathDate&gt;
-        &lt;/person&gt;
-        &lt;person&gt;
-            &lt;name&gt;George Sand&lt;/name&gt;
-            &lt;birthDate&gt;1804&lt;/birthDate&gt;
-            &lt;deathDate&gt;1876&lt;/deathDate&gt;
-        &lt;/person&gt;
-        &lt;person&gt;
-            &lt;name&gt;Honoré de Balzac&lt;/name&gt;
-            &lt;birthDate&gt;1799&lt;/birthDate&gt;
-            &lt;deathDate&gt;1850&lt;/deathDate&gt;
-        &lt;/person&gt;
-    &lt;/listPerson&gt;
-&lt;/xf:instance&gt;
-                        </code>
-         </pre>
-         <p>On utilise pour cela l’élément <code>xf:itemset</code> :</p>
-         <pre>
-            <code class="language-xml">
-&lt;xf:select1 ref="choice"&gt;
-    &lt;xf:label&gt;Choisir une personne&lt;/xf:label&gt;
-    &lt;xf:itemset ref="instance('listPerson')/person"&gt;
-        &lt;xf:label ref="name"/&gt;
-        &lt;xf:value ref="name"/&gt;
-    &lt;/xf:itemset&gt;
+&lt;xf:select1 ref="date[1]/@type"&gt;
+    &lt;xf:label&gt;Type de date&lt;/xf:label&gt;
+    &lt;xf:item&gt;
+        &lt;xf:label&gt;Naissance&lt;/xf:label&gt;
+        &lt;xf:value&gt;birth&lt;/xf:value&gt;
+    &lt;/xf:item&gt;
+    &lt;xf:item&gt;
+        &lt;xf:label&gt;Décès&lt;/xf:label&gt;
+        &lt;xf:value&gt;death&lt;/xf:value&gt;
+    &lt;/xf:item&gt;
 &lt;/xf:select1&gt;
                         </code>
          </pre>
-         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:select1 ref="choice" appearance="full">
-               <xf:label>Choisir une personne</xf:label>
-               <xf:itemset ref="instance('listPerson')/person">
-                  <xf:label ref="name"/>
-                  <xf:value value="name"/>
-               </xf:itemset>
-            </xf:select1>
-            <xf:output ref="choice">
-               <xf:label>Personne choisie : </xf:label>
-            </xf:output>
-         </xf:group>
-         <p>On notera l’utilisation de la fonction <code>instance()</code> avec <code>xf:itemset</code>.</p>
-         <p>Bien évidemment, il est possible d’interpréter des valeurs avec l’attribut <code>@value</code>, tout comme avec l’élément <code>xf:output</code> :</p>
+         <p>Chaque item de la liste est placé dans un élément <code>xf:item</code> comprenant un label (<code>xf:label</code>) et une valeur (<code>xf:value</code>) qui sera insérée dans l’instance. Dans le cas d’un champ à choix multiple, une <strong>espace</strong> est utilisée comme séparateur entre les valeurs… qui ne doivent donc pas en contenir !</p>
+         <p>Ces champs peuvent s’afficher de 3 manières différentes :</p>
          <pre>
             <code class="language-xml">
-&lt;!-- dans l’instance... --&gt;
-&lt;person id="vh"&gt;Victor Hugo&lt;/person&gt;
-                            
-&lt;xf:itemset ref="instance('listPerson')/person"&gt;
-    &lt;xf:label ref="."/&gt;
-    &lt;xf:value value="concat('#', @id)"/&gt;
-&lt;/xf:itemset&gt;
-                        </code>
-         </pre>
-         <p>Enfin, avec <code>xf:itemset</code> on peut préférer insérer un élément plutôt qu’une valeur. On utilisera à cet effet la balise <code>xf:copy</code> :</p>
-         <pre>
-            <code class="language-">
-&lt;xf:select ref="collection"&gt;
-    &lt;xf:label&gt;Choisir une personne&lt;/xf:label&gt;
-    &lt;xf:itemset ref="instance('listPerson')/person"&gt;
-        &lt;xf:label ref="name"/&gt;
-        &lt;xf:copy ref="name"/&gt;
-    &lt;/xf:itemset&gt;
-&lt;/xf:select&gt;
+&lt;xf:select1 ref="result" appearance="full"/&gt;
+&lt;xf:select1 ref="result" appearance="compact"/&gt;
+&lt;xf:select1 ref="result" appearance="minimal"/&gt;
                         </code>
          </pre>
          <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:output value="serialize(collection)"/>
-            <x:br/>
-            <xf:select ref="collection" appearance="full">
-               <xf:label>Choisir une personne</xf:label>
-               <xf:itemset ref="instance('listPerson')/person">
-                  <xf:label ref="name"/>
-                  <xf:copy ref="name"/>
-               </xf:itemset>
-            </xf:select>
+            <xf:select1 ref="date[1]/@type" appearance="minimal">
+               <xf:label>Type de date</xf:label>
+               <xf:item>
+                  <xf:label>Naissance</xf:label>
+                  <xf:value>birth</xf:value>
+               </xf:item>
+               <xf:item>
+                  <xf:label>Décès</xf:label>
+                  <xf:value>death</xf:value>
+               </xf:item>
+            </xf:select1>
+            <xf:select1 ref="date[1]/@type" appearance="compact">
+               <xf:label>Type de date</xf:label>
+               <xf:item>
+                  <xf:label>Naissance</xf:label>
+                  <xf:value>birth</xf:value>
+               </xf:item>
+               <xf:item>
+                  <xf:label>Décès</xf:label>
+                  <xf:value>death</xf:value>
+               </xf:item>
+            </xf:select1>
+            <xf:select1 ref="date[1]/@type" appearance="full">
+               <xf:label>Type de date</xf:label>
+               <xf:item>
+                  <xf:label>Naissance</xf:label>
+                  <xf:value>birth</xf:value>
+               </xf:item>
+               <xf:item>
+                  <xf:label>Décès</xf:label>
+                  <xf:value>death</xf:value>
+               </xf:item>
+            </xf:select1>
          </xf:group>
       </main>
       <script>hljs.highlightAll();</script>

@@ -23,57 +23,115 @@
       <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js">/**/</script>
       <script src="../assets/js/generateid.js"/>
       <xf:model xmlns="http://www.tei-c.org/ns/1.0">
-         <xf:instance>
-            <person xmlns="">
-               <name>Victor Hugo</name>
-               <birthDate>1802</birthDate>
-               <deathDate>1885</deathDate>
-               <age/>
-            </person>
+         <xf:instance id="personnes">
+            <personnes xmlns="">
+               <person>
+                  <name>Victor Hugo</name>
+                  <birthDate>1802</birthDate>
+                  <deathDate>1885</deathDate>
+                  <age/>
+               </person>
+               <person>
+                  <name>Émile Zola</name>
+                  <birthDate>1840</birthDate>
+                  <deathDate>1902</deathDate>
+                  <age/>
+               </person>
+               <person>
+                  <name>Gustave Flaubert</name>
+                  <birthDate>1821</birthDate>
+                  <deathDate>1880</deathDate>
+                  <age/>
+               </person>
+            </personnes>
          </xf:instance>
-         <xf:bind nodeset="birthDate|deathDate|age" type="integer"/>
-         <xf:bind nodeset="name" readonly="true()"/>
-         <xf:bind nodeset="age" calculate="../deathDate - ../birthDate"/>
+         <xf:instance id="blank">
+            <data xmlns="">
+               <person>
+                  <name/>
+                  <birthDate/>
+                  <deathDate/>
+                  <age/>
+               </person>
+            </data>
+         </xf:instance>
+         <xf:bind nodeset="person/birthDate|person/deathDate|person/age" type="integer"/>
+         <xf:bind nodeset="person/age" calculate="../deathDate - ../birthDate"/>
       </xf:model>
    </head>
    <body>
       <main class="slide ">
-         <h1 class="">Valeurs calculées - <code>@calculate</code>
-         </h1>
-         <p>Il est possible de spécifier qu’une valeur dépend d’une ou plusieurs autres valeurs. Dès que l’une de ces valeurs change, la valeur <strong>calculée</strong> est alors automatiquement mise à jour :</p>
+         <h1 class="">Suppression (<code>xf:delete</code>)</h1>
+         <p>Pour supprimer des éléments on procède plus où moins de la même manière, mais il faut faire attention à une chose :</p>
          <pre>
             <code class="language-xml">
-&lt;xf:instance&gt;
-    &lt;person xmlns=""&gt;
-        &lt;name&gt;Victor Hugo&lt;/name&gt;
-        &lt;birthDate&gt;1802&lt;/birthDate&gt;
-        &lt;deathDate&gt;1885&lt;/deathDate&gt;
-        &lt;age/&gt;
-    &lt;/person&gt;
-&lt;/xf:instance&gt;
+&lt;xf:delete nodeset="person"/&gt;
                         </code>
          </pre>
-         <p>À partir des dates de naissance et de mort, il devient très facile de déterminer l’age d’une personne par exemple :</p>
+         <p>Cette action supprime <strong>TOUS</strong> les éléments <code>person</code> (On n’utilise en effet pas <code>@ref</code>, mais <code>@nodeset</code>, tout comme avec <code>xf:repeat</code>). Si on est en présence d’une liste, il faut donc être en mesure de préciser quel élément nous souhaitons supprimer :</p>
          <pre>
             <code class="language-xml">
-&lt;xf:bind nodeset="age" calculate="../deathDate - ../birthDate"/&gt;
+&lt;xf:delete nodeset="person[1]"/&gt;
+&lt;xf:delete nodeset="person[last()]"/&gt;
+&lt;xf:delete nodeset="person[name = 'Victor Hugo']"/&gt;
+                        </code>
+         </pre>
+         <p>Une solution consiste à supprimer l’élément courant, dans le contexte d’un élément <code>xf:repeat</code> :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:repeat nodeset="person"&gt;
+    &lt;xf:input class="inline" ref="name"/&gt;
+    &lt;xf:input class="inline" ref="birthDate"/&gt;
+    &lt;xf:input class="inline" ref="deathDate"/&gt;
+    &lt;xf:output class="inline" ref="age"/&gt;
+    &lt;xf:trigger&gt;
+        &lt;xf:label&gt;×&lt;/xf:label&gt;
+        &lt;xf:hint&gt;Supprimer&lt;/xf:hint&gt;
+        &lt;xf:action ev:event="DOMActivate"&gt;
+            &lt;xf:delete nodeset="."/&gt;
+        &lt;/xf:action&gt;
+    &lt;/xf:trigger&gt;
+&lt;/xf:repeat&gt;
+
+&lt;xf:trigger&gt;
+    &lt;xf:label&gt;+&lt;/xf:label&gt;
+    &lt;xf:hint&gt;Ajouter&lt;/xf:hint&gt;
+    &lt;xf:action ev:event="DOMActivate"&gt;
+        &lt;xf:insert nodeset="person" origin="instance('blank')/person"/&gt;
+    &lt;/xf:action&gt;
+&lt;/xf:trigger&gt;
                         </code>
          </pre>
          <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:input ref="birthDate" incremental="true">
-               <xf:label>Année de naissance</xf:label>
-            </xf:input>
-            <x:br/>
-            <xf:input ref="deathDate" incremental="true">
-               <xf:label>Année de décès</xf:label>
-            </xf:input>
-            <x:br/>
-            <xf:input ref="age">
-               <xf:label>Âge</xf:label>
-            </xf:input>
+            <xf:repeat nodeset="person">
+               <xf:input class="inline" incremental="true" ref="name">
+                  <xf:label>Nom</xf:label>
+               </xf:input>
+               <xf:input class="inline" incremental="true" ref="birthDate">
+                  <xf:label>Naissance</xf:label>
+               </xf:input>
+               <xf:input class="inline" incremental="true" ref="deathDate">
+                  <xf:label>Décès</xf:label>
+               </xf:input>
+               <xf:output class="inline" ref="age">
+                  <xf:label>Âge</xf:label>
+               </xf:output>
+               <xf:trigger>
+                  <xf:label>×</xf:label>
+                  <xf:hint>Supprimer</xf:hint>
+                  <xf:action ev:event="DOMActivate">
+                     <xf:delete nodeset="."/>
+                  </xf:action>
+               </xf:trigger>
+            </xf:repeat>
+            <xf:trigger>
+               <xf:label>+</xf:label>
+               <xf:hint>Ajouter une personne</xf:hint>
+               <xf:action ev:event="DOMActivate">
+                  <xf:insert nodeset="person" origin="instance('blank')/person"/>
+               </xf:action>
+            </xf:trigger>
          </xf:group>
-         <p>Sur l’élément <code>xf:bind</code>, l’attribut <code>@nodeset</code> établit un contexte pour <code>@calculate</code>.</p>
-         <p>On n’est bien évidemment pas limité aux calculs arithmétiques, toutes les fonctions XPath peuvent être utilisées : <code>concat()</code>, <code>substring()</code>, etc.</p>
       </main>
       <script>hljs.highlightAll();</script>
    </body>

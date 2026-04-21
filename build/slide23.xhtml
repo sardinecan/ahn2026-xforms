@@ -23,7 +23,7 @@
       <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js">/**/</script>
       <script src="../assets/js/generateid.js"/>
       <xf:model xmlns="http://www.tei-c.org/ns/1.0">
-         <xf:instance id="personnes">
+         <xf:instance>
             <personnes xmlns="">
                <person>
                   <name>Victor Hugo</name>
@@ -35,12 +35,6 @@
                   <name>Émile Zola</name>
                   <birthDate>1840</birthDate>
                   <deathDate>1902</deathDate>
-                  <age/>
-               </person>
-               <person>
-                  <name>Gustave Flaubert</name>
-                  <birthDate>1821</birthDate>
-                  <deathDate>1880</deathDate>
                   <age/>
                </person>
             </personnes>
@@ -61,76 +55,235 @@
    </head>
    <body>
       <main class="slide ">
-         <h1 class="">Suppression (<code>xf:delete</code>)</h1>
-         <p>Pour supprimer des éléments on procède plus où moins de la même manière, mais il faut faire attention à une chose :</p>
+         <h1 class="">Insertion (<code>xf:insert</code>)</h1>
+         <p>Jusqu'ici, nous avons vu comme modifier des valeurs, voyons maintenant comment modifier une instance plus en profondeur. Supposons que nous ayons une liste de personnes :</p>
          <pre>
             <code class="language-xml">
-&lt;xf:delete nodeset="person"/&gt;
-                        </code>
-         </pre>
-         <p>Cette action supprime <strong>TOUS</strong> les éléments <code>person</code> (On n’utilise en effet pas <code>@ref</code>, mais <code>@nodeset</code>, tout comme avec <code>xf:repeat</code>). Si on est en présence d’une liste, il faut donc être en mesure de préciser quel élément nous souhaitons supprimer :</p>
-         <pre>
-            <code class="language-xml">
-&lt;xf:delete nodeset="person[1]"/&gt;
-&lt;xf:delete nodeset="person[last()]"/&gt;
-&lt;xf:delete nodeset="person[name = 'Victor Hugo']"/&gt;
-                        </code>
-         </pre>
-         <p>Une solution consiste à supprimer l’élément courant, dans le contexte d’un élément <code>xf:repeat</code> :</p>
-         <pre>
-            <code class="language-xml">
+&lt;xf:instance&gt;
+    &lt;listPerson xmlns=""&gt;
+        &lt;person&gt;
+            &lt;name&gt;Victor Hugo&lt;/name&gt;
+            &lt;birthDate&gt;1802&lt;/birthDate&gt;
+            &lt;deathDate&gt;1885&lt;/deathDate&gt;
+            &lt;age/&gt;
+        &lt;/person&gt;
+        &lt;person&gt;
+            &lt;name&gt;Émile Zola&lt;/name&gt;
+            &lt;birthDate&gt;1840&lt;/birthDate&gt;
+            &lt;deathDate&gt;1902&lt;/deathDate&gt;
+            &lt;age/&gt;
+        &lt;/person&gt;
+    &lt;/listPerson&gt;
+&lt;/xf:instance&gt;
+...
 &lt;xf:repeat nodeset="person"&gt;
-    &lt;xf:input class="inline" ref="name"/&gt;
-    &lt;xf:input class="inline" ref="birthDate"/&gt;
-    &lt;xf:input class="inline" ref="deathDate"/&gt;
-    &lt;xf:output class="inline" ref="age"/&gt;
-    &lt;xf:trigger&gt;
-        &lt;xf:label&gt;×&lt;/xf:label&gt;
-        &lt;xf:hint&gt;Supprimer&lt;/xf:hint&gt;
-        &lt;xf:action ev:event="DOMActivate"&gt;
-            &lt;xf:delete nodeset="."/&gt;
-        &lt;/xf:action&gt;
-    &lt;/xf:trigger&gt;
+    &lt;xf:input ref="name"/&gt;
+    &lt;xf:input ref="birthDate"/&gt;
+    &lt;xf:input ref="deathDate"/&gt;
+    &lt;xf:output ref="age"/&gt;
 &lt;/xf:repeat&gt;
-
+                        </code>
+         </pre>
+         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
+            <xf:repeat nodeset="person">
+               <xf:input incremental="true" ref="name">
+                  <xf:label>Nom</xf:label>
+               </xf:input>
+               <xf:input incremental="true" ref="birthDate">
+                  <xf:label>Naissance</xf:label>
+               </xf:input>
+               <xf:input incremental="true" ref="deathDate">
+                  <xf:label>Décès</xf:label>
+               </xf:input>
+               <xf:output ref="age">
+                  <xf:label>Âge</xf:label>
+               </xf:output>
+            </xf:repeat>
+         </xf:group>
+         <p>Il est possible d’ajouter une nouvelle personne à cette liste avec l’action <code>xf:insert</code> :</p>
+         <pre>
+            <code class="language-xml">
 &lt;xf:trigger&gt;
     &lt;xf:label&gt;+&lt;/xf:label&gt;
-    &lt;xf:hint&gt;Ajouter&lt;/xf:hint&gt;
+    &lt;xf:hint&gt;Ajouter une personne&lt;/xf:hint&gt;
     &lt;xf:action ev:event="DOMActivate"&gt;
-        &lt;xf:insert nodeset="person" origin="instance('blank')/person"/&gt;
+        &lt;xf:insert ref="person"/&gt;
+    &lt;/xf:action&gt;
+&lt;/xf:trigger&gt;
+                        </code>
+         </pre>
+         <p>Par défaut, le dernier élément est simplement dupliqué, avec les valeur qu’il contient.</p>
+         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
+            <xf:repeat nodeset="person">
+               <xf:input incremental="true" ref="name">
+                  <xf:label>Nom</xf:label>
+               </xf:input>
+               <xf:input incremental="true" ref="birthDate">
+                  <xf:label>Naissance</xf:label>
+               </xf:input>
+               <xf:input incremental="true" ref="deathDate">
+                  <xf:label>Décès</xf:label>
+               </xf:input>
+               <xf:output ref="age">
+                  <xf:label>Âge</xf:label>
+               </xf:output>
+            </xf:repeat>
+            <xf:trigger>
+               <xf:label>+</xf:label>
+               <xf:hint>Ajouter une personne</xf:hint>
+               <xf:action ev:event="DOMActivate">
+                  <xf:insert ref="person"/>
+               </xf:action>
+            </xf:trigger>
+         </xf:group>
+         <p>Pour vider le contenu on peut procéder avec <code>xf:setvalue</code> à la suite de la copie :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:trigger&gt;
+    &lt;xf:label&gt;+&lt;/xf:label&gt;
+    &lt;xf:hint&gt;Ajouter une personne&lt;/xf:hint&gt;
+    &lt;xf:action ev:event="DOMActivate"&gt;
+        &lt;xf:insert ref="person"/&gt;
+        &lt;xf:setvalue ref="person[last()]/name"/&gt;
+        &lt;xf:setvalue ref="person[last()]/birthDate"/&gt;
+        &lt;xf:setvalue ref="person[last()]/deathDate"/&gt;
     &lt;/xf:action&gt;
 &lt;/xf:trigger&gt;
                         </code>
          </pre>
          <xf:group xmlns="http://www.tei-c.org/ns/1.0">
             <xf:repeat nodeset="person">
-               <xf:input class="inline" incremental="true" ref="name">
+               <xf:input incremental="true" ref="name">
                   <xf:label>Nom</xf:label>
                </xf:input>
-               <xf:input class="inline" incremental="true" ref="birthDate">
+               <xf:input incremental="true" ref="birthDate">
                   <xf:label>Naissance</xf:label>
                </xf:input>
-               <xf:input class="inline" incremental="true" ref="deathDate">
+               <xf:input incremental="true" ref="deathDate">
                   <xf:label>Décès</xf:label>
                </xf:input>
-               <xf:output class="inline" ref="age">
+               <xf:output ref="age">
                   <xf:label>Âge</xf:label>
                </xf:output>
-               <xf:trigger>
-                  <xf:label>×</xf:label>
-                  <xf:hint>Supprimer</xf:hint>
-                  <xf:action ev:event="DOMActivate">
-                     <xf:delete nodeset="."/>
-                  </xf:action>
-               </xf:trigger>
             </xf:repeat>
             <xf:trigger>
                <xf:label>+</xf:label>
                <xf:hint>Ajouter une personne</xf:hint>
                <xf:action ev:event="DOMActivate">
-                  <xf:insert nodeset="person" origin="instance('blank')/person"/>
+                  <xf:insert ref="person"/>
+                  <xf:setvalue ref="person[last()]/name"/>
+                  <xf:setvalue ref="person[last()]/birthDate"/>
+                  <xf:setvalue ref="person[last()]/deathDate"/>
                </xf:action>
             </xf:trigger>
+         </xf:group>
+         <p>Toutefois cette méthode ne fonctionne pas si la liste est vide. La solution est alors de faire appel à une seconde instance :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:instance id="blank"&gt;
+    &lt;data xmlns=""&gt;
+        &lt;person&gt;
+            &lt;name/&gt;
+            &lt;birthDate/&gt;
+            &lt;deathDate/&gt;
+            &lt;age/&gt;
+        &lt;/person&gt;
+    &lt;/data&gt;
+&lt;/xf:instance&gt;
+                        </code>
+         </pre>
+         <p>Avec l’attribut <code>@origin</code> la procédure d’insertion se simplifie :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:trigger&gt;
+    &lt;xf:label&gt;+&lt;/xf:label&gt;
+    &lt;xf:hint&gt;Ajouter une personne&lt;/xf:hint&gt;
+    &lt;xf:action ev:event="DOMActivate"&gt;
+        &lt;xf:insert ref="person" origin="instance('blank')/person"/&gt;
+    &lt;/xf:action&gt;
+&lt;/xf:trigger&gt;
+                        </code>
+         </pre>
+         <p>Par défaut l’élément est ajouté à la fin de la liste, mais ce comportement peut être modifié :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:trigger&gt;
+    &lt;xf:label&gt;+&lt;/xf:label&gt;
+    &lt;xf:hint&gt;Insérer une personne au début&lt;/xf:hint&gt;
+    &lt;xf:action ev:event="DOMActivate"&gt;
+        &lt;xf:insert ref="person" at="1" position="before" origin="instance('blank')/person"/&gt;
+    &lt;/xf:action&gt;
+&lt;/xf:trigger&gt;
+                        </code>
+         </pre>
+         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
+            <xf:repeat nodeset="person">
+               <xf:input incremental="true" ref="name">
+                  <xf:label>Nom</xf:label>
+               </xf:input>
+               <xf:input incremental="true" ref="birthDate">
+                  <xf:label>Naissance</xf:label>
+               </xf:input>
+               <xf:input incremental="true" ref="deathDate">
+                  <xf:label>Décès</xf:label>
+               </xf:input>
+               <xf:output ref="age">
+                  <xf:label>Âge</xf:label>
+               </xf:output>
+            </xf:repeat>
+            <xf:trigger>
+               <xf:label>+</xf:label>
+               <xf:hint>Insérer une personne au début</xf:hint>
+               <xf:action ev:event="DOMActivate">
+                  <xf:insert ref="person"
+                             at="1"
+                             position="before"
+                             origin="instance('blank')/person"/>
+               </xf:action>
+            </xf:trigger>
+         </xf:group>
+         <p>Si on se trouve dans le contexte d’un élément <code>xf:repeat</code>, on peut même définir un index dynamique. Il est nécessaire d’attribuer un identifiant (<code>@id</code>) à l’élément <code>xf:repeat</code>. On peut alors utiliser la fonction <code>index()</code> pour déterminer une position :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:repeat nodeset="person" id="indexPerson"/&gt;
+
+&lt;xf:trigger&gt;
+    &lt;xf:label&gt;+&lt;/xf:label&gt;
+    &lt;xf:hint&gt;Insérer une personne au début&lt;/xf:hint&gt;
+    &lt;xf:action ev:event="DOMActivate"&gt;
+        &lt;xf:insert ref="person" at="index('indexPerson')" position="before" origin="instance('blank')/person"/&gt;
+        &lt;!-- &lt;xf:insert ref="person[index('indexPerson')]" position="before" origin="instance('blank')/person"/&gt; --&gt;
+    &lt;/xf:action&gt;
+&lt;/xf:trigger&gt;
+                        </code>
+         </pre>
+         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
+            <xf:group>
+               <xf:repeat nodeset="person" id="indexPerson">
+                  <xf:input incremental="true" ref="name">
+                     <xf:label>Nom</xf:label>
+                  </xf:input>
+                  <xf:input incremental="true" ref="birthDate">
+                     <xf:label>Naissance</xf:label>
+                  </xf:input>
+                  <xf:input incremental="true" ref="deathDate">
+                     <xf:label>Décès</xf:label>
+                  </xf:input>
+                  <xf:output ref="age">
+                     <xf:label>Âge</xf:label>
+                  </xf:output>
+               </xf:repeat>
+               <xf:trigger>
+                  <xf:label>+</xf:label>
+                  <xf:hint>Insérer une personne à une position précise</xf:hint>
+                  <xf:action ev:event="DOMActivate">
+                     <xf:insert ref="person"
+                                at="index('indexPerson')"
+                                position="before"
+                                origin="instance('blank')/person"/>
+                  </xf:action>
+               </xf:trigger>
+            </xf:group>
          </xf:group>
       </main>
       <script>hljs.highlightAll();</script>

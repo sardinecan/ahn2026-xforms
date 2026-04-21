@@ -22,90 +22,58 @@
             href="//unpkg.com/@catppuccin/highlightjs@1.0.1/css/catppuccin-latte.css"/>
       <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js">/**/</script>
       <script src="../assets/js/generateid.js"/>
-      <xf:model xmlns="http://www.tei-c.org/ns/1.0" id="M">
+      <xf:model xmlns="http://www.tei-c.org/ns/1.0">
          <xf:instance>
-            <data xmlns="">
-               <time/>
-            </data>
+            <person xmlns="">
+               <name>Victor Hugo</name>
+               <birthDate>1802</birthDate>
+               <deathDate>1885</deathDate>
+               <age/>
+            </person>
          </xf:instance>
-         <xf:dispatch ev:event="xforms-ready" name="TICK" targetid="M"/>
-         <xf:action ev:event="TICK">
-            <xf:setvalue ref="time" value="local-dateTime()"/>
-            <xf:dispatch name="TICK" targetid="M" delay="1000"/>
-         </xf:action>
+         <xf:bind nodeset="birthDate|deathDate|age" type="integer"/>
+         <xf:bind nodeset="name" readonly="true()"/>
+         <xf:bind nodeset="age" calculate="../deathDate - ../birthDate"/>
       </xf:model>
    </head>
    <body>
       <main class="slide ">
-         <h1 class="">Distribuer vos propres événements</h1>
-         <p>Nous avons parlé de la façon dont XForms distribue des événements à différents moments. Il est également possible de distribuer et capturer vos propres événements. Vous les distribuez avec l'action <code>&lt;dispatch&gt;</code> vers un élément avec un id particulier :</p>
+         <h1 class="">Attribute Value Templates (AVT)</h1>
+         <p>Outre <code>xf:output</code> qui permet d’insérer du texte dans la page web, XForms permet aussi d’interagir avec les attributs HTML par l’intermédiaire de l’<em>Attribute Value Templates</em> :</p>
          <pre>
             <code class="language-xml">
-&lt;xf:dispatch name="SAVE" targetid="element"/&gt;
+&lt;style type="text/css"&gt;
+    .positif {color: green}
+    .negatif {background-color: red; color: white}
+&lt;/style&gt;
                         </code>
          </pre>
-         <p>et les capturez de la manière habituelle.</p>
-         <p>Par exemple, s'il y a plusieurs endroits dans un XForm où vous capturez un événement et effectuez la même action, vous pourriez à la place distribuer votre propre événement vers un endroit pour gérer l'événement.</p>
-         <p>Un bon exemple est la capture des changements dans une instance, qui comme vous le savez peuvent être signalés par les événements <code>xforms-insert</code>, <code>xforms-delete</code> et <code>xforms-value-changed</code>.</p>
-         <p>Donc vous pouvez faire :</p>
+         <p>L’AVT permet d’évaluer une expression à l’intérieur d’un attribut. Il s’agit d’une expression placée entre accolades <code>{ }</code> à l'intérieur d'un attribut :</p>
          <pre>
             <code class="language-xml">
-&lt;xf:dispatch name="CHANGE" targetid="M" ev:event="xforms-insert"/&gt;
-&lt;xf:dispatch name="CHANGE" targetid="M" ev:event="xforms-delete"/&gt;
-&lt;xf:dispatch name="CHANGE" targetid="M" ev:event="xforms-value-changed"/&gt;
+&lt;span class="{if(age &amp;lt; 0, 'negatif', 'positif')}"&gt;
+    Âge au décès : &lt;xf:output ref="age"/&gt;
+&lt;/span&gt;
                         </code>
          </pre>
-         <p>et ensuite le capturer dans le modèle avec l'id M :</p>
-         <pre>
-            <code class="language-xml">
-&lt;xf:model id="M"&gt;
-    ...
-    &lt;xf:action ev:event="CHANGE"&gt;
-        ...
-    &lt;/xf:action&gt;
-&lt;/xf:model&gt;
-                        </code>
-         </pre>
-         <div>
-            <h2 class="">Dispatches différés</h2>
-            <p>Il est possible de distribuer un événement avec un délai, mesuré en millisecondes :</p>
-            <pre>
-               <code class="language-xml">
-&lt;xf:dispatch name="SAVE" targetid="M" delay="10000"/&gt;
-                            </code>
-            </pre>
-            <p>qui distribuera l'événement SAVE après 10 secondes. Par exemple, supposons que nous voulions faire une horloge. Au démarrage, nous envoyons un événement TICK :</p>
-            <pre>
-               <code class="language-xml">
-&lt;xf:action ev:event="xforms-ready"&gt;
-    &lt;xf:dispatch name="TICK" targetid="M"/&gt;
-&lt;/xf:action&gt;
-                            </code>
-            </pre>
-            <p>Nous répondons à cet événement en définissant une valeur à l'heure actuelle, et en distribuant un autre TICK avec un délai d'une seconde :</p>
-            <pre>
-               <code class="language-xml">
-&lt;xf:action ev:event="TICK"&gt;
-    &lt;xf:setvalue ref="time" value="local-dateTime()"/&gt;
-    &lt;xf:dispatch name="TICK" targetid="M" delay="1000"/&gt;
-&lt;/xf:action&gt;
-                            </code>
-            </pre>
-            <p>Ensuite, si nous affichons la valeur time, elle se mettra à jour toutes les secondes :</p>
-            <pre>
-               <code class="language-xml">
-&lt;xf:output ref="time"/&gt;
-                            </code>
-            </pre>
-            <xf:group xmlns="http://www.tei-c.org/ns/1.0" class="inset">
-               <xf:output ref="time">
-                  <xf:label>Heure actuelle</xf:label>
-               </xf:output>
-            </xf:group>
-         </div>
-         <div>
-            <h2 class="">Exercice</h2>
-         </div>
+         <p>Essayez-le en inversant les dates pour obtenir un âge négatif :</p>
+         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
+            <xf:output ref="name">
+               <xf:label>Nom</xf:label>
+            </xf:output>
+            <x:br/>
+            <xf:input ref="birthDate" incremental="true">
+               <xf:label>Année de naissance</xf:label>
+            </xf:input>
+            <x:br/>
+            <xf:input ref="deathDate" incremental="true">
+               <xf:label>Année de décès</xf:label>
+            </xf:input>
+            <x:br/>
+            <x:span class="{if(age &lt; 0, 'negatif', 'positif')}">
+                                Âge au décès : <xf:output ref="age"/>
+            </x:span>
+         </xf:group>
       </main>
       <script>hljs.highlightAll();</script>
    </body>

@@ -1,0 +1,102 @@
+<?xml-stylesheet href="../assets/xsltforms/xsltforms.xsl" type="text/xsl"?><html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ahn="http://ahn2026/ns/1.0"
+      xmlns:ev="http://www.w3.org/2001/xml-events"
+      xmlns:file="http://expath.org/ns/file"
+      xmlns:tei="http://www.tei-c.org/ns/1.0"
+      xmlns:x="http://www.w3.org/1999/xhtml"
+      xmlns:xf="http://www.w3.org/2002/xforms"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:xs="http://www.w3.org/2001/XMLSchema"
+      xf:bogus="fix/Firefox/namespace/issue"
+      xs:bogus="fix/Firefox/namespace/issue"
+      xlink:bogus="fix/Firefox/namespace/issue"
+      ahn:bogus="fix/Firefox/namespace/issue"
+      tei:bogus="fix/Firefox/namespace/issue"
+      lang="fr">
+   <head>
+      <meta charset="utf-8"/>
+      <title>AHN 2026Formation XForms</title>
+      <link rel="stylesheet" href="../assets/css/main.css" type="text/css"/>
+      <link rel="stylesheet" href="../assets/css/tei.css" type="text/css"/>
+      <link rel="stylesheet"
+            href="//unpkg.com/@catppuccin/highlightjs@1.0.1/css/catppuccin-latte.css"/>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js">/**/</script>
+      <script src="../assets/js/generateid.js"/>
+      <xf:model xmlns="http://www.tei-c.org/ns/1.0">
+         <xf:instance>
+            <person xmlns="">
+               <name>Victor Hugo</name>
+               <birthDate>1802</birthDate>
+               <deathDate>1885</deathDate>
+            </person>
+         </xf:instance>
+      </xf:model>
+   </head>
+   <body>
+      <main class="slide ">
+         <h1 class="">Miscelanea</h1>
+         <p>XSLTForms implémente une série d’instruction et d’éléments qui ne font pas partie du standard XForms 1.1, mais qui peuvent être utiles.</p>
+         <div>
+            <h2 class="">
+               <code>xf:var</code>
+            </h2>
+            <p>Les variables sont un ajout de XForms 2.0 :<code>xf:var</code>
+            </p>
+            <pre>
+               <code class="language-">
+&lt;xf:var name="name" value="name"/&gt;
+&lt;xf:output value="concat('Nom : ', $name)"/&gt;
+                            </code>
+            </pre>
+            <xf:group xmlns="http://www.tei-c.org/ns/1.0">
+               <xf:var name="name" value="name"/>
+               <xf:output value="concat('Nom : ', $name)"/>
+            </xf:group>
+         </div>
+         <div>
+            <h2 class="">XForms Debugger</h2>
+            <p>Accessible depuis la touche <code>f1</code>, on bénéficie, depuis le navigateur, d’une console XPath pour contrôler les instances de données. Il est aussi possible d’activer Fleur, un processeur XQuery en Javascript, mais ces fonctionnalités sont mal documentées.</p>
+            <pre>
+               <code class="language-">
+&lt;xf:var name="name" value="name"/&gt;
+&lt;xf:output value="concat('Nom : ', $name)"/&gt;
+                            </code>
+            </pre>
+            <xf:group xmlns="http://www.tei-c.org/ns/1.0">
+               <xf:var name="name" value="name"/>
+               <xf:output value="concat('Nom : ', $name)"/>
+            </xf:group>
+         </div>
+         <div>
+            <h2 class="">
+               <code>serialize()</code>
+            </h2>
+            <p>Pour visualiser la sérialisation d’une donnée</p>
+         </div>
+         <div>
+            <h2 class="">
+               <code>transform()</code>
+            </h2>
+            <p>
+               <code>transform()</code> pour transformer une instance à l’aide d’un feuille XSLT</p>
+            <pre>
+               <code class="language-">
+&lt;xf:output value="transform(instance('text'),'../assets/xsl/tei2html.xsl', false)" mediatype="text/html"/&gt;
+                            </code>
+            </pre>
+         </div>
+         <div>
+            <h2 class="">
+               <code>is-valid()</code>
+            </h2>
+            <p>La fonction <code>is-valid()</code> permet d’évaluer la validité d’un nœud. Un nœud est valide si les nœuds descendants sont valides également.</p>
+            <pre>
+               <code class="language-">
+&lt;div class="{ if(is-valid(.), 'valid', 'invalid') }"&gt;…&lt;/div&gt;
+                            </code>
+            </pre>
+         </div>
+      </main>
+      <script>hljs.highlightAll();</script>
+   </body>
+</html>

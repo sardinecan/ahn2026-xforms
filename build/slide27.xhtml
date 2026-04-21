@@ -30,106 +30,53 @@
                   <birthDate>1802</birthDate>
                   <deathDate>1885</deathDate>
                </person>
+               <person dead="false">
+                  <name>Annie Ernaux</name>
+                  <birthDate>1940</birthDate>
+                  <deathDate/>
+               </person>
             </personnes>
          </xf:instance>
+         <xf:bind nodeset="person/birthDate|person/deathDate|person/age" type="integer"/>
          <xf:bind nodeset="person/@dead" type="boolean"/>
-         <xf:bind nodeset="person/birthDate"
-                  type="integer"
-                  constraint=". &gt; 1500 and . &lt; 2026"/>
-         <xf:bind nodeset="person/deathDate"
-                  type="integer"
-                  relevant="../@dead = 'true'"
-                  constraint=". &gt; ../birthDate and . &lt; 2026"/>
-         <xf:bind nodeset="person/name" required="true()"/>
-         <xf:instance id="two">
-            <person xmlns="">
-               <name/>
-               <birthDate/>
-            </person>
-         </xf:instance>
-         <xf:bind nodeset="instance('two')/name" required="true()"/>
-         <xf:bind nodeset="instance('two')/birthDate" type="integer"/>
+         <xf:bind nodeset="person/deathDate" relevant="../@dead = 'true'"/>
+         <xf:submission id="save"
+                        method="put"
+                        resource="file:personnes.xml"
+                        replace="none"/>
       </xf:model>
    </head>
    <body>
       <main class="slide ">
-         <h1 class="">Validation des données</h1>
-         <p>Il existe 3 mécanismes de validation des données proposés par XForms. Nous en avons déjà vu un avec l’attribut <code>@type</code> associé à un élément <code>xf:bind</code> :</p>
+         <h1 class="">Relevance (Pertinence)</h1>
+         <p>Vous pouvez spécifier les conditions dans lesquelles certaines données sont pertinentes. Par exemple, la date de décès n'est pertinente que si la personne est décédée :</p>
          <pre>
             <code class="language-xml">
-&lt;xf:bind nodeset="birthDate" type="integer"/&gt;
+&lt;xf:bind nodeset="deathDate" relevant="../@dead = 'true'"/&gt;
                         </code>
          </pre>
-         <p>La seconde méthode consiste à rendre une donnée obligatoire avec l’attribut <code>@required</code> :</p>
-         <pre>
-            <code class="language-xml">
-&lt;xf:bind nodeset="name" required="true()"/&gt;
-&lt;xf:bind nodeset="deathDate" required="../@dead = 'true'"/&gt;
-                        </code>
-         </pre>
-         <p>Si une valeur est requise et n'a pas de valeur, elle est affichée différemment. Par défaut, on ne peut pas soumettre des données contenant des valeurs requises vides. On peut toutefois modifier ce comportement avec l’attribut <code>@validate="false"</code> sur l'élément <code>xf:submission</code>.</p>
-         <xf:group xmlns="http://www.tei-c.org/ns/1.0" ref="instance('two')">
-            <xf:input ref="name" incremental="true">
-               <xf:label>Nom</xf:label>
-            </xf:input>
-            <xf:input ref="birthDate" incremental="true">
-               <xf:label>Année de naissance</xf:label>
-            </xf:input>
-         </xf:group>
-         <p>La propriété <code>@relevant</code> est prioritaire sur <code>@required</code> : si une valeur est requise mais non pertinente, ce n'est pas un problème si elle n'a pas de valeur.</p>
-         <p>Enfin, la troisième méthode de validation porte sur la contrainte des valeurs (<code>@constraint</code>) :</p>
-         <pre>
-            <code class="language-xml">
-&lt;xf:bind nodeset="birthDate" type="integer" constraint=". &gt; 1500 and . &lt; 2026"/&gt;
-&lt;xf:bind nodeset="deathDate" type="integer" constraint=". &gt; ../birthDate and . &lt; 2026"/&gt;
-                        </code>
-         </pre>
-         <p>Ces trois propriétés déterminent si une valeur est valide ou non. Si une valeur n'est pas valide, les contrôles qui y sont attachés seront affichés en conséquence :</p>
+         <p>La pertinence a deux effets principaux : un contrôle lié à une valeur non pertinente n'est pas affiché, et lors d'une soumission, par défaut les éléments non pertinents ne sont pas inclus dans les données (vous pouvez modifier ce comportement avec <code>relevant="false"</code> sur l'élément submission). Essayez de cocher/décocher "Décédé" :</p>
          <xf:group xmlns="http://www.tei-c.org/ns/1.0">
             <xf:repeat nodeset="person">
-               <xf:input ref="name" incremental="true">
+               <xf:input ref="name">
                   <xf:label>Nom</xf:label>
                </xf:input>
                <xf:input ref="birthDate" incremental="true">
                   <xf:label>Année de naissance</xf:label>
                </xf:input>
+               <xf:input ref="@dead">
+                  <xf:label>Décédé</xf:label>
+               </xf:input>
                <xf:input ref="deathDate" incremental="true">
                   <xf:label>Année de décès</xf:label>
                </xf:input>
             </xf:repeat>
+            <xf:submit submission="save">
+               <xf:label>Sauvegarder</xf:label>
+            </xf:submit>
          </xf:group>
-         <p>Les données qui contiennent des valeurs non valides ne peuvent pas être soumises (sauf si on ajoute <code>@validate="false"</code> à l'élément <code>xf:submission</code>).</p>
-         <p>Tout contrôle lié à une valeur peut inclure un élément <code>xf:alert</code> pour avertir des problèmes de validité :</p>
-         <pre>
-            <code class="language-xml">
-&lt;xf:input ref="birthDate" incremental="true"&gt;
-    &lt;xf:label&gt;Année de naissance&lt;/xf:label&gt;
-    &lt;xf:alert&gt;Doit être un entier entre 1500 et 2026&lt;/xf:alert&gt;
-&lt;/xf:input&gt;
-&lt;xf:input ref="deathDate" incremental="true"&gt;
-    &lt;xf:label&gt;Année de décès&lt;/xf:label&gt;
-    &lt;xf:alert&gt;Doit être postérieure à &lt;xf:output ref="../birthDate"/&gt; et avant 2026&lt;/xf:alert&gt;
-&lt;/xf:input&gt;
-                        </code>
-         </pre>
-         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:repeat nodeset="person">
-               <xf:input ref="name" incremental="true">
-                  <xf:label>Nom</xf:label>
-                  <xf:alert>Le nom est requis</xf:alert>
-               </xf:input>
-               <x:br/>
-               <xf:input ref="birthDate" incremental="true">
-                  <xf:label>Année de naissance</xf:label>
-                  <xf:alert>Doit être un entier entre 1500 et 2026</xf:alert>
-               </xf:input>
-               <x:br/>
-               <xf:input ref="deathDate" incremental="true">
-                  <xf:label>Année de décès</xf:label>
-                  <xf:alert>Doit être postérieure à <xf:output class="inline" ref="../birthDate"/> et avant 2026</xf:alert>
-               </xf:input>
-            </xf:repeat>
-         </xf:group>
+         <p>En sauvegardant, vérifiez le fichier <code>personnes.xml</code>.</p>
+         <p>Il est important de noter qu'il existe également un autre type de pertinence : si un contrôle est lié à un élément qui n'existe tout simplement pas (par exemple s'il a été supprimé), le contrôle n'est pas non plus affiché. Si l'élément est réinséré, le contrôle réapparaîtra.</p>
       </main>
       <script>hljs.highlightAll();</script>
    </body>

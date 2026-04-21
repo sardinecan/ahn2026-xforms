@@ -23,76 +23,120 @@
       <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js">/**/</script>
       <script src="../assets/js/generateid.js"/>
       <xf:model xmlns="http://www.tei-c.org/ns/1.0">
-         <xf:instance>
-            <errors xmlns=""/>
+         <xf:instance id="text-from-jd">
+            <data xmlns="">
+               <text/>
+            </data>
          </xf:instance>
-         <xf:submission id="error1"
+         <xf:submission resource="https://juliettedrouet.univ-rouen.fr/lettres/jd.entry.3808/source"
+                        serialization="none"
                         method="get"
-                        resource="/ma/ressource/inconnue.xml"
-                        replace="none"
-                        serialization="none">
-            <xf:message ev:event="xforms-submit-error">
-                                    Erreur de soumission. 
-                                    error-type: <xf:output value="event('error-type')"/> 
-                                    error-message: <xf:output value="event('error-message')"/> 
-                                    response-status-code: <xf:output value="event('response-status-code')"/> 
-                                    response-reason-phrase: <xf:output value="event('response-reason-phrase')"/> 
-                                    resource-uri: <xf:output value="event('resource-uri')"/>
-            </xf:message>
-         </xf:submission>
+                        replace="instance"
+                        instance="text-from-jd"
+                        id="gettext"/>
+         <xf:submission resource="https://juliettedrouet.univ-rouen.fr/lettres/jd.entry.3808"
+                        serialization="none"
+                        method="get"
+                        replace="all"
+                        id="getview"/>
       </xf:model>
    </head>
    <body>
       <main class="slide ">
-         <h1 class="">Erreurs de soumission</h1>
-         <p>Après une soumission, un événement est propagé à l'élément <code>xf:submission</code> :</p>
+         <h1 class="">Soumission - <code>xf:submission</code>
+         </h1>
+         <p>Le module de soumission d’XForms est très complet et couvre un large éventail d’actions pour collecter, envoyer et stocker des données.</p>
+         <p>Il permet notamment de définir :</p>
          <ul>
+            <li>1) ce qu’on souhaite envoyer</li>
+            <li>2) où on souhaite l’envoyer</li>
+            <li>3) ce qu'on veut faire du résultat</li>
+         </ul>
+         <p>Tout ces paramètres sont définis avec l’élément <code>xf:submission</code> placé dans l'élément <code>xf:model</code>.</p>
+         <ul>
+            <li>L’attribut <code>@ref</code> précise l’instance (ou le segment d’instance) qu'on souhaite envoyer (sans indication, il s’agit de l’instance par défaut) ; si on ne souhaite envoyer aucune donnée mais simplement en récupérer, on utilise l’attribut <code>@serialization="none"</code> ;</li>
+            <li>l’attribut <code>@resource</code> indique où envoyer et d’où recevoir les données ;</li>
             <li>
-               <code>xforms-submit-done</code> en cas de succès</li>
-            <li>
-               <code>xforms-submit-error</code> en cas d’échec</li>
+                                Enfin l’attribut <code>@replace</code> permet de spécifier ce qu'il faut faire des données reçues :
+                                <ul>
+                  <li>
+                     <code>@replace="none"</code> : ne rien faire</li>
+                  <li>
+                     <code>@replace="instance"</code> : remplacer une instance. L’instance à remplacer est alors indiquée avec l’attribut <code>@instance="idInstance"</code>
+                  </li>
+                  <li>
+                     <code>@replace="all"</code> : remplace toute la page</li>
+               </ul>
+            </li>
          </ul>
          <pre>
             <code class="language-xml">
-&lt;xf:submission resource="maRessource" ...&gt;
-    &lt;xf:action ev:event="xforms-submit-error"&gt;
-        ...
-    &lt;/xf:action&gt;
-&lt;/xf:submission&gt;
+&lt;xf:submission resource="https://juliettedrouet.univ-rouen.fr/lettres/jd.entry.3808/source"
+    serialization="none" 
+    method="get"
+    replace="instance"
+    instance="text-from-jd"/&gt;
                         </code>
          </pre>
-         <p>Certains événements fournissent des informations supplémentaires accessibles via la fonction <code>event()</code>. C’est le cas avec <code>xforms-submit-error</code> qui dispose notamment de :</p>
-         <ul>
-            <li>
-               <code>error-type</code> : type d'erreur</li>
-            <li>
-               <code>error-message</code> : détails supplémentaires</li>
-            <li>
-               <code>response-status-code</code> : code HTTP du serveur (ex : 404)</li>
-            <li>
-               <code>response-reason-phrase</code> : message du serveur (ex : "fichier introuvable")</li>
-            <li>
-               <code>resource-uri</code> : URI utilisée pour la soumission</li>
-         </ul>
-         <p>Ces informations peuvent être affichées dans une fenêtre modale à l’aide de l’élément <code>xf:message</code> :</p>
          <pre>
             <code class="language-xml">
-&lt;xf:submission resource="..." ...&gt;
-    &lt;xf:action ev:event="xforms-submit-error"&gt;
-        &lt;xf:message&gt;Erreur de soumission.
-            type d'erreur : &lt;xf:output value="event('error-type')"/&gt;
-            message : &lt;xf:output value="event('error-message')"/&gt;
-            code de statut : &lt;xf:output value="event('response-status-code')"/&gt;
-            raison : &lt;xf:output value="event('response-reason-phrase')"/&gt;
-            URI : &lt;xf:output value="event('resource-uri')"/&gt;
-        &lt;/xf:message&gt;
-    &lt;/xf:action&gt;
+&lt;xf:submission
+    resource="https://juliettedrouet.univ-rouen.fr/lettres/jd.entry.3808"
+    serialization="none"
+    method="get"
+    replace="all"/&gt;
+                        </code>
+         </pre>
+         <p>Tout comme avec l’élément <code>xf:load</code>, si l’url à atteindre doit être construite, on peut remplacer l’attribut <code>@resource</code> par l’élément <code>xf:resource</code>.</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:submission
+    serialization="none"
+    method="get"
+    replace="all"&gt;
+    &lt;xf:resource value="concat('https://juliettedrouet.univ-rouen.fr/lettres/', 'jd.entry.3808')"/&gt;
 &lt;/xf:submission&gt;
                         </code>
          </pre>
-         <xf:submit xmlns="http://www.tei-c.org/ns/1.0" submission="error1">
-            <xf:label>Erreur</xf:label>
-         </xf:submit>
+         <p>On peut même avoir plusieurs processus de soumission au sein d’un même modèle. Il est alors nécessaire de leur attribuer un identifiant avec l’attribut <code>@id</code> :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:submission id="gettext" ...
+                        </code>
+         </pre>
+         <p>Pour déclencher une soumission, on a généralement recours à l’élément <code>xf:submit</code> :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:submit&gt;
+    &lt;xf:label&gt;Récupérer le fichier TEI&lt;/xf:label&gt;
+&lt;/xf:submit&gt;
+&lt;xf:submit submission="getview"&gt;
+    &lt;xf:label&gt;Voir en ligne&lt;/xf:label&gt;
+&lt;/xf:submit&gt;
+                        </code>
+         </pre>
+         <p>Mais on peut aussi utiliser un <code>xf:trigger</code> :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:trigger&gt;
+    &lt;xf:label&gt;Voir en ligne&lt;/xf:label&gt;
+    &lt;xf:action ev:event="DOMActivate"&gt;
+        &lt;xf:send submission="getview"/&gt;
+    &lt;/xf:action&gt;
+&lt;/xf:trigger&gt;
+                        </code>
+         </pre>
+         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
+            <xf:submit submission="gettext">
+               <xf:label>Récupérer le fichier TEI</xf:label>
+            </xf:submit>
+            <x:br/>
+            <xf:submit submission="getview">
+               <xf:label>Voir en ligne</xf:label>
+            </xf:submit>
+            <x:br/>
+            <xf:output value="serialize(.)"/>
+         </xf:group>
       </main>
       <script>hljs.highlightAll();</script>
    </body>
