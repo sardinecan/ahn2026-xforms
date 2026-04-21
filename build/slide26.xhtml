@@ -1,0 +1,83 @@
+<?xml-stylesheet href="../assets/xsltforms/xsltforms.xsl" type="text/xsl"?><html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ahn="http://ahn2026/ns/1.0"
+      xmlns:ev="http://www.w3.org/2001/xml-events"
+      xmlns:file="http://expath.org/ns/file"
+      xmlns:tei="http://www.tei-c.org/ns/1.0"
+      xmlns:x="http://www.w3.org/1999/xhtml"
+      xmlns:xf="http://www.w3.org/2002/xforms"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:xs="http://www.w3.org/2001/XMLSchema"
+      xf:bogus="fix/Firefox/namespace/issue"
+      xs:bogus="fix/Firefox/namespace/issue"
+      xlink:bogus="fix/Firefox/namespace/issue"
+      ahn:bogus="fix/Firefox/namespace/issue"
+      tei:bogus="fix/Firefox/namespace/issue"
+      lang="fr">
+   <head>
+      <meta charset="utf-8"/>
+      <title>AHN 2026Formation XForms</title>
+      <link rel="stylesheet" href="../assets/css/main.css" type="text/css"/>
+      <link rel="stylesheet" href="../assets/css/tei.css" type="text/css"/>
+      <link rel="stylesheet"
+            href="//unpkg.com/@catppuccin/highlightjs@1.0.1/css/catppuccin-latte.css"/>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js">/**/</script>
+      <script src="../assets/js/generateid.js"/>
+      <xf:model xmlns="http://www.tei-c.org/ns/1.0">
+         <xf:instance>
+            <personnes xmlns="">
+               <person dead="true">
+                  <name>Victor Hugo</name>
+                  <birthDate>1802</birthDate>
+                  <deathDate>1885</deathDate>
+               </person>
+               <person dead="false">
+                  <name>Annie Ernaux</name>
+                  <birthDate>1940</birthDate>
+                  <deathDate/>
+               </person>
+            </personnes>
+         </xf:instance>
+         <xf:bind nodeset="person/birthDate|person/deathDate|person/age" type="integer"/>
+         <xf:bind nodeset="person/@dead" type="boolean"/>
+         <xf:bind nodeset="person/deathDate" relevant="../@dead = 'true'"/>
+         <xf:submission id="save"
+                        method="put"
+                        resource="file:personnes.xml"
+                        replace="none"/>
+      </xf:model>
+   </head>
+   <body>
+      <main class="slide ">
+         <h1 class="">Relevance (Pertinence)</h1>
+         <p>Vous pouvez spécifier les conditions dans lesquelles certaines données sont pertinentes. Par exemple, la date de décès n'est pertinente que si la personne est décédée :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:bind nodeset="deathDate" relevant="../@dead = 'true'"/&gt;
+                        </code>
+         </pre>
+         <p>La pertinence a deux effets principaux : un contrôle lié à une valeur non pertinente n'est pas affiché, et lors d'une soumission, par défaut les éléments non pertinents ne sont pas inclus dans les données (vous pouvez modifier ce comportement avec <code>relevant="false"</code> sur l'élément submission). Essayez de cocher/décocher "Décédé" :</p>
+         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
+            <xf:repeat ref="person">
+               <xf:input ref="name">
+                  <xf:label>Nom</xf:label>
+               </xf:input>
+               <xf:input ref="birthDate" incremental="true">
+                  <xf:label>Année de naissance</xf:label>
+               </xf:input>
+               <xf:input ref="@dead">
+                  <xf:label>Décédé</xf:label>
+               </xf:input>
+               <xf:input ref="deathDate" incremental="true">
+                  <xf:label>Année de décès</xf:label>
+               </xf:input>
+            </xf:repeat>
+            <xf:submit submission="save">
+               <xf:label>Sauvegarder</xf:label>
+            </xf:submit>
+         </xf:group>
+         <p>En sauvegardant, vérifiez le fichier <code>personnes.xml</code>.</p>
+         <p>Il est important de noter qu'il existe également un autre type de pertinence : si un contrôle est lié à un élément qui n'existe tout simplement pas (par exemple s'il a été supprimé), le contrôle n'est pas non plus affiché. Si l'élément est réinséré, le contrôle réapparaîtra.</p>
+      </main>
+      <script>hljs.highlightAll();</script>
+   </body>
+</html>

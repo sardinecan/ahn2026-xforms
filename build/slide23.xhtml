@@ -1,0 +1,138 @@
+<?xml-stylesheet href="../assets/xsltforms/xsltforms.xsl" type="text/xsl"?><html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ahn="http://ahn2026/ns/1.0"
+      xmlns:ev="http://www.w3.org/2001/xml-events"
+      xmlns:file="http://expath.org/ns/file"
+      xmlns:tei="http://www.tei-c.org/ns/1.0"
+      xmlns:x="http://www.w3.org/1999/xhtml"
+      xmlns:xf="http://www.w3.org/2002/xforms"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:xs="http://www.w3.org/2001/XMLSchema"
+      xf:bogus="fix/Firefox/namespace/issue"
+      xs:bogus="fix/Firefox/namespace/issue"
+      xlink:bogus="fix/Firefox/namespace/issue"
+      ahn:bogus="fix/Firefox/namespace/issue"
+      tei:bogus="fix/Firefox/namespace/issue"
+      lang="fr">
+   <head>
+      <meta charset="utf-8"/>
+      <title>AHN 2026Formation XForms</title>
+      <link rel="stylesheet" href="../assets/css/main.css" type="text/css"/>
+      <link rel="stylesheet" href="../assets/css/tei.css" type="text/css"/>
+      <link rel="stylesheet"
+            href="//unpkg.com/@catppuccin/highlightjs@1.0.1/css/catppuccin-latte.css"/>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js">/**/</script>
+      <script src="../assets/js/generateid.js"/>
+      <xf:model xmlns="http://www.tei-c.org/ns/1.0">
+         <xf:instance id="personnes">
+            <personnes xmlns="">
+               <person>
+                  <name>Victor Hugo</name>
+                  <birthDate>1802</birthDate>
+                  <deathDate>1885</deathDate>
+                  <age/>
+               </person>
+               <person>
+                  <name>Émile Zola</name>
+                  <birthDate>1840</birthDate>
+                  <deathDate>1902</deathDate>
+                  <age/>
+               </person>
+               <person>
+                  <name>Gustave Flaubert</name>
+                  <birthDate>1821</birthDate>
+                  <deathDate>1880</deathDate>
+                  <age/>
+               </person>
+            </personnes>
+         </xf:instance>
+         <xf:instance id="blank">
+            <data xmlns="">
+               <person>
+                  <name/>
+                  <birthDate/>
+                  <deathDate/>
+                  <age/>
+               </person>
+            </data>
+         </xf:instance>
+         <xf:bind nodeset="person/birthDate|person/deathDate|person/age" type="integer"/>
+         <xf:bind nodeset="person/age" calculate="../deathDate - ../birthDate"/>
+      </xf:model>
+   </head>
+   <body>
+      <main class="slide ">
+         <h1 class="">Suppression (<code>xf:delete</code>)</h1>
+         <p>Pour supprimer des éléments on procède plus où moins de la même manière, mais il faut faire attention à une chose :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:delete nodeset="person"/&gt;
+                        </code>
+         </pre>
+         <p>Cette action supprime <strong>TOUS</strong> les éléments <code>person</code> (On n’utilise en effet pas <code>@ref</code>, mais <code>@nodeset</code>, tout comme avec <code>xf:repeat</code>). Si on est en présence d’une liste, il faut donc être en mesure de préciser quel élément nous souhaitons supprimer :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:delete nodeset="person[1]"/&gt;
+&lt;xf:delete nodeset="person[last()]"/&gt;
+&lt;xf:delete nodeset="person[name = 'Victor Hugo']"/&gt;
+                        </code>
+         </pre>
+         <p>Une solution consiste à supprimer l’élément courant, dans le contexte d’un élément <code>xf:repeat</code> :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:repeat nodeset="person"&gt;
+    &lt;xf:input class="inline" ref="name"/&gt;
+    &lt;xf:input class="inline" ref="birthDate"/&gt;
+    &lt;xf:input class="inline" ref="deathDate"/&gt;
+    &lt;xf:output class="inline" ref="age"/&gt;
+    &lt;xf:trigger&gt;
+        &lt;xf:label&gt;×&lt;/xf:label&gt;
+        &lt;xf:hint&gt;Supprimer&lt;/xf:hint&gt;
+        &lt;xf:action ev:event="DOMActivate"&gt;
+            &lt;xf:delete nodeset="."/&gt;
+        &lt;/xf:action&gt;
+    &lt;/xf:trigger&gt;
+&lt;/xf:repeat&gt;
+
+&lt;xf:trigger&gt;
+    &lt;xf:label&gt;+&lt;/xf:label&gt;
+    &lt;xf:hint&gt;Ajouter&lt;/xf:hint&gt;
+    &lt;xf:action ev:event="DOMActivate"&gt;
+        &lt;xf:insert nodeset="person" origin="instance('blank')/person"/&gt;
+    &lt;/xf:action&gt;
+&lt;/xf:trigger&gt;
+                        </code>
+         </pre>
+         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
+            <xf:repeat ref="person">
+               <xf:input class="inline" incremental="true" ref="name">
+                  <xf:label>Nom</xf:label>
+               </xf:input>
+               <xf:input class="inline" incremental="true" ref="birthDate">
+                  <xf:label>Naissance</xf:label>
+               </xf:input>
+               <xf:input class="inline" incremental="true" ref="deathDate">
+                  <xf:label>Décès</xf:label>
+               </xf:input>
+               <xf:output class="inline" ref="age">
+                  <xf:label>Âge</xf:label>
+               </xf:output>
+               <xf:trigger>
+                  <xf:label>×</xf:label>
+                  <xf:hint>Supprimer</xf:hint>
+                  <xf:action ev:event="DOMActivate">
+                     <xf:delete nodeset="."/>
+                  </xf:action>
+               </xf:trigger>
+            </xf:repeat>
+            <xf:trigger>
+               <xf:label>+</xf:label>
+               <xf:hint>Ajouter une personne</xf:hint>
+               <xf:action ev:event="DOMActivate">
+                  <xf:insert nodeset="person" origin="instance('blank')/person"/>
+               </xf:action>
+            </xf:trigger>
+         </xf:group>
+      </main>
+      <script>hljs.highlightAll();</script>
+   </body>
+</html>

@@ -1,0 +1,115 @@
+<?xml-stylesheet href="../assets/xsltforms/xsltforms.xsl" type="text/xsl"?><html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ahn="http://ahn2026/ns/1.0"
+      xmlns:ev="http://www.w3.org/2001/xml-events"
+      xmlns:file="http://expath.org/ns/file"
+      xmlns:tei="http://www.tei-c.org/ns/1.0"
+      xmlns:x="http://www.w3.org/1999/xhtml"
+      xmlns:xf="http://www.w3.org/2002/xforms"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:xs="http://www.w3.org/2001/XMLSchema"
+      xf:bogus="fix/Firefox/namespace/issue"
+      xs:bogus="fix/Firefox/namespace/issue"
+      xlink:bogus="fix/Firefox/namespace/issue"
+      ahn:bogus="fix/Firefox/namespace/issue"
+      tei:bogus="fix/Firefox/namespace/issue"
+      lang="fr">
+   <head>
+      <meta charset="utf-8"/>
+      <title>AHN 2026Formation XForms</title>
+      <link rel="stylesheet" href="../assets/css/main.css" type="text/css"/>
+      <link rel="stylesheet" href="../assets/css/tei.css" type="text/css"/>
+      <link rel="stylesheet"
+            href="//unpkg.com/@catppuccin/highlightjs@1.0.1/css/catppuccin-latte.css"/>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js">/**/</script>
+      <script src="../assets/js/generateid.js"/>
+      <xf:model xmlns="http://www.tei-c.org/ns/1.0">
+         <xf:instance>
+            <data xmlns="">
+               <nom>Victor Hugo</nom>
+               <dateNaissance>1802</dateNaissance>
+            </data>
+         </xf:instance>
+         <!--<xf:bind nodeset="age" type="integer"/>
+                            <xf:bind nodeset="dateNaissance" type="date"/>-->
+      </xf:model>
+   </head>
+   <body>
+      <main class="slide ">
+         <h1 class="">Visualiser - <code>xf:output</code>
+         </h1>
+         <p>L’élément <a href="https://www.w3.org/TR/xforms11/#ui-output" target="_blank">
+               <code>xf:output</code>
+            </a> ne dispose pas d’un équivalent HTML. Il permet d’afficher directement la valeur textuelle d’une donnée. Tout comme avec l’élément <code>xf:input</code>, on accède aux nœuds d’une instance par l’intermédiaire de l'attribut <code>@ref</code>.</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:output ref="nom"/&gt;
+&lt;xf:output ref="dateNaissance"/&gt;
+                        </code>
+         </pre>
+         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
+            <xf:output ref="nom"/>
+            <x:br/>
+            <xf:output ref="dateNaissance"/>
+         </xf:group>
+         <p>L’attribut <code>@value</code> permet quant à lui d’interpréter des expressions XPath :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:output value="concat('Nom :', nom)"/&gt;
+                        </code>
+         </pre>
+         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
+            <xf:output value="concat('Nom : ', nom)"/>
+         </xf:group>
+         <p>Un label facultatif peut être associé à tous les champs ou contrôles XForms avec l’élément <code>xf:label</code>
+         </p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:output value="substring(dateNaissance, 1, 4)"&gt;
+  &lt;xf:label&gt;Année de naissance :&lt;/xf:label&gt;
+&lt;/xf:output&gt;
+                        </code>
+         </pre>
+         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
+            <xf:output value="substring(dateNaissance, 1, 4)">
+               <xf:label>Année de naissance : </xf:label>
+            </xf:output>
+         </xf:group>
+         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
+            <xf:label>Input</xf:label>
+            <xf:input ref="nom" incremental="true">
+               <xf:label>Nom</xf:label>
+            </xf:input>
+            <x:br/>
+            <xf:input ref="dateNaissance" incremental="true">
+               <xf:label>Date de naissance</xf:label>
+            </xf:input>
+         </xf:group>
+         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
+            <xf:label>Output</xf:label>
+            <xf:group>
+               <xf:output ref="nom"/>
+               <x:br/>
+               <xf:output ref="dateNaissance"/>
+            </xf:group>
+         </xf:group>
+         <p>XSLTForms propose en plus deux fonctions très utiles :</p>
+         <ul>
+            <li>
+               <code>serialize()</code> pour visualiser la sérialisation d’une donnée</li>
+            <li>
+               <code>transform()</code> pour effectuer transformer une instance à l’aide d’un feuille XSLT</li>
+         </ul>
+         <pre>
+            <code class="language-xml">
+&lt;xf:output value="serialize(.)"/&gt;
+                        </code>
+         </pre>
+         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
+            <xf:output value="serialize(.)">
+               <xf:label>Sérialisation XML :</xf:label>
+            </xf:output>
+         </xf:group>
+      </main>
+      <script>hljs.highlightAll();</script>
+   </body>
+</html>

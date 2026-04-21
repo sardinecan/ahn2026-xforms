@@ -1,0 +1,51 @@
+<!DOCTYPE html
+  PUBLIC "'-//W3C//DTD XHTML 1.0 Strict//EN'" "'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:file="http://expath.org/ns/file" xmlns:x="http://www.w3.org/1999/xhtml" xmlns:xf="http://www.w3.org/2002/xforms">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+      <title>AHN 2026Formation XForms</title>
+      <link rel="stylesheet" href="../assets/css/main.css" type="text/css" />
+      <link rel="stylesheet" href="//unpkg.com/@catppuccin/highlightjs@1.0.1/css/catppuccin-latte.css" /><script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js">/**/</script></head>
+   <body>
+      <main class="slide ">
+         
+         <h1>Fonctionnement de XForms</h1>
+         
+         <div>
+            
+            <h2>Séparer les données de l’interface</h2>
+            
+            <p>Le modèle est le lieu où l’on déclare les données et où on lie des propriétés aux
+               valeurs</p>
+            
+            <h2>Séparer les valeurs des contrôles</h2>
+            
+            <p>Le modèle spécifie les valeurs collectées (l’instance) et leur logique</p>
+            
+            <ul>
+               
+               <li>types, restrictions</li>
+               
+               <li>valeurs initiales, relations entre les valeurs</li>
+               </ul>
+            
+            <p>Le corps du document lie (<em>bind</em>) des contrôles de formulaires aux valeurs dans l’instance</p>
+            </div>
+         
+         <div>
+            
+            <h2>Des contrôles fondés sur l’intention</h2>
+            
+            <p>Les contrôles de formulaires expriment leur fonction (sélectionner une valeur dans
+               une liste, etc.) plutôt que ce à quoi les champs doivent ressembler (bouton radios,
+               menus, etc.).</p>
+            
+            <p>Il est ainsi possible d’indiquer comment ils doivent être représentés sur différents
+               terminaux.</p>
+            </div>
+         
+         <figure>
+            <img src="../assets/images/arch2.png" />
+            </figure>
+         </main><script>hljs.highlightAll();</script></body>
+</html>

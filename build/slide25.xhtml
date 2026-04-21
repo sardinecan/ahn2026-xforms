@@ -1,0 +1,97 @@
+<?xml-stylesheet href="../assets/xsltforms/xsltforms.xsl" type="text/xsl"?><html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ahn="http://ahn2026/ns/1.0"
+      xmlns:ev="http://www.w3.org/2001/xml-events"
+      xmlns:file="http://expath.org/ns/file"
+      xmlns:tei="http://www.tei-c.org/ns/1.0"
+      xmlns:x="http://www.w3.org/1999/xhtml"
+      xmlns:xf="http://www.w3.org/2002/xforms"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:xs="http://www.w3.org/2001/XMLSchema"
+      xf:bogus="fix/Firefox/namespace/issue"
+      xs:bogus="fix/Firefox/namespace/issue"
+      xlink:bogus="fix/Firefox/namespace/issue"
+      ahn:bogus="fix/Firefox/namespace/issue"
+      tei:bogus="fix/Firefox/namespace/issue"
+      lang="fr">
+   <head>
+      <meta charset="utf-8"/>
+      <title>AHN 2026Formation XForms</title>
+      <link rel="stylesheet" href="../assets/css/main.css" type="text/css"/>
+      <link rel="stylesheet" href="../assets/css/tei.css" type="text/css"/>
+      <link rel="stylesheet"
+            href="//unpkg.com/@catppuccin/highlightjs@1.0.1/css/catppuccin-latte.css"/>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js">/**/</script>
+      <script src="../assets/js/generateid.js"/>
+      <xf:model xmlns="http://www.tei-c.org/ns/1.0">
+         <xf:instance>
+            <person xmlns="" edit="">
+               <name edit="">Victor Hugo</name>
+               <birthDate>1802</birthDate>
+               <deathDate>1885</deathDate>
+               <age/>
+            </person>
+         </xf:instance>
+         <xf:bind nodeset="birthDate|deathDate|age" type="integer"/>
+         <xf:bind nodeset="age" calculate="../deathDate - ../birthDate"/>
+         <xf:bind nodeset="name" readonly="parent::person/@edit != true()"/>
+         <xf:bind nodeset="@edit" type="boolean"/>
+      </xf:model>
+   </head>
+   <body>
+      <main class="slide ">
+         <h1 class="">Lecture seule - <code>@readonly</code>
+         </h1>
+         <p>Lorsqu'une valeur est associée à une propriété <code>calculate</code>, elle passe automatiquement en lecture seule (<code>readonly</code>).</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:instance&gt;
+    &lt;person xmlns=""&gt;
+        &lt;name&gt;Victor Hugo&lt;/name&gt;
+        &lt;birthDate&gt;1802&lt;/birthDate&gt;
+        &lt;deathDate&gt;1885&lt;/deathDate&gt;
+        &lt;age/&gt;
+    &lt;/person&gt;
+&lt;/xf:instance&gt;
+&lt;xf:bind nodeset="birthDate|deathDate|age" type="integer"/&gt;
+&lt;xf:bind nodeset="age" calculate="../deathDate - ../birthDate"/&gt;
+                        </code>
+         </pre>
+         <p>Cela signifie que même si on attache ce nœud à un contrôle <code>xf:input</code>, il sera impossible de modifier sa valeur :</p>
+         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
+            <xf:input ref="age">
+               <xf:label>Âge : </xf:label>
+            </xf:input>
+         </xf:group>
+         <p>S’il s'agit du comportement par défaut pour <code>calculate</code>, il est possible de placer d’autres valeurs en lecture seule si nécessaire. Soit de façon permanente :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:bind nodeset="name" readonly="true()"/&gt;
+                        </code>
+         </pre>
+         <p>soit de façon conditionnelle :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:bind nodeset="name" readonly="parent::person/@edit != true()"/&gt;
+                        </code>
+         </pre>
+         <p>Il devient alors très aisé de mettre en place des verrous :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:input ref="@edit"&gt;&lt;xf:label&gt;Autoriser modification&lt;/xf:label&gt;&lt;/xf:input&gt;
+&lt;xf:input ref="name"&gt;&lt;xf:label&gt;Nom&lt;/xf:label&gt;&lt;/xf:input&gt;
+                        </code>
+         </pre>
+         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
+            <xf:input ref="@edit">
+               <xf:label>Autoriser modification</xf:label>
+            </xf:input>
+            <xf:input ref="name" incremental="true">
+               <xf:label>Nom</xf:label>
+            </xf:input>
+         </xf:group>
+         <p>NB : on remarquera que le type <code>boolean</code> transforme notre <code>xf:input</code> en case à cocher !</p>
+         <p>NB bis : lorsqu’un nœud est en lecture seul, alors les nœuds descendants ou les attributs qu’il possède héritent de cette propriété.</p>
+      </main>
+      <script>hljs.highlightAll();</script>
+   </body>
+</html>

@@ -1,0 +1,82 @@
+<?xml-stylesheet href="../assets/xsltforms/xsltforms.xsl" type="text/xsl"?><html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ahn="http://ahn2026/ns/1.0"
+      xmlns:ev="http://www.w3.org/2001/xml-events"
+      xmlns:file="http://expath.org/ns/file"
+      xmlns:tei="http://www.tei-c.org/ns/1.0"
+      xmlns:x="http://www.w3.org/1999/xhtml"
+      xmlns:xf="http://www.w3.org/2002/xforms"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:xs="http://www.w3.org/2001/XMLSchema"
+      xf:bogus="fix/Firefox/namespace/issue"
+      xs:bogus="fix/Firefox/namespace/issue"
+      xlink:bogus="fix/Firefox/namespace/issue"
+      ahn:bogus="fix/Firefox/namespace/issue"
+      tei:bogus="fix/Firefox/namespace/issue"
+      lang="fr">
+   <head>
+      <meta charset="utf-8"/>
+      <title>AHN 2026Formation XForms</title>
+      <link rel="stylesheet" href="../assets/css/main.css" type="text/css"/>
+      <link rel="stylesheet" href="../assets/css/tei.css" type="text/css"/>
+      <link rel="stylesheet"
+            href="//unpkg.com/@catppuccin/highlightjs@1.0.1/css/catppuccin-latte.css"/>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js">/**/</script>
+      <script src="../assets/js/generateid.js"/>
+      <xf:model xmlns="http://www.tei-c.org/ns/1.0">
+         <xf:instance>
+            <data xmlns="">
+               <prenom/>
+            </data>
+         </xf:instance>
+      </xf:model>
+   </head>
+   <body>
+      <main class="slide ">
+         <h1 class="">L’architecture MVC de XForms</h1>
+         <pre>
+            <code class="language-xml">
+&lt;?xml-stylesheet href="xsltforms/xsltforms.xsl" type="text/xsl"?&gt;
+&lt;html xmlns="http://www.w3.org/1999/xhtml" xmlns:xf="http://www.w3.org/2002/xforms" lang="fr"&gt;
+   &lt;head&gt;
+      &lt;title&gt;Hello World with XForms&lt;/title&gt;
+      &lt;xf:model&gt;
+         &lt;xf:instance&gt;
+            &lt;data xmlns=""&gt;
+               &lt;prenom/&gt;
+            &lt;/data&gt;
+         &lt;/xf:instance&gt;
+      &lt;/xf:model&gt;
+   &lt;/head&gt;
+   &lt;body&gt;
+      &lt;xf:input ref="/data/prenom" incremental="true"&gt;
+         &lt;xf:label&gt;Entrez votre prénom: &lt;/xf:label&gt;
+      &lt;/xf:input&gt;
+      &lt;br /&gt;
+      &lt;xf:output value="concat('Hello ', /data/prenom, '!')"&gt;
+         &lt;xf:label&gt;Résultat : &lt;/xf:label&gt;
+      &lt;/xf:output&gt;
+   &lt;/body&gt;
+&lt;/html&gt;
+                        </code>
+         </pre>
+         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
+            <xf:input ref="/data/prenom" incremental="true">
+               <xf:label>Entrez votre prénom:</xf:label>
+            </xf:input>
+            <x:br/>
+            <xf:output value="if(prenom[normalize-space(.)!=''], concat('Hello ', prenom, '!'), '')">
+               <xf:label>
+                  <xf:output value="if(prenom[normalize-space(.)!=''], 'Résultat : ', '')"/>
+               </xf:label>
+            </xf:output>
+            <x:br/>
+            <xf:output value="if(prenom[normalize-space(.)!=''], serialize(.), '')">
+               <xf:label>
+                  <xf:output value="if(prenom[normalize-space(.)!=''], 'Sérialisation : ', '')"/>
+               </xf:label>
+            </xf:output>
+         </xf:group>
+      </main>
+      <script>hljs.highlightAll();</script>
+   </body>
+</html>

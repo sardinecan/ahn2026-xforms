@@ -1,0 +1,196 @@
+<?xml-stylesheet href="../assets/xsltforms/xsltforms.xsl" type="text/xsl"?><html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ahn="http://ahn2026/ns/1.0"
+      xmlns:ev="http://www.w3.org/2001/xml-events"
+      xmlns:file="http://expath.org/ns/file"
+      xmlns:tei="http://www.tei-c.org/ns/1.0"
+      xmlns:x="http://www.w3.org/1999/xhtml"
+      xmlns:xf="http://www.w3.org/2002/xforms"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:xs="http://www.w3.org/2001/XMLSchema"
+      xf:bogus="fix/Firefox/namespace/issue"
+      xs:bogus="fix/Firefox/namespace/issue"
+      xlink:bogus="fix/Firefox/namespace/issue"
+      ahn:bogus="fix/Firefox/namespace/issue"
+      tei:bogus="fix/Firefox/namespace/issue"
+      lang="fr">
+   <head>
+      <meta charset="utf-8"/>
+      <title>AHN 2026Formation XForms</title>
+      <link rel="stylesheet" href="../assets/css/main.css" type="text/css"/>
+      <link rel="stylesheet" href="../assets/css/tei.css" type="text/css"/>
+      <link rel="stylesheet"
+            href="//unpkg.com/@catppuccin/highlightjs@1.0.1/css/catppuccin-latte.css"/>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js">/**/</script>
+      <script src="../assets/js/generateid.js"/>
+      <xf:model xmlns="http://www.tei-c.org/ns/1.0">
+         <xf:instance>
+            <personnes xmlns="">
+               <person dead="true">
+                  <name>Victor Hugo</name>
+                  <birthDate>1802</birthDate>
+                  <deathDate>1885</deathDate>
+                  <age/>
+               </person>
+               <person dead="false">
+                  <name>Annie Ernaux</name>
+                  <birthDate>1940</birthDate>
+                  <deathDate/>
+                  <age/>
+               </person>
+               <visible>yes</visible>
+            </personnes>
+         </xf:instance>
+         <xf:bind nodeset="person/birthDate|person/deathDate|person/age" type="integer"/>
+         <xf:bind nodeset="person/@dead" type="boolean"/>
+         <xf:bind nodeset="person/deathDate" relevant="../@dead = 'true'"/>
+         <xf:bind nodeset="person/age"
+                  relevant="../@dead = 'true'"
+                  calculate="../deathDate - ../birthDate"/>
+         <xf:bind nodeset="visible" relevant=". = 'yes'"/>
+      </xf:model>
+   </head>
+   <body>
+      <main class="slide ">
+         <h1 class="">Visibilité</h1>
+         <p>Avec XForms, il existe plusieurs méthode pour afficher ou masquer des contrôles ou des données. Nous avons déjà vu que nous pouvions utiliser la propriété <code>@relevant</code>, : les contrôles qui ne sont pas pertinents ne sont pas affichés.</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:instance&gt;
+    &lt;personnes xmlns=""&gt;
+        &lt;visible&gt;yes&lt;/visible&gt;
+    &lt;/personnes&gt;
+&lt;/xf:instance&gt;
+&lt;xf:bind nodeset="visible" relevant=". = 'yes'"/&gt;
+&lt;xf:group ref="visible"&gt;
+    Tout le contenu de ce groupe n'est visible que lorsque 'visible' a la valeur 'yes'.
+&lt;/xf:group&gt;
+&lt;xf:trigger&gt;
+    &lt;xf:label&gt;&lt;xf:output value="if(visible = 'yes', 'Masquer', 'Afficher')"/&gt;&lt;/xf:label&gt;
+    &lt;xf:action ev:event="DOMActivate"&gt;
+        &lt;xf:setvalue ref="visible" value="if(. = 'yes', 'no', 'yes')"/&gt;
+    &lt;/xf:action&gt;
+&lt;/xf:trigger&gt;
+                        </code>
+         </pre>
+         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
+            <xf:group ref="visible">
+               <p>Tout le contenu de ce groupe n'est visible que lorsque 'visible' a la valeur 'yes'.</p>
+            </xf:group>
+            <xf:trigger>
+               <xf:label>
+                  <xf:output value="if(visible = 'yes', 'Masquer', 'Afficher')"/>
+               </xf:label>
+               <xf:action ev:event="DOMActivate">
+                  <xf:setvalue ref="visible" value="if(. = 'yes', 'no', 'yes')"/>
+               </xf:action>
+            </xf:trigger>
+         </xf:group>
+         <p>Mais ce n’est pas la seule méthode, on peut également s’appuyer sur l’élément <code>xf:switch</code> :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:switch&gt;
+    &lt;xf:case id="tous"&gt;
+        ...
+    &lt;/xf:case&gt;
+    &lt;xf:case id="decedes"&gt;
+        ...
+    &lt;/xf:case&gt;
+    ...
+&lt;/xf:switch&gt;
+                        </code>
+         </pre>
+         <p>Ce système permet de mettre en place facilement un système d’onglets. Chaque élément <code>xf:case</code> correspond à un onglet que l’on peut activer avec un <code>xf:trigger</code> et l’action <code>xf:toggle case="..."</code> :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:trigger&gt;
+    &lt;xf:label&gt;Tous&lt;/xf:label&gt;
+    &lt;xf:action ev:event="DOMActivate"&gt;
+        &lt;xf:toggle case="tous"/&gt;
+    &lt;/xf:action&gt;
+&lt;/xf:trigger&gt;
+                        </code>
+         </pre>
+         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
+            <xf:trigger id="toggletous">
+               <xf:label>Tous</xf:label>
+               <xf:toggle case="tous" ev:event="DOMActivate"/>
+            </xf:trigger>
+            <xf:trigger id="toggledecedes">
+               <xf:label>Décédés</xf:label>
+               <xf:toggle case="decedes" ev:event="DOMActivate"/>
+            </xf:trigger>
+            <xf:trigger id="togglevivants">
+               <xf:label>Vivants</xf:label>
+               <xf:toggle case="vivants" ev:event="DOMActivate"/>
+            </xf:trigger>
+            <xf:trigger id="togglestats">
+               <xf:label>Statistiques</xf:label>
+               <xf:toggle case="stats" ev:event="DOMActivate"/>
+            </xf:trigger>
+            <xf:switch>
+               <xf:case id="tous">
+                  <xf:label>Tous</xf:label>
+                  <xf:repeat ref="person">
+                     <xf:output ref="name"/>
+                  </xf:repeat>
+               </xf:case>
+               <xf:case id="decedes">
+                  <xf:label>Décédés</xf:label>
+                  <xf:repeat ref="person[@dead='true']">
+                     <xf:output ref="name"/>
+                  </xf:repeat>
+               </xf:case>
+               <xf:case id="vivants">
+                  <xf:label>Vivants</xf:label>
+                  <xf:repeat ref="person[@dead='false']">
+                     <xf:output ref="name"/>
+                  </xf:repeat>
+               </xf:case>
+               <xf:case id="stats">
+                  <xf:label>Statistiques</xf:label>
+                                    Total : <xf:output value="count(person)"/>
+                  <x:br/>
+                                    Décédés : <xf:output value="count(person[@dead='true'])"/>
+                  <x:br/>
+                                    Vivants : <xf:output value="count(person[@dead='false'])"/>
+               </xf:case>
+            </xf:switch>
+         </xf:group>
+         <pre>
+            <code class="language-xml">
+&lt;xf:trigger id="toggletous" appearance="minimal"&gt;
+    &lt;xf:label&gt;Tous&lt;/xf:label&gt;
+    &lt;xf:toggle case="tous" ev:event="DOMActivate"/&gt;
+&lt;/xf:trigger&gt;
+&lt;xf:trigger id="toggledecedes" appearance="minimal"&gt;
+    &lt;xf:label&gt;Décédés&lt;/xf:label&gt;
+    &lt;xf:toggle case="decedes" ev:event="DOMActivate"/&gt;
+&lt;/xf:trigger&gt;
+... etc ...
+&lt;xf:switch&gt;
+    &lt;xf:case id="tous"&gt;
+        &lt;xf:label&gt;Tous&lt;/xf:label&gt;
+        &lt;!--Liste de toutes les personnes...--&gt;
+    &lt;/xf:case&gt;
+    &lt;xf:case id="decedes"&gt;
+        &lt;xf:label&gt;Décédés&lt;/xf:label&gt;
+        &lt;!--Personnes décédées uniquement...--&gt;
+    &lt;/xf:case&gt;
+    ... etc ...
+&lt;/xf:switch&gt;
+                        </code>
+         </pre>
+         <p>Notez le raccourci qui a été utilisé ici : si un élément <code>xf:action</code> ne contient qu'une seule action, alors on peut se passier de ce dernier :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:action ev:event="DOMActivate"&gt;
+    &lt;xf:toggle case="tous"/&gt;
+&lt;/xf:action&gt;
+&lt;!-- devient --&gt;
+&lt;xf:toggle case="tous" ev:event="DOMActivate"/&gt;
+                        </code>
+         </pre>
+      </main>
+      <script>hljs.highlightAll();</script>
+   </body>
+</html>

@@ -1,0 +1,80 @@
+<?xml-stylesheet href="../assets/xsltforms/xsltforms.xsl" type="text/xsl"?><html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ahn="http://ahn2026/ns/1.0"
+      xmlns:ev="http://www.w3.org/2001/xml-events"
+      xmlns:file="http://expath.org/ns/file"
+      xmlns:tei="http://www.tei-c.org/ns/1.0"
+      xmlns:x="http://www.w3.org/1999/xhtml"
+      xmlns:xf="http://www.w3.org/2002/xforms"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:xs="http://www.w3.org/2001/XMLSchema"
+      xf:bogus="fix/Firefox/namespace/issue"
+      xs:bogus="fix/Firefox/namespace/issue"
+      xlink:bogus="fix/Firefox/namespace/issue"
+      ahn:bogus="fix/Firefox/namespace/issue"
+      tei:bogus="fix/Firefox/namespace/issue"
+      lang="fr">
+   <head>
+      <meta charset="utf-8"/>
+      <title>AHN 2026Formation XForms</title>
+      <link rel="stylesheet" href="../assets/css/main.css" type="text/css"/>
+      <link rel="stylesheet" href="../assets/css/tei.css" type="text/css"/>
+      <link rel="stylesheet"
+            href="//unpkg.com/@catppuccin/highlightjs@1.0.1/css/catppuccin-latte.css"/>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js">/**/</script>
+      <script src="../assets/js/generateid.js"/>
+      <xf:model xmlns="http://www.tei-c.org/ns/1.0">
+         <xf:instance>
+            <person xmlns="">
+               <name>Victor Hugo</name>
+               <birthDate>1802</birthDate>
+               <deathDate>1885</deathDate>
+               <age/>
+            </person>
+         </xf:instance>
+         <xf:bind nodeset="birthDate|deathDate|age" type="integer"/>
+         <xf:bind nodeset="name" readonly="true()"/>
+         <xf:bind nodeset="age" calculate="../deathDate - ../birthDate"/>
+      </xf:model>
+   </head>
+   <body>
+      <main class="slide ">
+         <h1 class="">Attribute Value Templates (AVT)</h1>
+         <p>Outre <code>xf:output</code> qui permet d’insérer du texte dans la page web, XForms permet aussi d’interagir avec les attributs HTML par l’intermédiaire de l’<em>Attribute Value Templates</em> :</p>
+         <pre>
+            <code class="language-xml">
+&lt;style type="text/css"&gt;
+    .positif {color: green}
+    .negatif {background-color: red; color: white}
+&lt;/style&gt;
+                        </code>
+         </pre>
+         <p>L’AVT permet d’évaluer une expression à l’intérieur d’un attribut. Il s’agit d’une expression placée entre accolades <code>{ }</code> à l'intérieur d'un attribut :</p>
+         <pre>
+            <code class="language-xml">
+&lt;span class="{if(age &amp;lt; 0, 'negatif', 'positif')}"&gt;
+    Âge au décès : &lt;xf:output ref="age"/&gt;
+&lt;/span&gt;
+                        </code>
+         </pre>
+         <p>Essayez-le en inversant les dates pour obtenir un âge négatif :</p>
+         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
+            <xf:output ref="name">
+               <xf:label>Nom</xf:label>
+            </xf:output>
+            <x:br/>
+            <xf:input ref="birthDate" incremental="true">
+               <xf:label>Année de naissance</xf:label>
+            </xf:input>
+            <x:br/>
+            <xf:input ref="deathDate" incremental="true">
+               <xf:label>Année de décès</xf:label>
+            </xf:input>
+            <x:br/>
+            <x:span class="{if(age &lt; 0, 'negatif', 'positif')}">
+                                Âge au décès : <xf:output ref="age"/>
+            </x:span>
+         </xf:group>
+      </main>
+      <script>hljs.highlightAll();</script>
+   </body>
+</html>
