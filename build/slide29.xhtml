@@ -114,7 +114,7 @@
          <p>alors l'action recevra les événements des deux inputs. Elle ne pourra pas les distinguer, mais elle saura que quelque chose a changé. Voici comment nous faisons cela pour notre liste de personnes, avec l'action positionnée à l'intérieur du contrôle repeat :</p>
          <pre>
             <code class="language-xml">
-&lt;xf:repeat ref="person"&gt;
+&lt;xf:repeat nodeset="person"&gt;
     &lt;xf:action ev:event="xforms-value-changed"&gt;
         &lt;xf:setvalue ref="instance('admin')/changed"&gt;true&lt;/xf:setvalue&gt;
     &lt;/xf:action&gt;
@@ -124,7 +124,7 @@
          <p>Vous devez faire attention à le positionner de manière à capturer uniquement les événements qui vous intéressent. Si vous le placez au-dessus du <code>&lt;repeat&gt;</code>, vous capturerez également les événements des contrôles au même niveau que le repeat.</p>
          <p>Essayez-le. Vous verrez que si vous modifiez l'un des contenus, comme le nom, cela enregistrera le changement, mais pas si vous ajoutez ou supprimez des éléments, car ceux-ci ne génèrent pas d'événements value-changed :</p>
          <xf:group xmlns="http://www.tei-c.org/ns/1.0" model="model_one">
-            <xf:repeat ref="person">
+            <xf:repeat nodeset="person">
                <xf:action ev:event="xforms-value-changed">
                   <xf:setvalue ref="instance('admin')/changed">true</xf:setvalue>
                </xf:action>
@@ -165,7 +165,7 @@
     &lt;xf:setvalue ref="instance('admin')/changed"&gt;true&lt;/xf:setvalue&gt;
 &lt;/xf:action&gt;
 ...
-&lt;xf:repeat ref="person"&gt;
+&lt;xf:repeat nodeset="person"&gt;
     &lt;xf:action ev:event="xforms-value-changed"&gt;
         &lt;xf:setvalue ref="instance('admin')/changed"&gt;true&lt;/xf:setvalue&gt;
     &lt;/xf:action&gt;
@@ -173,7 +173,7 @@
 </code>
          </pre>
          <xf:group xmlns="http://www.tei-c.org/ns/1.0" model="model_two">
-            <xf:repeat ref="instance('list2')/person">
+            <xf:repeat nodeset="instance('list2')/person">
                <xf:action ev:event="xforms-value-changed">
                   <xf:setvalue ref="instance('admin2')/changed">true</xf:setvalue>
                </xf:action>

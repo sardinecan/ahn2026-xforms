@@ -57,7 +57,7 @@
          </pre>
          <p>La pertinence a deux effets principaux : un contrôle lié à une valeur non pertinente n'est pas affiché, et lors d'une soumission, par défaut les éléments non pertinents ne sont pas inclus dans les données (vous pouvez modifier ce comportement avec <code>relevant="false"</code> sur l'élément submission). Essayez de cocher/décocher "Décédé" :</p>
          <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:repeat ref="person">
+            <xf:repeat nodeset="person">
                <xf:input ref="name">
                   <xf:label>Nom</xf:label>
                </xf:input>

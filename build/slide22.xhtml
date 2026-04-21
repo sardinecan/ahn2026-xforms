@@ -76,7 +76,7 @@
     &lt;/listPerson&gt;
 &lt;/xf:instance&gt;
 ...
-&lt;xf:repeat ref="person"&gt;
+&lt;xf:repeat nodeset="person"&gt;
     &lt;xf:input ref="name"/&gt;
     &lt;xf:input ref="birthDate"/&gt;
     &lt;xf:input ref="deathDate"/&gt;
@@ -85,7 +85,7 @@
                         </code>
          </pre>
          <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:repeat ref="person">
+            <xf:repeat nodeset="person">
                <xf:input incremental="true" ref="name">
                   <xf:label>Nom</xf:label>
                </xf:input>
@@ -114,7 +114,7 @@
          </pre>
          <p>Par défaut, le dernier élément est simplement dupliqué, avec les valeur qu’il contient.</p>
          <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:repeat ref="person">
+            <xf:repeat nodeset="person">
                <xf:input incremental="true" ref="name">
                   <xf:label>Nom</xf:label>
                </xf:input>
@@ -152,7 +152,7 @@
                         </code>
          </pre>
          <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:repeat ref="person">
+            <xf:repeat nodeset="person">
                <xf:input incremental="true" ref="name">
                   <xf:label>Nom</xf:label>
                </xf:input>
@@ -217,7 +217,7 @@
                         </code>
          </pre>
          <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:repeat ref="person">
+            <xf:repeat nodeset="person">
                <xf:input incremental="true" ref="name">
                   <xf:label>Nom</xf:label>
                </xf:input>
@@ -245,7 +245,7 @@
          <p>Si on se trouve dans le contexte d’un élément <code>xf:repeat</code>, on peut même définir un index dynamique. Il est nécessaire d’attribuer un identifiant (<code>@id</code>) à l’élément <code>xf:repeat</code>. On peut alors utiliser la fonction <code>index()</code> pour déterminer une position :</p>
          <pre>
             <code class="language-xml">
-&lt;xf:repeat ref="person" id="indexPerson"/&gt;
+&lt;xf:repeat nodeset="person" id="indexPerson"/&gt;
 
 &lt;xf:trigger&gt;
     &lt;xf:label&gt;+&lt;/xf:label&gt;
@@ -259,7 +259,7 @@
          </pre>
          <xf:group xmlns="http://www.tei-c.org/ns/1.0">
             <xf:group>
-               <xf:repeat ref="person" id="indexPerson">
+               <xf:repeat nodeset="person" id="indexPerson">
                   <xf:input incremental="true" ref="name">
                      <xf:label>Nom</xf:label>
                   </xf:input>

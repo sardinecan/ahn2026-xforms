@@ -1242,7 +1242,7 @@
     </listPerson>
 </xf:instance>
 ...
-<xf:repeat ref="person">
+<xf:repeat nodeset="person">
     <xf:input ref="name"/>
     <xf:input ref="birthDate"/>
     <xf:input ref="deathDate"/>
@@ -1250,7 +1250,7 @@
 </xf:repeat>]]>
                         </egXML>
                         <xf:group>
-                            <xf:repeat ref="person">
+                            <xf:repeat nodeset="person">
                                 <xf:input incremental="true" ref="name">
                                     <xf:label>Nom</xf:label>
                                 </xf:input>
@@ -1277,7 +1277,7 @@
                         </egXML>
                         <p>Par défaut, le dernier élément est simplement dupliqué, avec les valeur qu’il contient.</p>
                         <xf:group>
-                            <xf:repeat ref="person">
+                            <xf:repeat nodeset="person">
                                 <xf:input incremental="true" ref="name">
                                     <xf:label>Nom</xf:label>
                                 </xf:input>
@@ -1313,7 +1313,7 @@
 </xf:trigger>]]>
                         </egXML>
                         <xf:group>
-                            <xf:repeat ref="person">
+                            <xf:repeat nodeset="person">
                                 <xf:input incremental="true" ref="name">
                                     <xf:label>Nom</xf:label>
                                 </xf:input>
@@ -1372,7 +1372,7 @@
 </xf:trigger>]]>
                         </egXML>
                         <xf:group>
-                            <xf:repeat ref="person">
+                            <xf:repeat nodeset="person">
                                 <xf:input incremental="true" ref="name">
                                     <xf:label>Nom</xf:label>
                                 </xf:input>
@@ -1396,7 +1396,7 @@
                         </xf:group>
                         <p>Si on se trouve dans le contexte d’un élément <code>xf:repeat</code>, on peut même définir un index dynamique. Il est nécessaire d’attribuer un identifiant (<code>@id</code>) à l’élément <code>xf:repeat</code>. On peut alors utiliser la fonction <code>index()</code> pour déterminer une position :</p>
                         <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="xml">
-<![CDATA[<xf:repeat ref="person" id="indexPerson"/>
+<![CDATA[<xf:repeat nodeset="person" id="indexPerson"/>
 
 <xf:trigger>
     <xf:label>+</xf:label>
@@ -1409,7 +1409,7 @@
                         </egXML>
                         <xf:group>
                             <xf:group>
-                                <xf:repeat ref="person" id="indexPerson">
+                                <xf:repeat nodeset="person" id="indexPerson">
                                     <xf:input incremental="true" ref="name">
                                         <xf:label>Nom</xf:label>
                                     </xf:input>
@@ -1511,7 +1511,7 @@
 </xf:trigger>]]>
                         </egXML>
                         <xf:group>
-                            <xf:repeat ref="person">
+                            <xf:repeat nodeset="person">
                                 <xf:input class="inline" incremental="true" ref="name">
                                     <xf:label>Nom</xf:label>
                                 </xf:input>
@@ -1690,7 +1690,7 @@
                         </egXML>
                         <p>La pertinence a deux effets principaux : un contrôle lié à une valeur non pertinente n'est pas affiché, et lors d'une soumission, par défaut les éléments non pertinents ne sont pas inclus dans les données (vous pouvez modifier ce comportement avec <code>relevant="false"</code> sur l'élément submission). Essayez de cocher/décocher "Décédé" :</p>
                         <xf:group xmlns:xf="http://www.w3.org/2002/xforms">
-                            <xf:repeat ref="person">
+                            <xf:repeat nodeset="person">
                                 <xf:input ref="name">
                                     <xf:label>Nom</xf:label>
                                 </xf:input>
@@ -1768,7 +1768,7 @@
                         </egXML>
                         <p>Ces trois propriétés déterminent si une valeur est valide ou non. Si une valeur n'est pas valide, les contrôles qui y sont attachés seront affichés en conséquence :</p>
                         <xf:group xmlns:xf="http://www.w3.org/2002/xforms">
-                            <xf:repeat ref="person">
+                            <xf:repeat nodeset="person">
                                 <xf:input ref="name" incremental="true">
                                     <xf:label>Nom</xf:label>
                                 </xf:input>
@@ -1793,7 +1793,7 @@
 </xf:input>]]>
                         </egXML>
                         <xf:group xmlns:xf="http://www.w3.org/2002/xforms">
-                            <xf:repeat ref="person">
+                            <xf:repeat nodeset="person">
                                 <xf:input ref="name" incremental="true">
                                     <xf:label>Nom</xf:label>
                                     <xf:alert>Le nom est requis</xf:alert>
@@ -1886,7 +1886,7 @@
 ]]>
                         </egXML>
                         <xf:group xmlns:xf="http://www.w3.org/2002/xforms">
-                            <xf:repeat ref="person">
+                            <xf:repeat nodeset="person">
                                 <xf:input class="inline" incremental="true" ref="name">
                                     <xf:label>Nom</xf:label>
                                 </xf:input>
@@ -2025,7 +2025,7 @@
                         </egXML>
                         <p>alors l'action recevra les événements des deux inputs. Elle ne pourra pas les distinguer, mais elle saura que quelque chose a changé. Voici comment nous faisons cela pour notre liste de personnes, avec l'action positionnée à l'intérieur du contrôle repeat :</p>
                         <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="xml">
-<![CDATA[<xf:repeat ref="person">
+<![CDATA[<xf:repeat nodeset="person">
     <xf:action ev:event="xforms-value-changed">
         <xf:setvalue ref="instance('admin')/changed">true</xf:setvalue>
     </xf:action>
@@ -2034,7 +2034,7 @@
                         <p>Vous devez faire attention à le positionner de manière à capturer uniquement les événements qui vous intéressent. Si vous le placez au-dessus du <code>&lt;repeat&gt;</code>, vous capturerez également les événements des contrôles au même niveau que le repeat.</p>
                         <p>Essayez-le. Vous verrez que si vous modifiez l'un des contenus, comme le nom, cela enregistrera le changement, mais pas si vous ajoutez ou supprimez des éléments, car ceux-ci ne génèrent pas d'événements value-changed :</p>
                         <xf:group xmlns:xf="http://www.w3.org/2002/xforms" model="model_one">
-                            <xf:repeat ref="person">
+                            <xf:repeat nodeset="person">
                                 <xf:action ev:event="xforms-value-changed">
                                     <xf:setvalue ref="instance('admin')/changed">true</xf:setvalue>
                                 </xf:action>
@@ -2076,7 +2076,7 @@
     <xf:setvalue ref="instance('admin')/changed">true</xf:setvalue>
 </xf:action>
 ...
-<xf:repeat ref="person">
+<xf:repeat nodeset="person">
     <xf:action ev:event="xforms-value-changed">
         <xf:setvalue ref="instance('admin')/changed">true</xf:setvalue>
     </xf:action>
@@ -2084,7 +2084,7 @@
 ]]></egXML>
                         
                         <xf:group xmlns:xf="http://www.w3.org/2002/xforms" model="model_two">
-                            <xf:repeat ref="instance('list2')/person">
+                            <xf:repeat nodeset="instance('list2')/person">
                                 <xf:action xmlns:ev="http://www.w3.org/2001/xml-events" ev:event="xforms-value-changed">
                                     <xf:setvalue ref="instance('admin2')/changed">true</xf:setvalue>
                                 </xf:action>
@@ -2233,19 +2233,19 @@
                             <xf:switch>
                                 <xf:case id="tous">
                                     <xf:label>Tous</xf:label>
-                                    <xf:repeat ref="person">
+                                    <xf:repeat nodeset="person">
                                         <xf:output ref="name"/>
                                     </xf:repeat>
                                 </xf:case>
                                 <xf:case id="decedes">
                                     <xf:label>Décédés</xf:label>
-                                    <xf:repeat ref="person[@dead='true']">
+                                    <xf:repeat nodeset="person[@dead='true']">
                                         <xf:output ref="name"/>
                                     </xf:repeat>
                                 </xf:case>
                                 <xf:case id="vivants">
                                     <xf:label>Vivants</xf:label>
-                                    <xf:repeat ref="person[@dead='false']">
+                                    <xf:repeat nodeset="person[@dead='false']">
                                         <xf:output ref="name"/>
                                     </xf:repeat>
                                 </xf:case>

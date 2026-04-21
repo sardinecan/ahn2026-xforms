@@ -86,7 +86,7 @@
          </pre>
          <p>Ces trois propriétés déterminent si une valeur est valide ou non. Si une valeur n'est pas valide, les contrôles qui y sont attachés seront affichés en conséquence :</p>
          <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:repeat ref="person">
+            <xf:repeat nodeset="person">
                <xf:input ref="name" incremental="true">
                   <xf:label>Nom</xf:label>
                </xf:input>
@@ -113,7 +113,7 @@
                         </code>
          </pre>
          <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:repeat ref="person">
+            <xf:repeat nodeset="person">
                <xf:input ref="name" incremental="true">
                   <xf:label>Nom</xf:label>
                   <xf:alert>Le nom est requis</xf:alert>

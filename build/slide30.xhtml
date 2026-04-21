@@ -130,19 +130,19 @@
             <xf:switch>
                <xf:case id="tous">
                   <xf:label>Tous</xf:label>
-                  <xf:repeat ref="person">
+                  <xf:repeat nodeset="person">
                      <xf:output ref="name"/>
                   </xf:repeat>
                </xf:case>
                <xf:case id="decedes">
                   <xf:label>Décédés</xf:label>
-                  <xf:repeat ref="person[@dead='true']">
+                  <xf:repeat nodeset="person[@dead='true']">
                      <xf:output ref="name"/>
                   </xf:repeat>
                </xf:case>
                <xf:case id="vivants">
                   <xf:label>Vivants</xf:label>
-                  <xf:repeat ref="person[@dead='false']">
+                  <xf:repeat nodeset="person[@dead='false']">
                      <xf:output ref="name"/>
                   </xf:repeat>
                </xf:case>
