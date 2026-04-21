@@ -28,16 +28,17 @@
     <text>
         <body>
             <div type="lesson">
-                <div type="slide">
+                <div type="slide" rend="titlePage">
                     <head>AHN 2026</head>
                     <p>Formation XForms</p>
                     <p>Josselin Morvan (université de Rouen Normandie)</p>
                 </div>
                 <div type="slide">
                     <head>Objectifs</head>
+                    <p>À la fin de cette formation, savoir :</p>
                     <list>
-                        <item>Déployer une application XForms simple et maîtriser l’architecture MVC (<emph>Modèle Vue Contrôleur</emph>)</item>
-                        <item>déclarer une instance XML ;</item>
+                        <item>Déployer une application XForms et maîtriser l’architecture MVC (<emph>Modèle Vue Contrôleur</emph>)</item>
+                        <item>déclarer des instances XML ;</item>
                         <item>interagir avec le modèle de données ;</item>
                         <item>contrôler et valider ses données ;</item>
                         <item>enregistrer ses données ;</item>
@@ -51,7 +52,7 @@
                 <div type="slide">
                     <head>XForms quésaco ?</head>
                     <p>XForms est un langage de balisage XML pour une nouvelle génération d’applications sur le Web. XForms n’est pas un type de document autonome, mais est destiné à être intégré à d’autres langages de balisage, tels que XHTML, ODF ou SVG.</p>
-                    <p>Une application basée sur XForms collecte et traite des données en utilisant une architecture qui sépare la présentation, la finalité et le contenu ; le traitement des données s’effectue via trois mécanismes :</p>
+                    <p>Une application fondée sur XForms collecte et traite des données en utilisant une architecture qui sépare la présentation, la finalité et le contenu ; le traitement des données s’effectue via trois mécanismes :</p>
                     <list>
                         <item>un <hi rend="bold">modèle</hi> déclaratif composé de formules pour les calculs et contraintes, de déclarations de types de données et d’autres propriétés, ainsi que de paramètres pour la soumission des données ;</item>
                         <item>une couche <hi rend="bold">vue</hi> composée de contrôles d’interface utilisateur basés sur l’intention ;</item>
@@ -96,11 +97,24 @@
                         <graphic url="../assets/images/arch2.png"/>
                     </figure>
                 </div>
-                <div type="slide">
+                <!--<div type="slide">
                     <head>XForms</head>
                     <p>XForms est un dialecte XML spécialisé dans la création de formulaires web standardisé par le W3C à partir de 2006. Il s’appuie sur une architecture Modèle - Vue - Contrôleur (MVC). En distinguant fond et forme, cette technologie offre de nombreux avantages en termes de réutilisation des formulaires, de compatibilité avec les différents types de périphériques (ordinateurs, téléphones, tablettes, etc.), et d’accessibilité. Plus qu’un simple langage de formulaire, dans sa version 1.1 XForms est devenu un langage Turing-complet, qui adopte un modèle de programmation déclaratif, où l’on s’attache à décrire ce que l’on souhaite faire plutôt que comment, et capable de soutenir le développement d’applications à grande échelle.</p>
                     <p>La création de formulaires avec XForms permet d’éditer des instances XML directement dans un navigateur, tout en embarquant des fonctionnalités avancées propres aux technologies XML. Elle constitue donc une solution de choix pour faciliter l’édition de documents XML. Elle présente ainsi un intérêt particulier pour les ingénieurs et les chercheurs qui souhaitent travailler dans l’environnement XML. En effet, XForms facilite la mise en place de formulaires dynamiques et très complexes, comportant par exemple des répétitions, des contrôles sur les valeurs ou des règles de contraintes avancées relativement rapidement.</p>
                     <p>Malgré des qualités indéniables, cette recommandation du W3C n’a toutefois jamais été prise en charge par les navigateurs et nécessite donc l’utilisation d’un client pour s’exécuter. Pour cette leçon, nous utiliserons le client open source XSLTForms développé par Alain Couthures.</p>
+                </div>-->
+                <div type="slide">
+                    <head>Implémentations</head>
+                    <p>XForms est un dialecte XML spécialisé dans la création de formulaires web standardisé par le W3C à partir de 2006. Il s’appuie sur une architecture Modèle - Vue - Contrôleur (MVC). En distinguant fond et forme, cette technologie offre de nombreux avantages en termes de réutilisation des formulaires, de compatibilité avec les différents types de périphériques (ordinateurs, téléphones, tablettes, etc.), et d’accessibilité. Plus qu’un simple langage de formulaire, dans sa version 1.1 XForms est devenu un langage Turing-complet, qui adopte un modèle de programmation déclaratif, où l’on s’attache à décrire ce que l’on souhaite faire plutôt que comment, et capable de soutenir le développement d’applications à grande échelle.</p>
+                    <p>La création de formulaires avec XForms permet d’éditer des instances XML directement dans un navigateur, tout en embarquant des fonctionnalités avancées propres aux technologies XML. Elle constitue donc une solution de choix pour faciliter l’édition de documents XML. Elle présente ainsi un intérêt particulier pour les ingénieurs et les chercheurs qui souhaitent travailler dans l’environnement XML. En effet, XForms facilite la mise en place de formulaires dynamiques et très complexes, comportant par exemple des répétitions, des contrôles sur les valeurs ou des règles de contraintes avancées relativement rapidement.</p>
+                    <p><hi rend="bold">Malgré des qualités indéniables, cette recommandation du W3C n’a toutefois jamais été prise en charge par les navigateurs et nécessite donc l’utilisation d’un client pour s’exécuter. Pour cette leçon, nous utiliserons le client <emph>open source</emph> <ref target="https://github.com/AlainCouthures/declarative4all">XSLTForms</ref> développé par Alain Couthures.</hi></p>
+                    <p>Il existe d’autres implémentations, plus ou moins conformes au standard (liste non exhaustive) :</p>
+                    <list>
+                        <item><ref target="https://enketo.org/">Enketo</ref></item>
+                        <item><ref target="https://www.orbeon.com/fr/">Orbeon</ref></item>
+                        <item><ref target="https://github.com/betterFORM/betterFORM">betterForm</ref></item>
+                        <item><ref target="https://jinntec.github.io/Fore/doc/index.html">Fore</ref> (le plus éloigné du standard)</item>
+                    </list>
                 </div>
                 <div type="slide">
                     <head>Configuration</head>
@@ -143,7 +157,7 @@
                     <p>L’ensemble doit être servi comme un document XML (extension <code>.xml</code> ou <code>.xhtml</code>).</p>
                 </div>
                 <div type="slide" subtype="xforms">
-                    <head>L’architecture MVC de XForms</head>
+                    <head>Un exemple simple</head>
                     <div type="model">
                         <xf:model>
                             <xf:instance>
@@ -154,7 +168,7 @@
                         </xf:model>
                     </div>
                     <div type="content">
-                        <head>L’architecture MVC de XForms</head>
+                        <head>Un exemple simple</head>
                         <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="xml" rendition="small">
 <![CDATA[<?xml-stylesheet href="xsltforms/xsltforms.xsl" type="text/xsl"?>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:xf="http://www.w3.org/2002/xforms" lang="fr">
