@@ -25,77 +25,61 @@
       <xf:model xmlns="http://www.tei-c.org/ns/1.0">
          <xf:instance>
             <data xmlns="">
-               <nom>Victor Hugo</nom>
-               <dateNaissance>1802</dateNaissance>
-               <biographie/>
+               <nom/>
+               <dateNaissance/>
+               <age/>
             </data>
          </xf:instance>
-         <!--<xf:bind nodeset="age" type="integer"/>
-                            <xf:bind nodeset="dateNaissance" type="date"/>-->
+         <xf:bind nodeset="age" type="integer"/>
+         <xf:bind nodeset="dateNaissance" type="date"/>
       </xf:model>
    </head>
    <body>
       <main class="slide ">
-         <h1 class="">Champ texte (et pas uniquement) - <code>xf:input</code> &amp; <code>xf:textarea</code>
-         </h1>
-         <p>Avec XForms, on parle plutôt de <strong>contrôles</strong> que de champs de formulaire.</p>
-         <p>Le contrôle <code>xf:input</code> correspond, globalement, au champ texte. Ce type de contrôle est placé dans le corps du document XHTML (<code>body</code>). On le relie à un nœud d’une instance par l’intermédiaire d’un attribut <code>@ref</code> et d’une expression XPath.</p>
+         <h1 class="">Les instances de données (<code>xf:instance</code>)</h1>
+         <p>L’élément <a href="https://www.w3.org/TR/xforms11/#structure-model" target="_blank">
+               <code>xf:model</code>
+            </a> peut contenir une ou plusieurs instances XML (<a href="https://www.w3.org/TR/xforms11/#structure-model-instance"
+               target="_blank">
+               <code>xf:instance</code>
+            </a>) :</p>
          <pre>
             <code class="language-xml">
-&lt;xf:input ref="nom"&gt;
-    &lt;xf:label&gt;Nom de famille&lt;/xf:label&gt;
-&lt;/xf:input&gt;
-&lt;xf:input ref="dateNaissance"&gt;
-    &lt;xf:label&gt;Date de naissance&lt;/xf:label&gt;
-&lt;/xf:input&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;xf:model&gt;
+            &lt;xf:instance&gt;
+                &lt;data xmlns=""&gt;
+                    &lt;nom/&gt;
+                    &lt;dateNaissance/&gt;
+                    &lt;age/&gt;
+                &lt;/data&gt;
+            &lt;/xf:instance&gt;
+        &lt;/xf:model&gt;
+    &lt;/head&gt;
+    &lt;body/&gt;
+&lt;html&gt;
                         </code>
          </pre>
-         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:output value="serialize(.)"/>
-            <x:br/>
-            <xf:input ref="nom">
-               <xf:label>Nom de famille</xf:label>
-            </xf:input>
-            <x:br/>
-            <xf:input ref="dateNaissance">
-               <xf:label>Date de naissance</xf:label>
-            </xf:input>
-         </xf:group>
-         <p>Par défaut, un champ met à jour l’instance lorsqu’on le quitte, mais ce comportement peut être modifié avec l’utilisation de l'attribut <code>@incremental="true"</code>. L’instance se mettra à jour au fur et à mesure que l’on frappe sur son clavier :</p>
+         <p>Les instances peuvent être déclarées directement dans le modèle, comme nous venons de le voir, ou bien être issues de ressources externes (fichier local ou en ligne) à l'aide de l'attribut <code>@src</code> :</p>
          <pre>
             <code class="language-xml">
-&lt;xf:input ref="nom" incremental="true"&gt;
-    &lt;xf:label&gt;Nom de famille&lt;/xf:label&gt;
-&lt;/xf:input&gt;
-&lt;xf:input ref="dateNaissance" incremental="true"&gt;
-    &lt;xf:label&gt;Date de naissance&lt;/xf:label&gt;
-&lt;/xf:input&gt;
+&lt;xf:instance src="victorHugo.xml"/&gt;
+&lt;xf:instance src="https://experts.huma-num.fr/xpr/biographies/xpr0027"/&gt;
                         </code>
          </pre>
-         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:output value="serialize(.)"/>
-            <x:br/>
-            <xf:input ref="nom" incremental="true">
-               <xf:label>Nom de famille</xf:label>
-            </xf:input>
-            <x:br/>
-            <xf:input ref="dateNaissance" incremental="true">
-               <xf:label>Date de naissance</xf:label>
-            </xf:input>
-         </xf:group>
-         <p>Pour les zones de texte plus importantes, on utilisera l’élément <code>xf:textarea</code> de la même manière :</p>
+         <p>Il est impératif d’associer un espace de nom, même vide, aux instances sous peine de les voir interprétées comme des éléments XHTML.</p>
+         <p>Pour éviter les bugs avec Firefox (qui ne prend pas bien en charge les espaces de nom…), il convient de procéder avec <code>*:bogus</code> :</p>
          <pre>
             <code class="language-xml">
-&lt;xf:textarea ref="biographie" incremental="true"&gt;
-    &lt;xf:label&gt;Biographie&lt;/xf:label&gt;
-&lt;/xf:textarea&gt;
-                        </code>
+&lt;html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:xf="http://www.w3.org/2002/xforms"
+    xmlns:tei="http://www.tei-c.org/ns/1.0"
+    xf:bogus="fix/Firefox/namespace/issue"
+    xs:bogus="fix/Firefox/namespace/issue"
+    tei:bogus="fix/Firefox/namespace/issue"/&gt;</code>
          </pre>
-         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:textarea ref="biographie" incremental="true">
-               <xf:label>Biographie</xf:label>
-            </xf:textarea>
-         </xf:group>
       </main>
       <script>hljs.highlightAll();</script>
    </body>

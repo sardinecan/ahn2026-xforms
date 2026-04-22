@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="../../assets/xsltforms/xsltforms.xsl" type="text/xsl"?>
+<!-- 
+    EXERCICE 4 : Valider et sauvegarder une instance
+    
+    OBJECTIFS :
+        - Appréhender les valeurs calculées
+        - Ajouter un champ requis
+        - Sauvegarder une instance
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:xf="http://www.w3.org/2002/xforms"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:tei="http://www.tei-c.org/ns/1.0"
+    tei:bogus="fix/Firefox/namespace/issue">
+    <head>
+        <title>AHN 2026 ex04 : Valider et sauvegarder une instance</title>
+        <xf:model>
+            <!-- 01 s’il n'en dispose pas déjà, ajouter un attribut @ref sur les données 'author' -->
+            <xf:instance id="listBibl">
+                <listBibl xmlns="http://www.tei-c.org/ns/1.0">
+                    <bibl>
+                        <author></author>
+                        <title></title>
+                        <date></date>
+                    </bibl>
+                </listBibl>
+            </xf:instance>
+            <!-- 02 rendre le champs titre obligatoire -->
+            <xf:bind nodeset="tei:bibl/tei:date" type="date"/>
+            <!-- 03 ajouter une valeur calculée pour l’attribut author/@ref correspondant à #idAuthor (penser à mettre également des id pour les auteur de l’instance listAuthor) -->
+
+            <xf:instance id="bibl_blank">
+                <listBibl xmlns="http://www.tei-c.org/ns/1.0">
+                    <bibl>
+                        <author></author>
+                        <title></title>
+                        <date></date>
+                    </bibl>
+                </listBibl>
+            </xf:instance>
+            
+            <xf:instance id="listAuthor">
+                <listPerson xmlns="http://www.tei-c.org/ns/1.0">
+                    <person id="hugo">
+                        <persName>Victor Hugo</persName>
+                    </person>
+                    <person id="musset">
+                        <persName>Alfred de Musset</persName>
+                    </person>
+                    <person id="zola">
+                        <persName>Émile Zola</persName>
+                    </person>
+                </listPerson>
+            </xf:instance>
+            
+            <!-- 04 mettre en place un système de sauvegarde -->
+        </xf:model>
+    </head>
+    <body>
+        <xf:repeat nodeset="tei:bibl" id="indexBibl">
+            <xf:select1 ref="tei:author">
+                <xf:label>Auteur : </xf:label>
+                <xf:itemset ref="instance('listAuthor')/tei:person">
+                    <xf:label ref="tei:persName"/>
+                    <xf:value ref="tei:persName"/>
+                </xf:itemset>
+            </xf:select1>
+            <br/>
+            <xf:input ref="tei:title"><xf:label>Titre : </xf:label></xf:input>
+            <br/>
+            <xf:input ref="tei:date"><xf:label>Date : </xf:label></xf:input>
+            
+            <xf:trigger>
+                <xf:label>×</xf:label>
+                <xf:action ev:event="DOMActivate">
+                    <xf:delete nodeset="." if="parent::tei:listBibl[count(tei:bibl) &gt; 1]"/>
+                </xf:action>
+            </xf:trigger>
+        </xf:repeat>
+        
+        <xf:trigger>
+            <xf:label>+</xf:label>
+            <xf:action ev:event="DOMActivate">
+                <xf:insert ref="tei:bibl" at="index('indexBibl')" position="after" origin="instance('bibl_blank')/tei:bibl"/>
+            </xf:action>
+        </xf:trigger>
+    </body>
+</html>

@@ -24,107 +24,84 @@
       <script src="../assets/js/generateid.js"/>
       <xf:model xmlns="http://www.tei-c.org/ns/1.0">
          <xf:instance>
-            <data xmlns="">
-               <counter>0</counter>
-            </data>
-         </xf:instance>
-         <xf:instance id="urlParam">
-            <data xmlns="">
-               <q>art002e009287</q>
-            </data>
+            <person xmlns="">
+               <name>Victor Hugo</name>
+               <date type="">1802</date>
+               <date type="">1885</date>
+            </person>
          </xf:instance>
       </xf:model>
    </head>
    <body>
       <main class="slide ">
-         <h1 class="">Les boutons (<code>xf:trigger</code>)</h1>
-         <p>Un <code>xf:trigger</code> est un bouton qui déclenche un évènement <code>DOMActivate</code> lorsque l’on clique dessus.</p>
+         <h1 class="">Les éléments <code>xf:select</code> et <code>xf:select1</code>
+         </h1>
+         <p>Ces deux éléments permettent de proposer à l’utilisateur de choisir parmi un ensemble de valeurs prédéfinies :</p>
+         <ul>
+            <li>
+               <code>xf:select</code> : choix multiple</li>
+            <li>
+               <code>xf:select1</code> : choix unique</li>
+         </ul>
+         <p>Concernant leur mise en place, <code>xf:select</code> et <code>xf:select1</code> sont tout-à-fait similaires :</p>
          <pre>
             <code class="language-xml">
-&lt;xf:instance&gt;
-    &lt;data xmlns=""&gt;
-        &lt;counter&gt;0&lt;/counter&gt;
-    &lt;/data&gt;
-&lt;/xf:instance&gt;
-[…]
-&lt;xf:trigger&gt;
-    &lt;xf:label&gt;+ 1&lt;/xf:label&gt;
-    &lt;xf:action ev:event="DOMActivate"&gt;
-        &lt;xf:setvalue ref="counter" value=". + 1"/&gt;
-    &lt;/xf:action&gt;
-&lt;/xf:trigger&gt;
+&lt;xf:select1 ref="date[1]/@type"&gt;
+    &lt;xf:label&gt;Type de date&lt;/xf:label&gt;
+    &lt;xf:item&gt;
+        &lt;xf:label&gt;Naissance&lt;/xf:label&gt;
+        &lt;xf:value&gt;birth&lt;/xf:value&gt;
+    &lt;/xf:item&gt;
+    &lt;xf:item&gt;
+        &lt;xf:label&gt;Décès&lt;/xf:label&gt;
+        &lt;xf:value&gt;death&lt;/xf:value&gt;
+    &lt;/xf:item&gt;
+&lt;/xf:select1&gt;
+                        </code>
+         </pre>
+         <p>Chaque item de la liste est placé dans un élément <code>xf:item</code> comprenant un label (<code>xf:label</code>) et une valeur (<code>xf:value</code>) qui sera insérée dans l’instance. Dans le cas d’un champ à choix multiple, une <strong>espace</strong> est utilisée comme séparateur entre les valeurs… qui ne doivent donc pas en contenir !</p>
+         <p>Ces champs peuvent s’afficher de 3 manières différentes :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:select1 ref="result" appearance="full"/&gt;
+&lt;xf:select1 ref="result" appearance="compact"/&gt;
+&lt;xf:select1 ref="result" appearance="minimal"/&gt;
                         </code>
          </pre>
          <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:trigger>
-               <xf:label>+ 1</xf:label>
-               <xf:action ev:event="DOMActivate">
-                  <xf:setvalue ref="counter" value=". + 1"/>
-               </xf:action>
-            </xf:trigger>
-            <x:br/>
-            <xf:output ref="counter">
-               <xf:label>Nombre de clics : </xf:label>
-            </xf:output>
-         </xf:group>
-         <p>Mais on peut s’en servir pour plein d’autres de choses, par exemple, avec <code>xf:load</code> on peut mimer des liens hypertextes :</p>
-         <pre>
-            <code class="language-xml">
-&lt;xf:trigger&gt;
-    &lt;xf:label&gt;There is no dark side of the moon!&lt;/xf:label&gt;
-    &lt;xf:action ev:event="DOMActivate"&gt;
-        &lt;xf:load resource="https://images.nasa.gov/details/art002e009287" show="new"/&gt;
-    &lt;/xf:action&gt;
-&lt;/xf:trigger&gt;
-                        </code>
-         </pre>
-         <xf:trigger xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:label>There is no dark side of the moon!</xf:label>
-            <xf:action ev:event="DOMActivate">
-               <xf:load resource="https://images.nasa.gov/details/art002e009287" show="new"/>
-            </xf:action>
-         </xf:trigger>
-         <p>Par défaut, la ressource est chargée dans la fenêtre courante, sauf si on utilise l’attribut <code>@show="new"</code>.</p>
-         <p>L'attribut <code>@appearance</code> permet de changer la manière dont est représenté le bouton.</p>
-         <pre>
-            <code class="language-xml">
-&lt;xf:trigger appearance="minimal"&gt;
-    &lt;xf:label&gt;There is no dark side of the moon!&lt;/xf:label&gt;
-    &lt;xf:action ev:event="DOMActivate"&gt;
-        &lt;xf:load resource="https://images.nasa.gov/details/art002e009287" show="new"/&gt;
-    &lt;/xf:action&gt;
-&lt;/xf:trigger&gt;
-                        </code>
-         </pre>
-         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:trigger appearance="minimal">
-               <xf:label>There is no dark side of the moon!</xf:label>
-               <xf:action ev:event="DOMActivate">
-                  <xf:load resource="https://images.nasa.gov/details/art002e009287" show="new"/>
-               </xf:action>
-            </xf:trigger>
-         </xf:group>
-         <p>Si l’url doit être construite à partir des données du formulaire, l’attribut <code>@source</code> peut être remplacé par l’élément <code>xf:resource</code> :</p>
-         <pre>
-            <code class="language-">
-&lt;xf:instance id="urlParam"&gt;
-    &lt;data xmlns=""&gt;
-        &lt;q&gt;art002e009287&lt;/q&gt;
-    &lt;/data&gt;
-&lt;/xf:instance&gt;
-
-&lt;xf:load show="new"&gt;
-    &lt;xf:resource value="concat('https://images.nasa.gov/details/',instance('urlParam')/q)"/&gt;
-&lt;/xf:load&gt;
-                        </code>
-         </pre>
-         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:trigger>
-               <xf:label>There is still no dark side of the moon!</xf:label>
-               <xf:load show="new" ev:event="DOMActivate">
-                  <xf:resource value="concat('https://images.nasa.gov/details/', instance('urlParam')/q)"/>
-               </xf:load>
-            </xf:trigger>
+            <xf:select1 ref="date[1]/@type" appearance="minimal">
+               <xf:label>Type de date</xf:label>
+               <xf:item>
+                  <xf:label>Naissance</xf:label>
+                  <xf:value>birth</xf:value>
+               </xf:item>
+               <xf:item>
+                  <xf:label>Décès</xf:label>
+                  <xf:value>death</xf:value>
+               </xf:item>
+            </xf:select1>
+            <xf:select1 ref="date[1]/@type" appearance="compact">
+               <xf:label>Type de date</xf:label>
+               <xf:item>
+                  <xf:label>Naissance</xf:label>
+                  <xf:value>birth</xf:value>
+               </xf:item>
+               <xf:item>
+                  <xf:label>Décès</xf:label>
+                  <xf:value>death</xf:value>
+               </xf:item>
+            </xf:select1>
+            <xf:select1 ref="date[1]/@type" appearance="full">
+               <xf:label>Type de date</xf:label>
+               <xf:item>
+                  <xf:label>Naissance</xf:label>
+                  <xf:value>birth</xf:value>
+               </xf:item>
+               <xf:item>
+                  <xf:label>Décès</xf:label>
+                  <xf:value>death</xf:value>
+               </xf:item>
+            </xf:select1>
          </xf:group>
       </main>
       <script>hljs.highlightAll();</script>

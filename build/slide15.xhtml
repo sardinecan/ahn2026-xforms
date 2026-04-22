@@ -22,73 +22,111 @@
             href="//unpkg.com/@catppuccin/highlightjs@1.0.1/css/catppuccin-latte.css"/>
       <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js">/**/</script>
       <script src="../assets/js/generateid.js"/>
-      <xf:model>
-         <xf:instance id="museum">
-            <museum xmlns="">
-               <artists>
-                  <artist id="a1">
-                     <name>Artemisia Gentileschi</name>
-                  </artist>
-                  <artist id="a2">
-                     <name>Goya</name>
-                  </artist>
-               </artists>
-               <artworks>
-                  <artwork artist="a1">
-                     <title>Judith décapitant Holopherne</title>
-                  </artwork>
-                  <artwork artist="a2">
-                     <title>El tres de mayo de 1808 en Madrid</title>
-                  </artwork>
-                  <artwork artist="a2">
-                     <title>Saturne dévorant un de ses fils</title>
-                  </artwork>
-               </artworks>
-            </museum>
+      <xf:model xmlns="http://www.tei-c.org/ns/1.0">
+         <xf:instance>
+            <data xmlns="">
+               <nom/>
+               <dateNaissance/>
+               <age/>
+            </data>
          </xf:instance>
+         <xf:bind nodeset="age" type="integer"/>
+         <xf:bind nodeset="dateNaissance" type="date"/>
+         <xf:instance id="contact">
+            <data xmlns="">
+               <contact type="email"/>
+               <contact type="phone"/>
+            </data>
+         </xf:instance>
+         <xs:schema targetNamespace="http://ahn2026/ns/1.0">
+            <xs:simpleType name="phone">
+               <xs:restriction base="xs:string">
+                  <xs:pattern value="^(\d{2}\s?){5}"/>
+               </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType name="email">
+               <xs:restriction base="xs:string">
+                  <xs:pattern value="^[^@]+@[^@]+"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:schema>
+         <xf:bind nodeset="instance('contact')//contact[@type='email']" type="ahn:email"/>
+         <xf:bind nodeset="instance('contact')//contact[@type='phone']" type="ahn:phone"/>
       </xf:model>
    </head>
    <body>
       <main class="slide ">
-         <h1 class="">
-            <code>current()</code>
-         </h1>
-         <p>La fonction <code>current()</code> renvoie le nœud du contexte (par exemple l’item d’un repeat). Cette fonction est très utile pour écrire des expressions avec imbrication des contextes.</p>
+         <h1 class="">Typer les données (<code>xf:bind</code>)</h1>
+         <p>Au sein du <code>xf:model</code>, l’élément <a href="https://www.w3.org/TR/xforms11/#structure-bind-element"
+               target="_blank">
+               <code>xf:bind</code>
+            </a> est utilisé pour typer les données. Il est relié aux nœuds par l’intermédiaire de l’attribut <code>@nodeset</code> (groupe de nœuds) et le type est indiqué dans un attribut <code>@type</code> :</p>
          <pre>
-            <code class="language-">
-&lt;xf:instance id="museum"&gt;
-    &lt;museum xmlns=""&gt;
-        &lt;artists&gt;
-            &lt;artist id="a1"&gt;&lt;name&gt;Artemisia Gentileschi&lt;/name&gt;&lt;/artist&gt;
-            &lt;artist id="a2"&gt;&lt;name&gt;Goya&lt;/name&gt;&lt;/artist&gt;
-        &lt;/artists&gt;
-        &lt;artworks&gt;
-            &lt;artwork artist="a1"&gt;&lt;title&gt;Judith décapitant Holopherne&lt;/title&gt;&lt;/artwork&gt;
-            &lt;artwork artist="a2"&gt;&lt;title&gt;El tres de mayo de 1808 en Madrid&lt;/title&gt;&lt;/artwork&gt;
-            &lt;artwork artist="a2"&gt;&lt;title&gt;Saturne dévorant un de ses fils&lt;/title&gt;&lt;/artwork&gt;
-        &lt;/artworks&gt;
-    &lt;/museum&gt;
-&lt;/xf:instance&gt;
-
-&lt;xf:repeat nodeset="instance('museum')/artists/artist"&gt;
-    &lt;xf:output value="concat(
-        name,
-        ', nombre d’oeuvres dans la collection : ',
-        count(instance('museum')/artworks/artwork[@artist = current()/@id]))"/&gt;
-&lt;/xf:repeat&gt;</code>
+            <code class="language-xml">
+&lt;xf:model&gt;
+    &lt;xf:instance&gt;
+        &lt;data xmlns=""&gt;
+            &lt;nom/&gt;
+            &lt;dateNaissance/&gt;
+            &lt;age/&gt;
+        &lt;/data&gt;
+    &lt;/xf:instance&gt;
+    &lt;xf:bind nodeset="age" type="integer"/&gt;
+    &lt;xf:bind nodeset="dateNaissance" type="date"/&gt;
+&lt;/xf:model&gt;
+                        </code>
          </pre>
          <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:repeat nodeset="instance('museum')/artists/artist">
-               <xf:output value="concat(                                     name,                                     ', nombre d’oeuvres dans la collection : ',                                     count(instance('museum')/artworks/artwork[@artist = current()/@id]))"/>
-            </xf:repeat>
+            <xf:input ref="nom" incremental="true">
+               <xf:label>Nom : </xf:label>
+            </xf:input>
+            <x:br/>
+            <xf:input ref="dateNaissance" incremental="true">
+               <xf:label>Date de naissance</xf:label>
+            </xf:input>
+            <x:br/>
+            <xf:input ref="age" incremental="true">
+               <xf:label>Age</xf:label>
+            </xf:input>
+            <x:br/>
+            <xf:output value="serialize(.)" incremental="true">
+               <xf:label>output :</xf:label>
+            </xf:output>
          </xf:group>
-         <ul>
-            <li>Le <code>xf:repeat</code> parcourt les artistes</li>
-            <li>
-               <code>current()</code> désigne l’artiste de la ligne en cours</li>
-            <li>On peut alors compter les oeuvres dont l’attribut <code>@artist</code> correspond à l’artiste courant</li>
-         </ul>
-         <p>Sans <code>current()</code>, la comparaison perdrait le bon contexte.</p>
+         <details>
+            <summary>Que remarque-t-on ?</summary>
+            <p>Les champs s’adaptent aux types. Cependant, la valeur affichée peut ne pas correspondre à la façon dont elle est stockée (cf. date). Le non respect du type entraîne l’affichage d’une alerte.</p>
+            <p>On remarque également que l’utilisation de l’attribut <code>@incremental="true"</code> modifie l’évaluation du typage, qui se fait alors en temps réel.</p>
+         </details>
+         <p>Le type par défaut est <code>string</code> (chaîne de caractères), mais tous les types XML peuvent être appelés ; on peut même définir des types avec XML Schema :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xs:schema targetNamespace="http://ahn2026/ns/1.0"&gt;
+    &lt;xs:simpleType name="phone"&gt;
+        &lt;xs:restriction base="xs:string"&gt;
+            &lt;xs:pattern value="^(\d{2}\s?){5}"/&gt;
+        &lt;/xs:restriction&gt;
+    &lt;/xs:simpleType&gt;
+    &lt;xs:simpleType name="email"&gt;
+        &lt;xs:restriction base="xs:string"&gt;
+            &lt;xs:pattern value="^[^@]+@[^@]+"/&gt;
+        &lt;/xs:restriction&gt;
+    &lt;/xs:simpleType&gt;
+&lt;/xs:schema&gt;
+
+&lt;xf:bind nodeset="//contact[@type='email']" type="ahn:email"/&gt;
+&lt;xf:bind nodeset="//contact[@type='phone']" type="ahn:phone"/&gt;
+                        </code>
+         </pre>
+         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
+            <xf:input ref="instance('contact')/contact[@type='email']" incremental="true">
+               <xf:label>Email : </xf:label>
+            </xf:input>
+            <x:br/>
+            <xf:input ref="instance('contact')/contact[@type='phone']" incremental="true">
+               <xf:label>Téléphone : </xf:label>
+            </xf:input>
+         </xf:group>
       </main>
       <script>hljs.highlightAll();</script>
    </body>

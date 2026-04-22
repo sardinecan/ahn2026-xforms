@@ -24,85 +24,41 @@
       <script src="../assets/js/generateid.js"/>
       <xf:model xmlns="http://www.tei-c.org/ns/1.0">
          <xf:instance>
-            <listPerson xmlns="">
-               <person>
-                  <name>Victor Hugo</name>
-                  <birthDate>1802</birthDate>
-                  <deathDate>1885</deathDate>
-               </person>
-               <person>
-                  <name>Juliette Drouet</name>
-                  <birthDate>1806</birthDate>
-                  <deathDate>1883</deathDate>
-               </person>
-            </listPerson>
+            <data xmlns="">
+               <nom>Victor Hugo</nom>
+               <dateNaissance>1802</dateNaissance>
+            </data>
          </xf:instance>
+         <!--<xf:bind nodeset="age" type="integer"/>
+                            <xf:bind nodeset="dateNaissance" type="date"/>-->
       </xf:model>
    </head>
    <body>
       <main class="slide ">
-         <h1 class="">L’élément <code>xf:repeat</code>
+         <h1 class="">
+            <code>xf:label</code>, <code>xf:hint</code>, <code>xf:help</code> et <code>xf:alert</code>
          </h1>
-         <p>Imaginons l’instance suivante :</p>
+         <p>Les éléments <code>xf:label</code>, <code>xf:hint</code>, <code>xf:help</code> et <code>xf:alert</code> permettent d’attacher des métadonnées à une grande partie des contrôles XForms.</p>
+         <p>Ils sont utilisés comme des sous-éléments pour le contrôles <code>xf:input</code>, <code>xf:output</code>, <code>xf:group</code>, <code>xf:repeat</code>, etc.</p>
+         <p>Un label facultatif peut être associé à tous les champs ou contrôles XForms avec l’élément <code>xf:label</code>
+         </p>
          <pre>
             <code class="language-xml">
-&lt;xf:instance&gt;
-    &lt;listPerson xmlns=""&gt;
-        &lt;person&gt;
-            &lt;name&gt;Victor Hugo&lt;/name&gt;
-            &lt;birthDate&gt;1802&lt;/birthDate&gt;
-            &lt;deathDate&gt;1885&lt;/deathDate&gt;
-        &lt;/person&gt;
-        &lt;person&gt;
-            &lt;name&gt;Juliette Drouet&lt;/name&gt;
-            &lt;birthDate&gt;1806&lt;/birthDate&gt;
-            &lt;deathDate&gt;1883&lt;/deathDate&gt;
-        &lt;/person&gt;
-    &lt;/listPerson&gt;
-&lt;/xf:instance&gt;
-                        </code>
-         </pre>
-         <p>Avec XForms, il est très facile de gérer une séquence d’éléments qui partagent une même structure (ou non d'ailleurs).</p>
-         <p>La balise <code>xf:repeat</code> permet de propager des règles communes à un ensemble de nœuds identifiés par l’attribut <code>@nodeset</code>.</p>
-         <pre>
-            <code class="language-xml">
-&lt;xf:repeat nodeset="person"&gt;
-    &lt;xf:output ref="name"/&gt; (&lt;xf:output ref="birthDate"/&gt; - &lt;xf:output ref="deathDate"/&gt;)
-&lt;/xf:repeat&gt;
+&lt;xf:input ref="dateNaissance" incremental="true"&gt;
+    &lt;xf:label&gt;Date de naissance&lt;/xf:label&gt;
+    &lt;xf:help&gt;Date au format AAAA&lt;/xf:help&gt;
+    &lt;xf:hint&gt;Année de naissance de VH&lt;/xf:hint&gt;
+&lt;/xf:input&gt;
                         </code>
          </pre>
          <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:repeat nodeset="person">
-               <xf:group>
-                  <xf:output ref="name"/> (<xf:output ref="birthDate"/> - <xf:output ref="deathDate"/>)
-                                </xf:group>
-            </xf:repeat>
+            <xf:input ref="dateNaissance" incremental="true">
+               <xf:label>Date de naissance</xf:label>
+               <xf:help>Date au format AAAA</xf:help>
+               <xf:hint>Année de naissance de VH</xf:hint>
+            </xf:input>
          </xf:group>
-         <p>À l'intérieur d’un <code>xf:repeat</code> on hérite du <strong>contexte</strong> défini par l’attribut <code>@nodeset</code>. On indique donc bien :</p>
-         <pre>
-            <code class="language-xml">
-&lt;xf:output ref="name"/&gt;
-                        </code>
-         </pre>
-         <p>et non</p>
-         <pre>
-            <code class="language-xml">
-&lt;xf:output ref="person/name"/&gt;
-                        </code>
-         </pre>
-         <p>Ceci est généralement vrai partout dans un document XForms : les expressions utilisent le contexte fourni par l'élément parent.</p>
-         <p>Il est toutefois possible de définir le contexte explicitement, soit en utilisant un élément <code>xf:group</code> :</p>
-         <pre>
-            <code class="language-xml">
-&lt;xf:group ref="person[1]"&gt;
-    &lt;xf:output ref="person/name"/&gt;
-&lt;/xf:group&gt;
-                        </code>
-         </pre>
-         <xf:group xmlns="http://www.tei-c.org/ns/1.0" ref="person[1]">
-            <xf:output ref="name"/>
-         </xf:group>
-         <p>soit en précisant le contexte directement sur certains éléments comme <code>xf:insert</code>, mais nous verrons cela un peu plus loin.</p>
+         <p>On peut y placer directement du texte ou charger du contenu depuis une instance de données en utilisant l'attribut <code>@ref</code>.</p>
       </main>
       <script>hljs.highlightAll();</script>
    </body>

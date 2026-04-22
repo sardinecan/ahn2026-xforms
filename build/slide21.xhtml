@@ -23,119 +23,130 @@
       <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js">/**/</script>
       <script src="../assets/js/generateid.js"/>
       <xf:model xmlns="http://www.tei-c.org/ns/1.0">
-         <xf:instance id="text-from-jd">
+         <xf:instance id="choice">
             <data xmlns="">
-               <text/>
+               <choice/>
+               <collection/>
             </data>
          </xf:instance>
-         <xf:submission resource="https://juliettedrouet.univ-rouen.fr/lettres/jd.entry.3808/source"
-                        serialization="none"
-                        method="get"
-                        replace="instance"
-                        instance="text-from-jd"
-                        id="gettext"/>
-         <xf:submission resource="https://juliettedrouet.univ-rouen.fr/lettres/jd.entry.3808"
-                        serialization="none"
-                        method="get"
-                        replace="all"
-                        id="getview"/>
+         <xf:instance id="listPerson">
+            <listPerson xmlns="">
+               <person>
+                  <name>Victor Hugo</name>
+                  <birthDate>1802</birthDate>
+                  <deathDate>1885</deathDate>
+               </person>
+               <person>
+                  <name>Alexandre Dumas</name>
+                  <birthDate>1802</birthDate>
+                  <deathDate>1870</deathDate>
+               </person>
+               <person>
+                  <name>George Sand</name>
+                  <birthDate>1804</birthDate>
+                  <deathDate>1876</deathDate>
+               </person>
+               <person>
+                  <name>Honoré de Balzac</name>
+                  <birthDate>1799</birthDate>
+                  <deathDate>1850</deathDate>
+               </person>
+            </listPerson>
+         </xf:instance>
       </xf:model>
    </head>
    <body>
       <main class="slide ">
-         <h1 class="">Soumission - <code>xf:submission</code>
+         <h1 class="">L’élément <code>xf:itemset</code>
          </h1>
-         <p>Le module de soumission d’XForms est très complet et couvre un large éventail d’actions pour collecter, envoyer et stocker des données.</p>
-         <p>Il permet notamment de définir :</p>
-         <ul>
-            <li>1) ce qu’on souhaite envoyer</li>
-            <li>2) où on souhaite l’envoyer</li>
-            <li>3) ce qu'on veut faire du résultat</li>
-         </ul>
-         <p>Tout ces paramètres sont définis avec l’élément <code>xf:submission</code> placé dans l'élément <code>xf:model</code>.</p>
-         <ul>
-            <li>L’attribut <code>@ref</code> précise l’instance (ou le segment d’instance) qu'on souhaite envoyer (sans indication, il s’agit de l’instance par défaut) ; si on ne souhaite envoyer aucune donnée mais simplement en récupérer, on utilise l’attribut <code>@serialization="none"</code> ;</li>
-            <li>l’attribut <code>@resource</code> indique où envoyer et d’où recevoir les données ;</li>
-            <li>
-                                Enfin l’attribut <code>@replace</code> permet de spécifier ce qu'il faut faire des données reçues :
-                                <ul>
-                  <li>
-                     <code>@replace="none"</code> : ne rien faire</li>
-                  <li>
-                     <code>@replace="instance"</code> : remplacer une instance. L’instance à remplacer est alors indiquée avec l’attribut <code>@instance="idInstance"</code>
-                  </li>
-                  <li>
-                     <code>@replace="all"</code> : remplace toute la page</li>
-               </ul>
-            </li>
-         </ul>
+         <p>Il est également possible de créer une liste de choix directement à partir d’une instance.</p>
          <pre>
             <code class="language-xml">
-&lt;xf:submission resource="https://juliettedrouet.univ-rouen.fr/lettres/jd.entry.3808/source"
-    serialization="none" 
-    method="get"
-    replace="instance"
-    instance="text-from-jd"/&gt;
+&lt;xf:instance id="listPerson"&gt;
+    &lt;listPerson xmlns=""&gt;
+        &lt;person&gt;
+            &lt;name&gt;Victor Hugo&lt;/name&gt;
+            &lt;birthDate&gt;1802&lt;/birthDate&gt;
+            &lt;deathDate&gt;1885&lt;/deathDate&gt;
+        &lt;/person&gt;
+        &lt;person&gt;
+            &lt;name&gt;Alexandre Dumas&lt;/name&gt;
+            &lt;birthDate&gt;1802&lt;/birthDate&gt;
+            &lt;deathDate&gt;1870&lt;/deathDate&gt;
+        &lt;/person&gt;
+        &lt;person&gt;
+            &lt;name&gt;George Sand&lt;/name&gt;
+            &lt;birthDate&gt;1804&lt;/birthDate&gt;
+            &lt;deathDate&gt;1876&lt;/deathDate&gt;
+        &lt;/person&gt;
+        &lt;person&gt;
+            &lt;name&gt;Honoré de Balzac&lt;/name&gt;
+            &lt;birthDate&gt;1799&lt;/birthDate&gt;
+            &lt;deathDate&gt;1850&lt;/deathDate&gt;
+        &lt;/person&gt;
+    &lt;/listPerson&gt;
+&lt;/xf:instance&gt;
                         </code>
          </pre>
+         <p>On utilise pour cela l’élément <code>xf:itemset</code> :</p>
          <pre>
             <code class="language-xml">
-&lt;xf:submission
-    resource="https://juliettedrouet.univ-rouen.fr/lettres/jd.entry.3808"
-    serialization="none"
-    method="get"
-    replace="all"/&gt;
-                        </code>
-         </pre>
-         <p>Tout comme avec l’élément <code>xf:load</code>, si l’url à atteindre doit être construite, on peut remplacer l’attribut <code>@resource</code> par l’élément <code>xf:resource</code>.</p>
-         <pre>
-            <code class="language-xml">
-&lt;xf:submission
-    serialization="none"
-    method="get"
-    replace="all"&gt;
-    &lt;xf:resource value="concat('https://juliettedrouet.univ-rouen.fr/lettres/', 'jd.entry.3808')"/&gt;
-&lt;/xf:submission&gt;
-                        </code>
-         </pre>
-         <p>On peut même avoir plusieurs processus de soumission au sein d’un même modèle. Il est alors nécessaire de leur attribuer un identifiant avec l’attribut <code>@id</code> :</p>
-         <pre>
-            <code class="language-xml">
-&lt;xf:submission id="gettext" ...
-                        </code>
-         </pre>
-         <p>Pour déclencher une soumission, on a généralement recours à l’élément <code>xf:submit</code> :</p>
-         <pre>
-            <code class="language-xml">
-&lt;xf:submit&gt;
-    &lt;xf:label&gt;Récupérer le fichier TEI&lt;/xf:label&gt;
-&lt;/xf:submit&gt;
-&lt;xf:submit submission="getview"&gt;
-    &lt;xf:label&gt;Voir en ligne&lt;/xf:label&gt;
-&lt;/xf:submit&gt;
-                        </code>
-         </pre>
-         <p>Mais on peut aussi utiliser un <code>xf:trigger</code> :</p>
-         <pre>
-            <code class="language-xml">
-&lt;xf:trigger&gt;
-    &lt;xf:label&gt;Voir en ligne&lt;/xf:label&gt;
-    &lt;xf:action ev:event="DOMActivate"&gt;
-        &lt;xf:send submission="getview"/&gt;
-    &lt;/xf:action&gt;
-&lt;/xf:trigger&gt;
+&lt;xf:select1 ref="choice"&gt;
+    &lt;xf:label&gt;Choisir une personne&lt;/xf:label&gt;
+    &lt;xf:itemset ref="instance('listPerson')/person"&gt;
+        &lt;xf:label ref="name"/&gt;
+        &lt;xf:value ref="name"/&gt;
+    &lt;/xf:itemset&gt;
+&lt;/xf:select1&gt;
                         </code>
          </pre>
          <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:submit submission="gettext">
-               <xf:label>Récupérer le fichier TEI</xf:label>
-            </xf:submit>
+            <xf:select1 ref="choice" appearance="full">
+               <xf:label>Choisir une personne</xf:label>
+               <xf:itemset ref="instance('listPerson')/person">
+                  <xf:label ref="name"/>
+                  <xf:value value="name"/>
+               </xf:itemset>
+            </xf:select1>
+            <xf:output ref="choice">
+               <xf:label>Personne choisie : </xf:label>
+            </xf:output>
+         </xf:group>
+         <p>On notera l’utilisation de la fonction <code>instance()</code> avec <code>xf:itemset</code>.</p>
+         <p>Bien évidemment, il est possible d’interpréter des valeurs avec l’attribut <code>@value</code>, tout comme avec l’élément <code>xf:output</code> :</p>
+         <pre>
+            <code class="language-xml">
+&lt;!-- dans l’instance... --&gt;
+&lt;person id="vh"&gt;Victor Hugo&lt;/person&gt;
+                            
+&lt;xf:itemset ref="instance('listPerson')/person"&gt;
+    &lt;xf:label ref="."/&gt;
+    &lt;xf:value value="concat('#', @id)"/&gt;
+&lt;/xf:itemset&gt;
+                        </code>
+         </pre>
+         <p>Enfin, avec <code>xf:itemset</code> on peut préférer insérer un élément plutôt qu’une valeur. On utilisera à cet effet la balise <code>xf:copy</code> :</p>
+         <pre>
+            <code class="language-">
+&lt;xf:select ref="collection"&gt;
+    &lt;xf:label&gt;Choisir une personne&lt;/xf:label&gt;
+    &lt;xf:itemset ref="instance('listPerson')/person"&gt;
+        &lt;xf:label ref="name"/&gt;
+        &lt;xf:copy ref="name"/&gt;
+    &lt;/xf:itemset&gt;
+&lt;/xf:select&gt;
+                        </code>
+         </pre>
+         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
+            <xf:output value="serialize(collection)"/>
             <x:br/>
-            <xf:submit submission="getview">
-               <xf:label>Voir en ligne</xf:label>
-            </xf:submit>
-            <x:br/>
-            <xf:output value="serialize(.)"/>
+            <xf:select ref="collection" appearance="full">
+               <xf:label>Choisir une personne</xf:label>
+               <xf:itemset ref="instance('listPerson')/person">
+                  <xf:label ref="name"/>
+                  <xf:copy ref="name"/>
+               </xf:itemset>
+            </xf:select>
          </xf:group>
       </main>
       <script>hljs.highlightAll();</script>

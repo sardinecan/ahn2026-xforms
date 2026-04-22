@@ -1,0 +1,223 @@
+<?xml-stylesheet href="../assets/xsltforms/xsltforms.xsl" type="text/xsl"?><html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ahn="http://ahn2026/ns/1.0"
+      xmlns:ev="http://www.w3.org/2001/xml-events"
+      xmlns:file="http://expath.org/ns/file"
+      xmlns:tei="http://www.tei-c.org/ns/1.0"
+      xmlns:x="http://www.w3.org/1999/xhtml"
+      xmlns:xf="http://www.w3.org/2002/xforms"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:xs="http://www.w3.org/2001/XMLSchema"
+      xf:bogus="fix/Firefox/namespace/issue"
+      xs:bogus="fix/Firefox/namespace/issue"
+      xlink:bogus="fix/Firefox/namespace/issue"
+      ahn:bogus="fix/Firefox/namespace/issue"
+      tei:bogus="fix/Firefox/namespace/issue"
+      lang="fr">
+   <head>
+      <meta charset="utf-8"/>
+      <title>AHN 2026Formation XForms</title>
+      <link rel="stylesheet" href="../assets/css/main.css" type="text/css"/>
+      <link rel="stylesheet" href="../assets/css/tei.css" type="text/css"/>
+      <link rel="stylesheet"
+            href="//unpkg.com/@catppuccin/highlightjs@1.0.1/css/catppuccin-latte.css"/>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js">/**/</script>
+      <script src="../assets/js/generateid.js"/>
+      <xf:model xmlns="http://www.tei-c.org/ns/1.0" id="model_one">
+         <xf:instance id="list">
+            <personnes xmlns="">
+               <person>
+                  <name>Victor Hugo</name>
+                  <birthDate>1802</birthDate>
+                  <deathDate>1885</deathDate>
+               </person>
+            </personnes>
+         </xf:instance>
+         <xf:instance id="blank">
+            <data xmlns="">
+               <person dead="false">
+                  <name/>
+                  <birthDate/>
+                  <deathDate/>
+                  <age/>
+               </person>
+            </data>
+         </xf:instance>
+         <xf:instance id="admin">
+            <admin xmlns="">
+               <changed/>
+            </admin>
+         </xf:instance>
+         <xf:bind nodeset="person/birthDate|person/deathDate|person/age" type="integer"/>
+         <xf:bind nodeset="instance('admin')/changed" type="boolean"/>
+      </xf:model>
+      <xf:model xmlns="http://www.tei-c.org/ns/1.0" id="model_two">
+         <xf:instance id="list2">
+            <personnes xmlns="">
+               <person dead="true">
+                  <name>Victor Hugo</name>
+                  <birthDate>1802</birthDate>
+                  <deathDate>1885</deathDate>
+                  <age/>
+               </person>
+            </personnes>
+         </xf:instance>
+         <xf:instance id="blank2">
+            <data xmlns="">
+               <person dead="false">
+                  <name/>
+                  <birthDate/>
+                  <deathDate/>
+                  <age/>
+               </person>
+            </data>
+         </xf:instance>
+         <xf:instance id="admin2">
+            <admin xmlns="">
+               <changed/>
+            </admin>
+         </xf:instance>
+         <xf:bind nodeset="person/birthDate|person/deathDate|person/age" type="integer"/>
+         <xf:bind nodeset="instance('admin2')/changed" type="boolean"/>
+         <xf:action ev:event="xforms-insert" ev:listener="list2">
+            <xf:setvalue ref="instance('admin2')/changed">true</xf:setvalue>
+         </xf:action>
+         <xf:action ev:event="xforms-delete" ev:listener="list2">
+            <xf:setvalue ref="instance('admin2')/changed">true</xf:setvalue>
+         </xf:action>
+      </xf:model>
+   </head>
+   <body>
+      <main class="slide ">
+         <h1 class="">Détecter les changements dans une instance</h1>
+         <p>Nous avons ajouté un contrôle de sauvegarde pour permettre d'enregistrer les données dans un fichier, mais existe-t-il un moyen de savoir si les données doivent être sauvegardées, autrement dit si une instance a changé ?</p>
+         <p>Nous avons déjà rencontré l'événement <code>xforms-value-changed</code>, et comme nous l'avons mentionné, il est distribué au contrôle lié à la valeur, nous mettons donc le gestionnaire dans le contenu de cet élément :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:input ref="name"&gt;
+    &lt;xf:label&gt;Nom&lt;/xf:label&gt;
+    &lt;xf:action ev:event="xforms-value-changed"&gt;
+        &lt;xf:setvalue ref="instance('admin')/changed"&gt;true&lt;/xf:setvalue&gt;
+    &lt;/xf:action&gt;
+&lt;/xf:input&gt;
+                        </code>
+         </pre>
+         <p>Cependant, de nombreux événements "remontent" (bubble) : à partir de l'élément auquel ils sont distribués, ils remontent l'arbre des éléments. Donc si nous faisons ceci :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:action ev:event="xforms-value-changed"&gt;
+    &lt;xf:setvalue ref="instance('admin')/changed"&gt;true&lt;/xf:setvalue&gt;
+&lt;/xf:action&gt;
+&lt;xf:input ref="name"&gt;&lt;xf:label&gt;Nom&lt;/xf:label&gt;&lt;/xf:input&gt;
+&lt;xf:input ref="birthDate"&gt;&lt;xf:label&gt;Année de naissance&lt;/xf:label&gt;&lt;/xf:input&gt;
+                        </code>
+         </pre>
+         <p>alors l'action recevra les événements des deux inputs. Elle ne pourra pas les distinguer, mais elle saura que quelque chose a changé. Voici comment nous faisons cela pour notre liste de personnes, avec l'action positionnée à l'intérieur du contrôle repeat :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:repeat nodeset="person"&gt;
+    &lt;xf:action ev:event="xforms-value-changed"&gt;
+        &lt;xf:setvalue ref="instance('admin')/changed"&gt;true&lt;/xf:setvalue&gt;
+    &lt;/xf:action&gt;
+    ...
+                        </code>
+         </pre>
+         <p>Vous devez faire attention à le positionner de manière à capturer uniquement les événements qui vous intéressent. Si vous le placez au-dessus du <code>&lt;repeat&gt;</code>, vous capturerez également les événements des contrôles au même niveau que le repeat.</p>
+         <p>Essayez-le. Vous verrez que si vous modifiez l'un des contenus, comme le nom, cela enregistrera le changement, mais pas si vous ajoutez ou supprimez des éléments, car ceux-ci ne génèrent pas d'événements value-changed :</p>
+         <xf:group xmlns="http://www.tei-c.org/ns/1.0" model="model_one">
+            <xf:repeat nodeset="person">
+               <xf:action ev:event="xforms-value-changed">
+                  <xf:setvalue ref="instance('admin')/changed">true</xf:setvalue>
+               </xf:action>
+               <xf:group>
+                  <xf:input class="inline" incremental="true" ref="name">
+                     <xf:label>Nom</xf:label>
+                  </xf:input>
+                  <xf:input class="inline" incremental="true" ref="birthDate">
+                     <xf:label>Naissance</xf:label>
+                  </xf:input>
+                  <xf:input class="inline" incremental="true" ref="deathDate">
+                     <xf:label>Décès</xf:label>
+                  </xf:input>
+               </xf:group>
+            </xf:repeat>
+            <xf:group>
+               <p>Modification : </p>
+               <xf:output class="inline" value="instance('admin')/changed"/>
+            </xf:group>
+         </xf:group>
+         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
+            <xf:label>Changements pour les insertions et suppressions</xf:label>
+            <x:p>Les événements pour les éléments insérés et supprimés sont envoyés à l'instance elle-même, et sont <code>xforms-insert</code> et <code>xforms-delete</code>. Évidemment, vous ne pouvez pas mettre l'action à l'intérieur du contenu de l'instance, car elle apparaîtrait alors comme faisant partie des données de l'instance, vous utilisez donc l'id de l'instance :</x:p>
+         </xf:group>
+         <pre>
+            <code class="language-xml">
+&lt;xf:action ev:event="xforms-insert" ev:listener="list"&gt;
+    ...
+</code>
+         </pre>
+         <p>Cela fonctionne sinon de la même manière. (En fait, vous pouvez faire cela avec tous les éléments <code>&lt;action&gt;</code> si vous le souhaitez). Donc maintenant l'image complète est :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:action ev:event="xforms-insert" ev:listener="list"&gt;
+    &lt;xf:setvalue ref="instance('admin')/changed"&gt;true&lt;/xf:setvalue&gt;
+&lt;/xf:action&gt;
+&lt;xf:action ev:event="xforms-delete" ev:listener="list"&gt;
+    &lt;xf:setvalue ref="instance('admin')/changed"&gt;true&lt;/xf:setvalue&gt;
+&lt;/xf:action&gt;
+...
+&lt;xf:repeat nodeset="person"&gt;
+    &lt;xf:action ev:event="xforms-value-changed"&gt;
+        &lt;xf:setvalue ref="instance('admin')/changed"&gt;true&lt;/xf:setvalue&gt;
+    &lt;/xf:action&gt;
+    ...
+</code>
+         </pre>
+         <xf:group xmlns="http://www.tei-c.org/ns/1.0" model="model_two">
+            <xf:repeat nodeset="instance('list2')/person">
+               <xf:action ev:event="xforms-value-changed">
+                  <xf:setvalue ref="instance('admin2')/changed">true</xf:setvalue>
+               </xf:action>
+               <xf:group>
+                  <xf:input class="inline" incremental="true" ref="name">
+                     <xf:label>Nom</xf:label>
+                  </xf:input>
+                  <xf:input class="inline" incremental="true" ref="birthDate">
+                     <xf:label>Naissance</xf:label>
+                  </xf:input>
+                  <xf:input class="inline" incremental="true" ref="deathDate">
+                     <xf:label>Décès</xf:label>
+                  </xf:input>
+                  <xf:trigger>
+                     <xf:label>×</xf:label>
+                     <xf:hint>Supprimer</xf:hint>
+                     <xf:action ev:event="DOMActivate">
+                        <xf:delete nodeset="."/>
+                     </xf:action>
+                  </xf:trigger>
+               </xf:group>
+            </xf:repeat>
+            <xf:trigger>
+               <xf:label>+</xf:label>
+               <xf:hint>Ajouter une personne</xf:hint>
+               <xf:action ev:event="DOMActivate">
+                  <xf:insert nodeset="instance('list2')/person" origin="instance('blank2')/person"/>
+               </xf:action>
+            </xf:trigger>
+            <xf:group>
+               <x:p>Modifié : </x:p>
+               <xf:output class="inline" value="instance('admin2')/changed"/>
+            </xf:group>
+            <xf:trigger>
+               <xf:label>Réinitialiser</xf:label>
+               <xf:action ev:event="DOMActivate">
+                  <xf:setvalue ref="instance('admin2')/changed"/>
+               </xf:action>
+            </xf:trigger>
+         </xf:group>
+         <div>
+            <h2 class="">Exercice</h2>
+         </div>
+      </main>
+      <script>hljs.highlightAll();</script>
+   </body>
+</html>

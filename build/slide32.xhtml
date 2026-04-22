@@ -24,56 +24,59 @@
       <script src="../assets/js/generateid.js"/>
       <xf:model xmlns="http://www.tei-c.org/ns/1.0">
          <xf:instance>
-            <person xmlns="">
-               <name>Victor Hugo</name>
-               <birthDate>1802</birthDate>
-               <deathDate>1885</deathDate>
-               <age/>
-            </person>
+            <personnes xmlns="">
+               <person dead="true">
+                  <name>Victor Hugo</name>
+                  <birthDate>1802</birthDate>
+                  <deathDate>1885</deathDate>
+               </person>
+               <person dead="false">
+                  <name>Annie Ernaux</name>
+                  <birthDate>1940</birthDate>
+                  <deathDate/>
+               </person>
+            </personnes>
          </xf:instance>
-         <xf:bind nodeset="birthDate|deathDate|age" type="integer"/>
-         <xf:bind nodeset="name" readonly="true()"/>
-         <xf:bind nodeset="age" calculate="../deathDate - ../birthDate"/>
+         <xf:bind nodeset="person/birthDate|person/deathDate|person/age" type="integer"/>
+         <xf:bind nodeset="person/@dead" type="boolean"/>
+         <xf:bind nodeset="person/deathDate" relevant="../@dead = 'true'"/>
+         <xf:submission id="save"
+                        method="put"
+                        resource="file:personnes.xml"
+                        replace="none"/>
       </xf:model>
    </head>
    <body>
       <main class="slide ">
-         <h1 class="">Attribute Value Templates (AVT)</h1>
-         <p>Outre <code>xf:output</code> qui permet d’insérer du texte dans la page web, XForms permet aussi d’interagir avec les attributs HTML par l’intermédiaire de l’<em>Attribute Value Templates</em> :</p>
+         <h1 class="">Relevance (Pertinence)</h1>
+         <p>Vous pouvez spécifier les conditions dans lesquelles certaines données sont pertinentes. Par exemple, la date de décès n'est pertinente que si la personne est décédée :</p>
          <pre>
             <code class="language-xml">
-&lt;style type="text/css"&gt;
-    .positif {color: green}
-    .negatif {background-color: red; color: white}
-&lt;/style&gt;
+&lt;xf:bind nodeset="deathDate" relevant="../@dead = 'true'"/&gt;
                         </code>
          </pre>
-         <p>L’AVT permet d’évaluer une expression à l’intérieur d’un attribut. Il s’agit d’une expression placée entre accolades <code>{ }</code> à l'intérieur d'un attribut :</p>
-         <pre>
-            <code class="language-xml">
-&lt;span class="{if(age &amp;lt; 0, 'negatif', 'positif')}"&gt;
-    Âge au décès : &lt;xf:output ref="age"/&gt;
-&lt;/span&gt;
-                        </code>
-         </pre>
-         <p>Essayez-le en inversant les dates pour obtenir un âge négatif :</p>
+         <p>La pertinence a deux effets principaux : un contrôle lié à une valeur non pertinente n'est pas affiché, et lors d'une soumission, par défaut les éléments non pertinents ne sont pas inclus dans les données (vous pouvez modifier ce comportement avec <code>relevant="false"</code> sur l'élément submission). Essayez de cocher/décocher "Décédé" :</p>
          <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:output ref="name">
-               <xf:label>Nom</xf:label>
-            </xf:output>
-            <x:br/>
-            <xf:input ref="birthDate" incremental="true">
-               <xf:label>Année de naissance</xf:label>
-            </xf:input>
-            <x:br/>
-            <xf:input ref="deathDate" incremental="true">
-               <xf:label>Année de décès</xf:label>
-            </xf:input>
-            <x:br/>
-            <x:span class="{if(age &lt; 0, 'negatif', 'positif')}">
-                                Âge au décès : <xf:output ref="age"/>
-            </x:span>
+            <xf:repeat nodeset="person">
+               <xf:input ref="name">
+                  <xf:label>Nom</xf:label>
+               </xf:input>
+               <xf:input ref="birthDate" incremental="true">
+                  <xf:label>Année de naissance</xf:label>
+               </xf:input>
+               <xf:input ref="@dead">
+                  <xf:label>Décédé</xf:label>
+               </xf:input>
+               <xf:input ref="deathDate" incremental="true">
+                  <xf:label>Année de décès</xf:label>
+               </xf:input>
+            </xf:repeat>
+            <xf:submit submission="save">
+               <xf:label>Sauvegarder</xf:label>
+            </xf:submit>
          </xf:group>
+         <p>En sauvegardant, vérifiez le fichier <code>personnes.xml</code>.</p>
+         <p>Il est important de noter qu'il existe également un autre type de pertinence : si un contrôle est lié à un élément qui n'existe tout simplement pas (par exemple s'il a été supprimé), le contrôle n'est pas non plus affiché. Si l'élément est réinséré, le contrôle réapparaîtra.</p>
       </main>
       <script>hljs.highlightAll();</script>
    </body>

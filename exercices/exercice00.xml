@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="../assets/xsltforms/xsltforms.xsl" type="text/xsl"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xf="http://www.w3.org/2002/xforms" lang="fr">
+    <head>
+        <title>Hello World with XForms</title>
+        <xf:model>
+            <xf:instance>
+                <data xmlns="">
+                    <prenom/>
+                </data>
+            </xf:instance>
+        </xf:model>
+    </head>
+    <body>
+        <xf:input ref="/data/prenom" incremental="true">
+            <xf:label>Entrez votre prénom : </xf:label>
+        </xf:input>
+        <br />
+        <xf:output value="concat('Hello ', /data/prenom, '!')">
+            <xf:label>Résultat : </xf:label>
+        </xf:output>
+    </body>
+</html>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="../assets/xsltforms/xsltforms.xsl" type="text/xsl"?>
+<!-- 
+    EXERCICE 1 : Formulaire notice bibliographique
+    
+    OBJECTIFS :
+    - Créer une instance de données pour une notice bibliographique (p. ex. auteur, titre et date)
+    - Ajouter un type pour la date
+    - Mettre en place le contrôle pour la saisie des données
+    - Afficher les données avec xf:output
+ 
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:xf="http://www.w3.org/2002/xforms"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:tei="http://www.tei-c.org/ns/1.0"
+    tei:bogus="fix/Firefox/namespace/issue">
+    <head>
+        <title>AHN 2026 ex01 : notice bibliographique</title>
+        <!-- 01 Ajouter un model contenant l’instance de données -->
+        <!-- 02 un type pour la donnée date -->
+    </head>
+    <body>
+        <!-- 03 mettre en place les contrôles de formulaire -->
+        <!-- 04 visualiser les données saisies -->
+    </body>
+</html>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="../../assets/xsltforms/xsltforms.xsl" type="text/xsl"?>
+<!-- 
+    EXERCICE 3 : Insérer et supprimer des nœuds
+    
+    OBJECTIFS :
+    - Mettre en place un système pour ajouter/supprimer des notices
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:xf="http://www.w3.org/2002/xforms"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:tei="http://www.tei-c.org/ns/1.0"
+    tei:bogus="fix/Firefox/namespace/issue">
+    <head>
+        <title>AHN 2026 ex03 : Insérer et supprimer des nœuds</title>
+        <xf:model>
+            <xf:instance id="listBibl">
+                
+                <!-- 01 Ne garder qu’une seule notice dans la liste -->
+                
+                <listBibl xmlns="http://www.tei-c.org/ns/1.0">
+                    <bibl>
+                        <author></author>
+                        <title></title>
+                        <date></date>
+                    </bibl>
+                    <bibl>
+                        <author></author>
+                        <title></title>
+                        <date></date>
+                    </bibl>
+                </listBibl>
+            </xf:instance>
+            
+            <xf:bind nodeset="tei:bibl/tei:date" type="date"/>
+            
+            <!-- 02 Ajouter une nouvelle instance contenant une notice bibliographique vide -->
+            
+            <xf:instance id="listAuthor">
+                <listPerson xmlns="http://www.tei-c.org/ns/1.0">
+                    <person id="hugo">
+                        <persName>Victor Hugo</persName>
+                    </person>
+                    <person id="musset">
+                        <persName>Alfred de Musset</persName>
+                    </person>
+                    <person id="zola">
+                        <persName>Émile Zola</persName>
+                    </person>
+                </listPerson>
+            </xf:instance>
+        </xf:model>
+    </head>
+    <body>
+        <xf:repeat nodeset="tei:bibl">
+            <xf:select1 ref="tei:author">
+                <xf:label>Auteur : </xf:label>
+                <xf:itemset ref="instance('listAuthor')/tei:person">
+                    <xf:label ref="tei:persName"/>
+                    <xf:value ref="tei:persName"/>
+                </xf:itemset>
+            </xf:select1>
+            <br/>
+            <xf:input ref="tei:title"><xf:label>Titre : </xf:label></xf:input>
+            <br/>
+            <xf:input ref="tei:date"><xf:label>Date : </xf:label></xf:input>
+            <!-- 04 ajouter une bouton pour supprimer une notice-->
+        </xf:repeat>
+        <!-- 03 ajouter une bouton pour insérer une nouvelle notice dans la liste (penser à ajouter un id au repeat pour l'index) -->
+    </body>
+</html>

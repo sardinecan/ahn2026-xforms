@@ -1,163 +1,22 @@
-<?xml-stylesheet href="../assets/xsltforms/xsltforms.xsl" type="text/xsl"?><html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ahn="http://ahn2026/ns/1.0"
-      xmlns:ev="http://www.w3.org/2001/xml-events"
-      xmlns:file="http://expath.org/ns/file"
-      xmlns:tei="http://www.tei-c.org/ns/1.0"
-      xmlns:x="http://www.w3.org/1999/xhtml"
-      xmlns:xf="http://www.w3.org/2002/xforms"
-      xmlns:xlink="http://www.w3.org/1999/xlink"
-      xmlns:xs="http://www.w3.org/2001/XMLSchema"
-      xf:bogus="fix/Firefox/namespace/issue"
-      xs:bogus="fix/Firefox/namespace/issue"
-      xlink:bogus="fix/Firefox/namespace/issue"
-      ahn:bogus="fix/Firefox/namespace/issue"
-      tei:bogus="fix/Firefox/namespace/issue"
-      lang="fr">
+<!DOCTYPE html
+  PUBLIC "'-//W3C//DTD XHTML 1.0 Strict//EN'" "'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:file="http://expath.org/ns/file" xmlns:x="http://www.w3.org/1999/xhtml" xmlns:xf="http://www.w3.org/2002/xforms">
    <head>
-      <meta charset="utf-8"/>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
       <title>AHN 2026Formation XForms</title>
-      <link rel="stylesheet" href="../assets/css/main.css" type="text/css"/>
-      <link rel="stylesheet" href="../assets/css/tei.css" type="text/css"/>
-      <link rel="stylesheet"
-            href="//unpkg.com/@catppuccin/highlightjs@1.0.1/css/catppuccin-latte.css"/>
-      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js">/**/</script>
-      <script src="../assets/js/generateid.js"/>
-      <xf:model xmlns="http://www.tei-c.org/ns/1.0">
-         <xf:instance>
-            <personnes xmlns="">
-               <person>
-                  <name>Victor Hugo</name>
-                  <birthDate>1802</birthDate>
-                  <deathDate>1885</deathDate>
-                  <age/>
-               </person>
-               <person>
-                  <name>Émile Zola</name>
-                  <birthDate>1840</birthDate>
-                  <deathDate>1902</deathDate>
-                  <age/>
-               </person>
-            </personnes>
-         </xf:instance>
-         <xf:instance id="blank">
-            <data xmlns="">
-               <person>
-                  <name/>
-                  <birthDate/>
-                  <deathDate/>
-                  <age/>
-               </person>
-            </data>
-         </xf:instance>
-         <xf:bind nodeset="person/birthDate|person/deathDate|person/age" type="integer"/>
-         <xf:bind nodeset="person/age" calculate="../deathDate - ../birthDate"/>
-         <xf:submission id="save" method="put" resource="personnes.xml" replace="none">
-            <xf:message ev:event="xforms-submit-error">
-                                    Erreur de soumission. 
-                                    error-type: <xf:output value="event('error-type')"/> 
-                                    error-message: <xf:output value="event('error-message')"/> 
-                                    response-status-code: <xf:output value="event('response-status-code')"/> 
-                                    response-reason-phrase: <xf:output value="event('response-reason-phrase')"/> 
-                                    resource-uri: <xf:output value="event('resource-uri')"/>
-            </xf:message>
-         </xf:submission>
-         <xf:submission id="restore"
-                        method="get"
-                        resource="../assets/instances/personnes.xml"
-                        replace="instance"
-                        serialization="none"/>
-         <xf:submission id="saveLocal"
-                        method="put"
-                        resource="file:personnes.xml"
-                        mediatype="application/xml">
-            <xf:action ev:event="xforms-submit-done">
-               <xf:message>
-                  <xf:output value="'Données sauvegardées'"/>
-               </xf:message>
-            </xf:action>
-         </xf:submission>
-      </xf:model>
-   </head>
+      <link rel="stylesheet" href="../assets/css/main.css" type="text/css" />
+      <link rel="stylesheet" href="//unpkg.com/@catppuccin/highlightjs@1.0.1/css/catppuccin-latte.css" /><script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js">/**/</script></head>
    <body>
-      <main class="slide ">
-         <h1 class="">Sauvegarder des données</h1>
-         <p>Pour sauvegarder des données, on utilise la <code>@method="put"</code> au lieu de <code>@method="get"</code> :</p>
-         <pre>
-            <code class="language-xml">
-&lt;xf:submission id="save" method="put" resource="personnes.xml" replace="none"&gt;
-    &lt;xf:message ev:event="xforms-submit-error"&gt;
-        Erreur lors de la sauvegarde.
-    &lt;/xf:message&gt;
-&lt;/xf:submission&gt;
-                        </code>
-         </pre>
-         <p>Et pour restaurer les données, nous avons vu que nous pouvions utiliser :</p>
-         <pre>
-            <code class="language-xml">
-&lt;xf:submission id="restore" method="get" resource="personnes.xml"
-    replace="instance"
-    serialization="none"&gt;
-    &lt;xf:message ev:event="xforms-submit-error"&gt;
-        Erreur lors de la restauration.
-    &lt;/xf:message&gt;
-&lt;/xf:submission&gt;
-
-                        </code>
-         </pre>
-         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:repeat nodeset="person">
-               <xf:input class="inline" incremental="true" ref="name">
-                  <xf:label>Nom</xf:label>
-               </xf:input>
-               <xf:input class="inline" incremental="true" ref="birthDate">
-                  <xf:label>Naissance</xf:label>
-               </xf:input>
-               <xf:input class="inline" incremental="true" ref="deathDate">
-                  <xf:label>Décès</xf:label>
-               </xf:input>
-               <xf:output class="inline" ref="age">
-                  <xf:label>Âge</xf:label>
-               </xf:output>
-               <xf:trigger>
-                  <xf:label>×</xf:label>
-                  <xf:hint>Supprimer</xf:hint>
-                  <xf:action ev:event="DOMActivate">
-                     <xf:delete nodeset="."/>
-                  </xf:action>
-               </xf:trigger>
-            </xf:repeat>
-            <xf:trigger>
-               <xf:label>+</xf:label>
-               <xf:hint>Ajouter une personne</xf:hint>
-               <xf:action ev:event="DOMActivate">
-                  <xf:insert nodeset="person" origin="instance('blank')/person"/>
-               </xf:action>
-            </xf:trigger>
-            <xf:submit submission="save">
-               <xf:label>Sauvegarder</xf:label>
-            </xf:submit>
-            <xf:submit submission="restore">
-               <xf:label>Restaurer</xf:label>
-            </xf:submit>
-         </xf:group>
-         <p>
-            <strong>Attention :</strong> tous les serveurs n'acceptent pas la méthode PUT. <br/>Alternativement on peut utiliser l'API <code>file:</code>
-         </p>
-         <pre>
-            <code class="language-">
-&lt;xf:submission id="saveLocal" method="put" resource="file:personnes.xml" mediatype="application/xml"&gt;
-    &lt;xf:action ev:event="xforms-submit-done"&gt;
-        &lt;xf:message&gt;
-            &lt;xf:output value="'Données sauvegardées'"/&gt;
-        &lt;/xf:message&gt;
-    &lt;/xf:action&gt;
-&lt;/xf:submission&gt;
-                        </code>
-         </pre>
-         <xf:submit xmlns="http://www.tei-c.org/ns/1.0" submission="saveLocal">
-            <xf:label>Sauvegarder localement</xf:label>
-         </xf:submit>
-      </main>
-      <script>hljs.highlightAll();</script>
-   </body>
+      <main class="slide titlePage">
+         
+         <h1>Exercice 03</h1>
+         
+         <p>Insérer et supprimer des nœuds</p>
+         
+         <p>Objectifs :</p>
+         
+         <ul>
+            <li>Mettre en place un système pour ajouter/supprimer des notices</li>
+         </ul>
+         </main><script>hljs.highlightAll();</script></body>
 </html>

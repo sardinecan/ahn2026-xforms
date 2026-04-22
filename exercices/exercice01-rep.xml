@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="../assets/xsltforms/xsltforms.xsl" type="text/xsl"?>
+<!-- 
+    EXERCICE 1 : Formulaire notice bibliographique
+    
+    OBJECTIFS :
+    - Créer une instance de données pour une notice bibliographique (p. ex. auteur, titre et date)
+    - Ajouter un type pour la date
+    - Mettre en place le contrôle pour la saisie des données
+    - Afficher les données avec xf:output
+ 
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:xf="http://www.w3.org/2002/xforms"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:tei="http://www.tei-c.org/ns/1.0"
+    tei:bogus="fix/Firefox/namespace/issue">
+    <head>
+        <title>AHN 2026 ex01 : notice bibliographique</title>
+        <!-- 01 Ajouter un model contenant l’instance de données -->
+        <xf:model>
+            <xf:instance>
+                <bibl xmlns="http://www.tei-c.org/ns/1.0">
+                    <author></author>
+                    <title></title>
+                    <date></date>
+                </bibl>
+            </xf:instance>
+            <!-- 02 un type pour la donnée date -->        
+            <xf:bind nodeset="tei:date" type="date"/>
+        </xf:model>
+    </head>
+    <body>
+        <div>
+            <xf:input ref="tei:author"><xf:label>Auteur : </xf:label></xf:input>
+            <br/>
+            <xf:input ref="tei:title"><xf:label>Titre : </xf:label></xf:input>
+            <br/>
+            <xf:input ref="tei:date"><xf:label>Date : </xf:label></xf:input>
+        </div>
+        <!-- 03 mettre en place les contrôles de formulaire -->
+        <!-- 04 visualiser les données saisies -->
+        <div>
+            <xf:output value="concat(tei:author, ', ', tei:title, ', ', tei:date)"/>
+        </div>
+    </body>
+</html>

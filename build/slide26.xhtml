@@ -24,73 +24,75 @@
       <script src="../assets/js/generateid.js"/>
       <xf:model xmlns="http://www.tei-c.org/ns/1.0">
          <xf:instance>
-            <person xmlns="" edit="">
-               <name edit="">Victor Hugo</name>
-               <birthDate>1802</birthDate>
-               <deathDate>1885</deathDate>
-               <age/>
-            </person>
+            <errors xmlns=""/>
          </xf:instance>
-         <xf:bind nodeset="birthDate|deathDate|age" type="integer"/>
-         <xf:bind nodeset="age" calculate="../deathDate - ../birthDate"/>
-         <xf:bind nodeset="name" readonly="parent::person/@edit != true()"/>
-         <xf:bind nodeset="@edit" type="boolean"/>
+         <xf:submission id="error1"
+                        method="get"
+                        resource="/ma/ressource/inconnue.xml"
+                        replace="none"
+                        serialization="none">
+            <xf:message ev:event="xforms-submit-error">
+                                    Erreur de soumission. 
+                                    error-type: <xf:output value="event('error-type')"/> 
+                                    error-message: <xf:output value="event('error-message')"/> 
+                                    response-status-code: <xf:output value="event('response-status-code')"/> 
+                                    response-reason-phrase: <xf:output value="event('response-reason-phrase')"/> 
+                                    resource-uri: <xf:output value="event('resource-uri')"/>
+            </xf:message>
+         </xf:submission>
       </xf:model>
    </head>
    <body>
       <main class="slide ">
-         <h1 class="">Lecture seule - <code>@readonly</code>
-         </h1>
-         <p>Lorsqu'une valeur est associée à une propriété <code>calculate</code>, elle passe automatiquement en lecture seule (<code>readonly</code>).</p>
+         <h1 class="">Erreurs de soumission</h1>
+         <p>Après une soumission, un événement est propagé à l'élément <code>xf:submission</code> :</p>
+         <ul>
+            <li>
+               <code>xforms-submit-done</code> en cas de succès</li>
+            <li>
+               <code>xforms-submit-error</code> en cas d’échec</li>
+         </ul>
          <pre>
             <code class="language-xml">
-&lt;xf:instance&gt;
-    &lt;person xmlns=""&gt;
-        &lt;name&gt;Victor Hugo&lt;/name&gt;
-        &lt;birthDate&gt;1802&lt;/birthDate&gt;
-        &lt;deathDate&gt;1885&lt;/deathDate&gt;
-        &lt;age/&gt;
-    &lt;/person&gt;
-&lt;/xf:instance&gt;
-&lt;xf:bind nodeset="birthDate|deathDate|age" type="integer"/&gt;
-&lt;xf:bind nodeset="age" calculate="../deathDate - ../birthDate"/&gt;
+&lt;xf:submission resource="maRessource" ...&gt;
+    &lt;xf:action ev:event="xforms-submit-error"&gt;
+        ...
+    &lt;/xf:action&gt;
+&lt;/xf:submission&gt;
                         </code>
          </pre>
-         <p>Cela signifie que même si on attache ce nœud à un contrôle <code>xf:input</code>, il sera impossible de modifier sa valeur :</p>
-         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:input ref="age">
-               <xf:label>Âge : </xf:label>
-            </xf:input>
-         </xf:group>
-         <p>S’il s'agit du comportement par défaut pour <code>calculate</code>, il est possible de placer d’autres valeurs en lecture seule si nécessaire. Soit de façon permanente :</p>
+         <p>Certains événements fournissent des informations supplémentaires accessibles via la fonction <code>event()</code>. C’est le cas avec <code>xforms-submit-error</code> qui dispose notamment de :</p>
+         <ul>
+            <li>
+               <code>error-type</code> : type d'erreur</li>
+            <li>
+               <code>error-message</code> : détails supplémentaires</li>
+            <li>
+               <code>response-status-code</code> : code HTTP du serveur (ex : 404)</li>
+            <li>
+               <code>response-reason-phrase</code> : message du serveur (ex : "fichier introuvable")</li>
+            <li>
+               <code>resource-uri</code> : URI utilisée pour la soumission</li>
+         </ul>
+         <p>Ces informations peuvent être affichées dans une fenêtre modale à l’aide de l’élément <code>xf:message</code> :</p>
          <pre>
             <code class="language-xml">
-&lt;xf:bind nodeset="name" readonly="true()"/&gt;
+&lt;xf:submission resource="..." ...&gt;
+    &lt;xf:action ev:event="xforms-submit-error"&gt;
+        &lt;xf:message&gt;Erreur de soumission.
+            type d'erreur : &lt;xf:output value="event('error-type')"/&gt;
+            message : &lt;xf:output value="event('error-message')"/&gt;
+            code de statut : &lt;xf:output value="event('response-status-code')"/&gt;
+            raison : &lt;xf:output value="event('response-reason-phrase')"/&gt;
+            URI : &lt;xf:output value="event('resource-uri')"/&gt;
+        &lt;/xf:message&gt;
+    &lt;/xf:action&gt;
+&lt;/xf:submission&gt;
                         </code>
          </pre>
-         <p>soit de façon conditionnelle :</p>
-         <pre>
-            <code class="language-xml">
-&lt;xf:bind nodeset="name" readonly="parent::person/@edit != true()"/&gt;
-                        </code>
-         </pre>
-         <p>Il devient alors très aisé de mettre en place des verrous :</p>
-         <pre>
-            <code class="language-xml">
-&lt;xf:input ref="@edit"&gt;&lt;xf:label&gt;Autoriser modification&lt;/xf:label&gt;&lt;/xf:input&gt;
-&lt;xf:input ref="name"&gt;&lt;xf:label&gt;Nom&lt;/xf:label&gt;&lt;/xf:input&gt;
-                        </code>
-         </pre>
-         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:input ref="@edit">
-               <xf:label>Autoriser modification</xf:label>
-            </xf:input>
-            <xf:input ref="name" incremental="true">
-               <xf:label>Nom</xf:label>
-            </xf:input>
-         </xf:group>
-         <p>NB : on remarquera que le type <code>boolean</code> transforme notre <code>xf:input</code> en case à cocher !</p>
-         <p>NB bis : lorsqu’un nœud est en lecture seul, alors les nœuds descendants ou les attributs qu’il possède héritent de cette propriété.</p>
+         <xf:submit xmlns="http://www.tei-c.org/ns/1.0" submission="error1">
+            <xf:label>Erreur</xf:label>
+         </xf:submit>
       </main>
       <script>hljs.highlightAll();</script>
    </body>

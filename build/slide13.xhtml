@@ -25,107 +25,57 @@
       <xf:model xmlns="http://www.tei-c.org/ns/1.0">
          <xf:instance>
             <data xmlns="">
-               <nom/>
-               <dateNaissance/>
-               <age/>
+               <nom>Victor Hugo</nom>
+               <dateNaissance>1802</dateNaissance>
             </data>
          </xf:instance>
-         <xf:bind nodeset="age" type="integer"/>
-         <xf:bind nodeset="dateNaissance" type="date"/>
-         <xf:instance id="contact">
-            <data xmlns="">
-               <contact type="email"/>
-               <contact type="phone"/>
-            </data>
-         </xf:instance>
-         <xs:schema targetNamespace="http://ahn2026/ns/1.0">
-            <xs:simpleType name="phone">
-               <xs:restriction base="xs:string">
-                  <xs:pattern value="^(\d{2}\s?){5}"/>
-               </xs:restriction>
-            </xs:simpleType>
-            <xs:simpleType name="email">
-               <xs:restriction base="xs:string">
-                  <xs:pattern value="^[^@]+@[^@]+"/>
-               </xs:restriction>
-            </xs:simpleType>
-         </xs:schema>
-         <xf:bind nodeset="instance('contact')//contact[@type='email']" type="ahn:email"/>
-         <xf:bind nodeset="instance('contact')//contact[@type='phone']" type="ahn:phone"/>
+         <!--<xf:bind nodeset="age" type="integer"/>
+                            <xf:bind nodeset="dateNaissance" type="date"/>-->
       </xf:model>
    </head>
    <body>
       <main class="slide ">
-         <h1 class="">Typer les données (<code>xf:bind</code>)</h1>
-         <p>Au sein du <code>xf:model</code>, l’élément <a href="https://www.w3.org/TR/xforms11/#structure-bind-element"
-               target="_blank">
-               <code>xf:bind</code>
-            </a> est utilisé pour typer les données. Il est relié aux nœuds par l’intermédiaire de l’attribut <code>@nodeset</code> (groupe de nœuds) et le type est indiqué dans un attribut <code>@type</code> :</p>
+         <h1 class="">Visualiser - <code>xf:output</code>
+         </h1>
+         <p>L’élément <a href="https://www.w3.org/TR/xforms11/#ui-output" target="_blank">
+               <code>xf:output</code>
+            </a> ne dispose pas d’un équivalent HTML. Il permet d’afficher directement la valeur textuelle d’une donnée. Tout comme avec l’élément <code>xf:input</code>, on accède aux nœuds d’une instance par l’intermédiaire de l'attribut <code>@ref</code>.</p>
          <pre>
             <code class="language-xml">
-&lt;xf:model&gt;
-    &lt;xf:instance&gt;
-        &lt;data xmlns=""&gt;
-            &lt;nom/&gt;
-            &lt;dateNaissance/&gt;
-            &lt;age/&gt;
-        &lt;/data&gt;
-    &lt;/xf:instance&gt;
-    &lt;xf:bind nodeset="age" type="integer"/&gt;
-    &lt;xf:bind nodeset="dateNaissance" type="date"/&gt;
-&lt;/xf:model&gt;
+&lt;xf:output ref="nom"/&gt;
+&lt;xf:output ref="dateNaissance"/&gt;
                         </code>
          </pre>
          <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:input ref="nom" incremental="true">
-               <xf:label>Nom : </xf:label>
-            </xf:input>
+            <xf:output ref="nom"/>
             <x:br/>
-            <xf:input ref="dateNaissance" incremental="true">
-               <xf:label>Date de naissance</xf:label>
-            </xf:input>
-            <x:br/>
-            <xf:input ref="age" incremental="true">
-               <xf:label>Age</xf:label>
-            </xf:input>
-            <x:br/>
-            <xf:output value="serialize(.)" incremental="true">
-               <xf:label>output :</xf:label>
-            </xf:output>
+            <xf:output ref="dateNaissance"/>
          </xf:group>
-         <details>
-            <summary>Que remarque-t-on ?</summary>
-            <p>Les champs s’adaptent aux types. Cependant, la valeur affichée peut ne pas correspondre à la façon dont elle est stockée (cf. date). Le non respect du type entraîne l’affichage d’une alerte.</p>
-            <p>On remarque également que l’utilisation de l’attribut <code>@incremental="true"</code> modifie l’évaluation du typage, qui se fait alors en temps réel.</p>
-         </details>
-         <p>Le type par défaut est <code>string</code> (chaîne de caractères), mais tous les types XML peuvent être appelés ; on peut même définir des types avec XML Schema :</p>
+         <p>L’attribut <code>@value</code> permet quant à lui d’interpréter des expressions XPath :</p>
          <pre>
             <code class="language-xml">
-&lt;xs:schema targetNamespace="http://ahn2026/ns/1.0"&gt;
-    &lt;xs:simpleType name="phone"&gt;
-        &lt;xs:restriction base="xs:string"&gt;
-            &lt;xs:pattern value="^(\d{2}\s?){5}"/&gt;
-        &lt;/xs:restriction&gt;
-    &lt;/xs:simpleType&gt;
-    &lt;xs:simpleType name="email"&gt;
-        &lt;xs:restriction base="xs:string"&gt;
-            &lt;xs:pattern value="^[^@]+@[^@]+"/&gt;
-        &lt;/xs:restriction&gt;
-    &lt;/xs:simpleType&gt;
-&lt;/xs:schema&gt;
-
-&lt;xf:bind nodeset="//contact[@type='email']" type="ahn:email"/&gt;
-&lt;xf:bind nodeset="//contact[@type='phone']" type="ahn:phone"/&gt;
+&lt;xf:output value="concat('Nom :', nom)"/&gt;
                         </code>
          </pre>
          <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:input ref="instance('contact')/contact[@type='email']" incremental="true">
-               <xf:label>Email : </xf:label>
-            </xf:input>
-            <x:br/>
-            <xf:input ref="instance('contact')/contact[@type='phone']" incremental="true">
-               <xf:label>Téléphone : </xf:label>
-            </xf:input>
+            <xf:output value="concat('Nom : ', nom)"/>
+         </xf:group>
+         <p>XSLTForms propose deux fonctions très utiles :</p>
+         <ul>
+            <li>
+               <code>serialize()</code> pour visualiser la sérialisation d’une donnée</li>
+            <li>
+               <code>transform()</code> pour effectuer transformer une instance à l’aide d’un feuille XSLT</li>
+         </ul>
+         <pre>
+            <code class="language-xml">
+&lt;xf:output value="serialize(.)"/&gt;
+                        </code>
+         </pre>
+         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
+            <xf:output value="serialize(.)">
+               <xf:label>Sérialisation XML :</xf:label>
+            </xf:output>
          </xf:group>
       </main>
       <script>hljs.highlightAll();</script>

@@ -1,99 +1,28 @@
-<?xml-stylesheet href="../assets/xsltforms/xsltforms.xsl" type="text/xsl"?><html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ahn="http://ahn2026/ns/1.0"
-      xmlns:ev="http://www.w3.org/2001/xml-events"
-      xmlns:file="http://expath.org/ns/file"
-      xmlns:tei="http://www.tei-c.org/ns/1.0"
-      xmlns:x="http://www.w3.org/1999/xhtml"
-      xmlns:xf="http://www.w3.org/2002/xforms"
-      xmlns:xlink="http://www.w3.org/1999/xlink"
-      xmlns:xs="http://www.w3.org/2001/XMLSchema"
-      xf:bogus="fix/Firefox/namespace/issue"
-      xs:bogus="fix/Firefox/namespace/issue"
-      xlink:bogus="fix/Firefox/namespace/issue"
-      ahn:bogus="fix/Firefox/namespace/issue"
-      tei:bogus="fix/Firefox/namespace/issue"
-      lang="fr">
+<!DOCTYPE html
+  PUBLIC "'-//W3C//DTD XHTML 1.0 Strict//EN'" "'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:file="http://expath.org/ns/file" xmlns:x="http://www.w3.org/1999/xhtml" xmlns:xf="http://www.w3.org/2002/xforms">
    <head>
-      <meta charset="utf-8"/>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
       <title>AHN 2026Formation XForms</title>
-      <link rel="stylesheet" href="../assets/css/main.css" type="text/css"/>
-      <link rel="stylesheet" href="../assets/css/tei.css" type="text/css"/>
-      <link rel="stylesheet"
-            href="//unpkg.com/@catppuccin/highlightjs@1.0.1/css/catppuccin-latte.css"/>
-      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js">/**/</script>
-      <script src="../assets/js/generateid.js"/>
-      <xf:model xmlns="http://www.tei-c.org/ns/1.0">
-         <xf:instance>
-            <errors xmlns=""/>
-         </xf:instance>
-         <xf:submission id="error1"
-                        method="get"
-                        resource="/ma/ressource/inconnue.xml"
-                        replace="none"
-                        serialization="none">
-            <xf:message ev:event="xforms-submit-error">
-                                    Erreur de soumission. 
-                                    error-type: <xf:output value="event('error-type')"/> 
-                                    error-message: <xf:output value="event('error-message')"/> 
-                                    response-status-code: <xf:output value="event('response-status-code')"/> 
-                                    response-reason-phrase: <xf:output value="event('response-reason-phrase')"/> 
-                                    resource-uri: <xf:output value="event('resource-uri')"/>
-            </xf:message>
-         </xf:submission>
-      </xf:model>
-   </head>
+      <link rel="stylesheet" href="../assets/css/main.css" type="text/css" />
+      <link rel="stylesheet" href="//unpkg.com/@catppuccin/highlightjs@1.0.1/css/catppuccin-latte.css" /><script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js">/**/</script></head>
    <body>
-      <main class="slide ">
-         <h1 class="">Erreurs de soumission</h1>
-         <p>Après une soumission, un événement est propagé à l'élément <code>xf:submission</code> :</p>
+      <main class="slide titlePage">
+         
+         <h1>Exercice 02</h1>
+         
+         <p>Formulaire liste de notices bibliographiques</p>
+         
+         
+         <p>Objectifs :</p>
+         
          <ul>
-            <li>
-               <code>xforms-submit-done</code> en cas de succès</li>
-            <li>
-               <code>xforms-submit-error</code> en cas d’échec</li>
-         </ul>
-         <pre>
-            <code class="language-xml">
-&lt;xf:submission resource="maRessource" ...&gt;
-    &lt;xf:action ev:event="xforms-submit-error"&gt;
-        ...
-    &lt;/xf:action&gt;
-&lt;/xf:submission&gt;
-                        </code>
-         </pre>
-         <p>Certains événements fournissent des informations supplémentaires accessibles via la fonction <code>event()</code>. C’est le cas avec <code>xforms-submit-error</code> qui dispose notamment de :</p>
-         <ul>
-            <li>
-               <code>error-type</code> : type d'erreur</li>
-            <li>
-               <code>error-message</code> : détails supplémentaires</li>
-            <li>
-               <code>response-status-code</code> : code HTTP du serveur (ex : 404)</li>
-            <li>
-               <code>response-reason-phrase</code> : message du serveur (ex : "fichier introuvable")</li>
-            <li>
-               <code>resource-uri</code> : URI utilisée pour la soumission</li>
-         </ul>
-         <p>Ces informations peuvent être affichées dans une fenêtre modale à l’aide de l’élément <code>xf:message</code> :</p>
-         <pre>
-            <code class="language-xml">
-&lt;xf:submission resource="..." ...&gt;
-    &lt;xf:action ev:event="xforms-submit-error"&gt;
-        &lt;xf:message&gt;Erreur de soumission.
-            type d'erreur : &lt;xf:output value="event('error-type')"/&gt;
-            message : &lt;xf:output value="event('error-message')"/&gt;
-            code de statut : &lt;xf:output value="event('response-status-code')"/&gt;
-            raison : &lt;xf:output value="event('response-reason-phrase')"/&gt;
-            URI : &lt;xf:output value="event('resource-uri')"/&gt;
-        &lt;/xf:message&gt;
-    &lt;/xf:action&gt;
-&lt;/xf:submission&gt;
-                        </code>
-         </pre>
-         <xf:submit xmlns="http://www.tei-c.org/ns/1.0" submission="error1">
-            <xf:label>Erreur</xf:label>
-         </xf:submit>
-      </main>
-      <script>hljs.highlightAll();</script>
-   </body>
+            
+            <li>Implémenter les répétitions</li>
+            
+            <li>Déclarer une seconde instance pour un liste d’auteurs</li>
+            
+            <li>Mettre en place une liste de choix à partir d’une instance</li>
+            </ul>
+         </main><script>hljs.highlightAll();</script></body>
 </html>

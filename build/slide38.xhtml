@@ -38,28 +38,30 @@
    </head>
    <body>
       <main class="slide ">
-         <h1 class="">Valeurs calculées - <code>@calculate</code>
-         </h1>
-         <p>Il est possible de spécifier qu’une valeur dépend d’une ou plusieurs autres valeurs. Dès que l’une de ces valeurs change, la valeur <strong>calculée</strong> est alors automatiquement mise à jour :</p>
+         <h1 class="">Attribute Value Templates (AVT)</h1>
+         <p>Outre <code>xf:output</code> qui permet d’insérer du texte dans la page web, XForms permet aussi d’interagir avec les attributs HTML par l’intermédiaire de l’<em>Attribute Value Templates</em> :</p>
          <pre>
             <code class="language-xml">
-&lt;xf:instance&gt;
-    &lt;person xmlns=""&gt;
-        &lt;name&gt;Victor Hugo&lt;/name&gt;
-        &lt;birthDate&gt;1802&lt;/birthDate&gt;
-        &lt;deathDate&gt;1885&lt;/deathDate&gt;
-        &lt;age/&gt;
-    &lt;/person&gt;
-&lt;/xf:instance&gt;
+&lt;style type="text/css"&gt;
+    .positif {color: green}
+    .negatif {background-color: red; color: white}
+&lt;/style&gt;
                         </code>
          </pre>
-         <p>À partir des dates de naissance et de mort, il devient très facile de déterminer l’age d’une personne par exemple :</p>
+         <p>L’AVT permet d’évaluer une expression à l’intérieur d’un attribut. Il s’agit d’une expression placée entre accolades <code>{ }</code> à l'intérieur d'un attribut :</p>
          <pre>
             <code class="language-xml">
-&lt;xf:bind nodeset="age" calculate="../deathDate - ../birthDate"/&gt;
+&lt;span class="{if(age &amp;lt; 0, 'negatif', 'positif')}"&gt;
+    Âge au décès : &lt;xf:output ref="age"/&gt;
+&lt;/span&gt;
                         </code>
          </pre>
+         <p>Essayez-le en inversant les dates pour obtenir un âge négatif :</p>
          <xf:group xmlns="http://www.tei-c.org/ns/1.0">
+            <xf:output ref="name">
+               <xf:label>Nom</xf:label>
+            </xf:output>
+            <x:br/>
             <xf:input ref="birthDate" incremental="true">
                <xf:label>Année de naissance</xf:label>
             </xf:input>
@@ -68,12 +70,10 @@
                <xf:label>Année de décès</xf:label>
             </xf:input>
             <x:br/>
-            <xf:input ref="age">
-               <xf:label>Âge</xf:label>
-            </xf:input>
+            <x:span class="{if(age &lt; 0, 'negatif', 'positif')}">
+                                Âge au décès : <xf:output ref="age"/>
+            </x:span>
          </xf:group>
-         <p>Sur l’élément <code>xf:bind</code>, l’attribut <code>@nodeset</code> établit un contexte pour <code>@calculate</code>.</p>
-         <p>On n’est bien évidemment pas limité aux calculs arithmétiques, toutes les fonctions XPath peuvent être utilisées : <code>concat()</code>, <code>substring()</code>, etc.</p>
       </main>
       <script>hljs.highlightAll();</script>
    </body>

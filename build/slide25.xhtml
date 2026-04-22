@@ -23,57 +23,120 @@
       <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js">/**/</script>
       <script src="../assets/js/generateid.js"/>
       <xf:model xmlns="http://www.tei-c.org/ns/1.0">
-         <xf:instance>
-            <person xmlns="">
-               <name>Victor Hugo</name>
-               <birthDate>1802</birthDate>
-               <deathDate>1885</deathDate>
-               <age/>
-            </person>
+         <xf:instance id="text-from-jd">
+            <data xmlns="">
+               <text/>
+            </data>
          </xf:instance>
-         <xf:bind nodeset="birthDate|deathDate|age" type="integer"/>
-         <xf:bind nodeset="name" readonly="true()"/>
-         <xf:bind nodeset="age" calculate="../deathDate - ../birthDate"/>
+         <xf:submission resource="https://juliettedrouet.univ-rouen.fr/lettres/jd.entry.3808/source"
+                        serialization="none"
+                        method="get"
+                        replace="instance"
+                        instance="text-from-jd"
+                        id="gettext"/>
+         <xf:submission resource="https://juliettedrouet.univ-rouen.fr/lettres/jd.entry.3808"
+                        serialization="none"
+                        method="get"
+                        replace="all"
+                        id="getview"/>
       </xf:model>
    </head>
    <body>
       <main class="slide ">
-         <h1 class="">Valeurs calculées - <code>@calculate</code>
+         <h1 class="">Soumission - <code>xf:submission</code>
          </h1>
-         <p>Il est possible de spécifier qu’une valeur dépend d’une ou plusieurs autres valeurs. Dès que l’une de ces valeurs change, la valeur <strong>calculée</strong> est alors automatiquement mise à jour :</p>
+         <p>Le module de soumission d’XForms est très complet et couvre un large éventail d’actions pour collecter, envoyer et stocker des données.</p>
+         <p>Il permet notamment de définir :</p>
+         <ul>
+            <li>1) ce qu’on souhaite envoyer</li>
+            <li>2) où on souhaite l’envoyer</li>
+            <li>3) ce qu'on veut faire du résultat</li>
+         </ul>
+         <p>Tout ces paramètres sont définis avec l’élément <code>xf:submission</code> placé dans l'élément <code>xf:model</code>.</p>
+         <ul>
+            <li>L’attribut <code>@ref</code> précise l’instance (ou le segment d’instance) qu'on souhaite envoyer (sans indication, il s’agit de l’instance par défaut) ; si on ne souhaite envoyer aucune donnée mais simplement en récupérer, on utilise l’attribut <code>@serialization="none"</code> ;</li>
+            <li>l’attribut <code>@resource</code> indique où envoyer et d’où recevoir les données ;</li>
+            <li>
+                                Enfin l’attribut <code>@replace</code> permet de spécifier ce qu'il faut faire des données reçues :
+                                <ul>
+                  <li>
+                     <code>@replace="none"</code> : ne rien faire</li>
+                  <li>
+                     <code>@replace="instance"</code> : remplacer une instance. L’instance à remplacer est alors indiquée avec l’attribut <code>@instance="idInstance"</code>
+                  </li>
+                  <li>
+                     <code>@replace="all"</code> : remplace toute la page</li>
+               </ul>
+            </li>
+         </ul>
          <pre>
             <code class="language-xml">
-&lt;xf:instance&gt;
-    &lt;person xmlns=""&gt;
-        &lt;name&gt;Victor Hugo&lt;/name&gt;
-        &lt;birthDate&gt;1802&lt;/birthDate&gt;
-        &lt;deathDate&gt;1885&lt;/deathDate&gt;
-        &lt;age/&gt;
-    &lt;/person&gt;
-&lt;/xf:instance&gt;
+&lt;xf:submission resource="https://juliettedrouet.univ-rouen.fr/lettres/jd.entry.3808/source"
+    serialization="none" 
+    method="get"
+    replace="instance"
+    instance="text-from-jd"/&gt;
                         </code>
          </pre>
-         <p>À partir des dates de naissance et de mort, il devient très facile de déterminer l’age d’une personne par exemple :</p>
          <pre>
             <code class="language-xml">
-&lt;xf:bind nodeset="age" calculate="../deathDate - ../birthDate"/&gt;
+&lt;xf:submission
+    resource="https://juliettedrouet.univ-rouen.fr/lettres/jd.entry.3808"
+    serialization="none"
+    method="get"
+    replace="all"/&gt;
+                        </code>
+         </pre>
+         <p>Tout comme avec l’élément <code>xf:load</code>, si l’url à atteindre doit être construite, on peut remplacer l’attribut <code>@resource</code> par l’élément <code>xf:resource</code>.</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:submission
+    serialization="none"
+    method="get"
+    replace="all"&gt;
+    &lt;xf:resource value="concat('https://juliettedrouet.univ-rouen.fr/lettres/', 'jd.entry.3808')"/&gt;
+&lt;/xf:submission&gt;
+                        </code>
+         </pre>
+         <p>On peut même avoir plusieurs processus de soumission au sein d’un même modèle. Il est alors nécessaire de leur attribuer un identifiant avec l’attribut <code>@id</code> :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:submission id="gettext" ...
+                        </code>
+         </pre>
+         <p>Pour déclencher une soumission, on a généralement recours à l’élément <code>xf:submit</code> :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:submit&gt;
+    &lt;xf:label&gt;Récupérer le fichier TEI&lt;/xf:label&gt;
+&lt;/xf:submit&gt;
+&lt;xf:submit submission="getview"&gt;
+    &lt;xf:label&gt;Voir en ligne&lt;/xf:label&gt;
+&lt;/xf:submit&gt;
+                        </code>
+         </pre>
+         <p>Mais on peut aussi utiliser un <code>xf:trigger</code> :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:trigger&gt;
+    &lt;xf:label&gt;Voir en ligne&lt;/xf:label&gt;
+    &lt;xf:action ev:event="DOMActivate"&gt;
+        &lt;xf:send submission="getview"/&gt;
+    &lt;/xf:action&gt;
+&lt;/xf:trigger&gt;
                         </code>
          </pre>
          <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:input ref="birthDate" incremental="true">
-               <xf:label>Année de naissance</xf:label>
-            </xf:input>
+            <xf:submit submission="gettext">
+               <xf:label>Récupérer le fichier TEI</xf:label>
+            </xf:submit>
             <x:br/>
-            <xf:input ref="deathDate" incremental="true">
-               <xf:label>Année de décès</xf:label>
-            </xf:input>
+            <xf:submit submission="getview">
+               <xf:label>Voir en ligne</xf:label>
+            </xf:submit>
             <x:br/>
-            <xf:input ref="age">
-               <xf:label>Âge</xf:label>
-            </xf:input>
+            <xf:output value="serialize(.)"/>
          </xf:group>
-         <p>Sur l’élément <code>xf:bind</code>, l’attribut <code>@nodeset</code> établit un contexte pour <code>@calculate</code>.</p>
-         <p>On n’est bien évidemment pas limité aux calculs arithmétiques, toutes les fonctions XPath peuvent être utilisées : <code>concat()</code>, <code>substring()</code>, etc.</p>
       </main>
       <script>hljs.highlightAll();</script>
    </body>
