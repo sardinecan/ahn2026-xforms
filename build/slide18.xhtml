@@ -22,73 +22,123 @@
             href="//unpkg.com/@catppuccin/highlightjs@1.0.1/css/catppuccin-latte.css"/>
       <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js">/**/</script>
       <script src="../assets/js/generateid.js"/>
-      <xf:model>
-         <xf:instance id="museum">
-            <museum xmlns="">
-               <artists>
-                  <artist id="a1">
-                     <name>Artemisia Gentileschi</name>
-                  </artist>
-                  <artist id="a2">
-                     <name>Goya</name>
-                  </artist>
-               </artists>
-               <artworks>
-                  <artwork artist="a1">
-                     <title>Judith décapitant Holopherne</title>
-                  </artwork>
-                  <artwork artist="a2">
-                     <title>El tres de mayo de 1808 en Madrid</title>
-                  </artwork>
-                  <artwork artist="a2">
-                     <title>Saturne dévorant un de ses fils</title>
-                  </artwork>
-               </artworks>
-            </museum>
+      <xf:model xmlns="http://www.tei-c.org/ns/1.0">
+         <xf:instance>
+            <listPerson xmlns="">
+               <person>
+                  <name>Victor Hugo</name>
+                  <birthDate>1802</birthDate>
+                  <deathDate>1885</deathDate>
+               </person>
+               <person>
+                  <name>Juliette Drouet</name>
+                  <birthDate>1806</birthDate>
+                  <deathDate>1883</deathDate>
+               </person>
+               <person>
+                  <name>Alexandre Dumas</name>
+                  <birthDate>1802</birthDate>
+                  <deathDate>1870</deathDate>
+               </person>
+               <person>
+                  <name>George Sand</name>
+                  <birthDate>1804</birthDate>
+                  <deathDate>1876</deathDate>
+               </person>
+               <person>
+                  <name>Honoré de Balzac</name>
+                  <birthDate>1799</birthDate>
+                  <deathDate>1850</deathDate>
+               </person>
+               <person>
+                  <name>Gustave Flaubert</name>
+                  <birthDate>1821</birthDate>
+                  <deathDate>1880</deathDate>
+               </person>
+               <person>
+                  <name>Charles Baudelaire</name>
+                  <birthDate>1821</birthDate>
+                  <deathDate>1867</deathDate>
+               </person>
+               <person>
+                  <name>Alphonse de Lamartine</name>
+                  <birthDate>1790</birthDate>
+                  <deathDate>1869</deathDate>
+               </person>
+               <person>
+                  <name>Alfred de Musset</name>
+                  <birthDate>1810</birthDate>
+                  <deathDate>1857</deathDate>
+               </person>
+               <person>
+                  <name>Stendhal</name>
+                  <birthDate>1783</birthDate>
+                  <deathDate>1842</deathDate>
+               </person>
+               <person>
+                  <name>Théophile Gautier</name>
+                  <birthDate>1811</birthDate>
+                  <deathDate>1872</deathDate>
+               </person>
+               <person>
+                  <name>Gérard de Nerval</name>
+                  <birthDate>1808</birthDate>
+                  <deathDate>1855</deathDate>
+               </person>
+            </listPerson>
+         </xf:instance>
+         <xf:instance id="search">
+            <search xmlns="">
+               <q/>
+            </search>
          </xf:instance>
       </xf:model>
    </head>
    <body>
       <main class="slide ">
-         <h1 class="">
-            <code>current()</code>
-         </h1>
-         <p>La fonction <code>current()</code> renvoie le nœud du contexte (par exemple l’item d’un repeat). Cette fonction est très utile pour écrire des expressions avec imbrication des contextes.</p>
+         <h1 class="">Multiples instances</h1>
+         <p>Il est possible de déclarer plusieurs instances au sein d’un même modèle. Dans ce cas, il est nécessaire de leur attribuer un identifiant à l’aide d’un attribut <code>@id</code>.</p>
          <pre>
-            <code class="language-">
-&lt;xf:instance id="museum"&gt;
-    &lt;museum xmlns=""&gt;
-        &lt;artists&gt;
-            &lt;artist id="a1"&gt;&lt;name&gt;Artemisia Gentileschi&lt;/name&gt;&lt;/artist&gt;
-            &lt;artist id="a2"&gt;&lt;name&gt;Goya&lt;/name&gt;&lt;/artist&gt;
-        &lt;/artists&gt;
-        &lt;artworks&gt;
-            &lt;artwork artist="a1"&gt;&lt;title&gt;Judith décapitant Holopherne&lt;/title&gt;&lt;/artwork&gt;
-            &lt;artwork artist="a2"&gt;&lt;title&gt;El tres de mayo de 1808 en Madrid&lt;/title&gt;&lt;/artwork&gt;
-            &lt;artwork artist="a2"&gt;&lt;title&gt;Saturne dévorant un de ses fils&lt;/title&gt;&lt;/artwork&gt;
-        &lt;/artworks&gt;
-    &lt;/museum&gt;
+            <code class="language-xml">
+&lt;xf:instance id="listPerson" resource="listPerson.xml"/&gt;
+&lt;xf:instance id="search"&gt;
+    &lt;search xmlns=""&gt;
+        &lt;q/&gt;
+    &lt;/search&gt;
 &lt;/xf:instance&gt;
-
-&lt;xf:repeat nodeset="instance('museum')/artists/artist"&gt;
-    &lt;xf:output value="concat(
-        name,
-        ', nombre d’oeuvres dans la collection : ',
-        count(instance('museum')/artworks/artwork[@artist = current()/@id]))"/&gt;
-&lt;/xf:repeat&gt;</code>
+                        </code>
+         </pre>
+         <p>Pour faire référence à une instance particulière on utilise la fonction <code>instance()</code>. Cette fonction prend un unique argument : l’identifiant de l’instance.</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:input ref="instance('search')/q"&gt;&lt;xf:label&gt;Recherche : &lt;/xf:label&gt;&lt;/xf:input&gt;
+                        </code>
          </pre>
          <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:repeat nodeset="instance('museum')/artists/artist">
-               <xf:output value="concat(                                     name,                                     ', nombre d’oeuvres dans la collection : ',                                     count(instance('museum')/artworks/artwork[@artist = current()/@id]))"/>
+            <xf:input ref="instance('search')/q">
+               <xf:label>Recherche</xf:label>
+            </xf:input>
+         </xf:group>
+         <p>La première instance est l’instance par défaut, il n'est donc pas nécessaire d’utiliser la fonction <code>instance()</code> avec cette dernière.</p>
+         <p>Avec ce mécanisme, il devient très facile de filtrer des nœuds au regard de la valeur d’une donnée par exemple. :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:repeat nodeset="person[contains(lower-case(.), lower-case(instance('search')))]"&gt;
+     &lt;xf:output value="concat(name, ' (', birthDate, ' - ', deathDate, ')')"/&gt;
+&lt;/xf:repeat&gt;
+                        </code>
+         </pre>
+         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
+            <xf:input ref="instance('search')/q" incremental="true">
+               <xf:label>Rechercher un auteur : </xf:label>
+            </xf:input>
+            <x:br/>
+            <xf:repeat nodeset="person[contains(lower-case(.), lower-case(instance('search')))]">
+               <xf:output value="concat(name, ' (', birthDate, ' - ', deathDate, ')')"/>
             </xf:repeat>
          </xf:group>
-         <ul>
-            <li>Le <code>xf:repeat</code> parcourt les artistes</li>
-            <li>
-               <code>current()</code> désigne l’artiste de la ligne en cours</li>
-            <li>On peut alors compter les oeuvres dont l’attribut <code>@artist</code> correspond à l’artiste courant</li>
-         </ul>
-         <p>Sans <code>current()</code>, la comparaison perdrait le bon contexte.</p>
+         <p>Avec ce filtre, seuls sont répétés les éléments <code>person</code> contenant le segment indiqué dans l’instance <code>search</code>
+         </p>
       </main>
       <script>hljs.highlightAll();</script>
    </body>

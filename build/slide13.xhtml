@@ -35,48 +35,29 @@
    </head>
    <body>
       <main class="slide ">
-         <h1 class="">Visualiser - <code>xf:output</code>
+         <h1 class="">Métadonnées des contrôles - <code>xf:label</code>, <code>xf:hint</code>, <code>xf:help</code> &amp; <code>xf:alert</code>
          </h1>
-         <p>L’élément <a href="https://www.w3.org/TR/xforms11/#ui-output" target="_blank">
-               <code>xf:output</code>
-            </a> ne dispose pas d’un équivalent HTML. Il permet d’afficher directement la valeur textuelle d’une donnée. Tout comme avec l’élément <code>xf:input</code>, on accède aux nœuds d’une instance par l’intermédiaire de l'attribut <code>@ref</code>.</p>
+         <p>Les éléments <code>xf:label</code>, <code>xf:hint</code>, <code>xf:help</code> et <code>xf:alert</code> permettent d’attacher des métadonnées à une grande partie des contrôles XForms.</p>
+         <p>Ils sont utilisés comme des sous-éléments pour le contrôles <code>xf:input</code>, <code>xf:output</code>, <code>xf:group</code>, <code>xf:repeat</code>, etc.</p>
+         <p>Un label facultatif peut être associé à tous les champs ou contrôles XForms avec l’élément <code>xf:label</code>
+         </p>
          <pre>
             <code class="language-xml">
-&lt;xf:output ref="nom"/&gt;
-&lt;xf:output ref="dateNaissance"/&gt;
+&lt;xf:input ref="dateNaissance" incremental="true"&gt;
+    &lt;xf:label&gt;Date de naissance&lt;/xf:label&gt;
+    &lt;xf:help&gt;Date au format AAAA&lt;/xf:help&gt;
+    &lt;xf:hint&gt;Année de naissance de VH&lt;/xf:hint&gt;
+&lt;/xf:input&gt;
                         </code>
          </pre>
          <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:output ref="nom"/>
-            <x:br/>
-            <xf:output ref="dateNaissance"/>
+            <xf:input ref="dateNaissance" incremental="true">
+               <xf:label>Date de naissance</xf:label>
+               <xf:help>Date au format AAAA</xf:help>
+               <xf:hint>Année de naissance de VH</xf:hint>
+            </xf:input>
          </xf:group>
-         <p>L’attribut <code>@value</code> permet quant à lui d’interpréter des expressions XPath :</p>
-         <pre>
-            <code class="language-xml">
-&lt;xf:output value="concat('Nom :', nom)"/&gt;
-                        </code>
-         </pre>
-         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:output value="concat('Nom : ', nom)"/>
-         </xf:group>
-         <p>XSLTForms propose deux fonctions très utiles :</p>
-         <ul>
-            <li>
-               <code>serialize()</code> pour visualiser la sérialisation d’une donnée</li>
-            <li>
-               <code>transform()</code> pour effectuer transformer une instance à l’aide d’un feuille XSLT</li>
-         </ul>
-         <pre>
-            <code class="language-xml">
-&lt;xf:output value="serialize(.)"/&gt;
-                        </code>
-         </pre>
-         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:output value="serialize(.)">
-               <xf:label>Sérialisation XML :</xf:label>
-            </xf:output>
-         </xf:group>
+         <p>On peut y placer directement du texte ou charger du contenu depuis une instance de données en utilisant l'attribut <code>@ref</code>.</p>
       </main>
       <script>hljs.highlightAll();</script>
    </body>

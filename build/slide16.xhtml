@@ -1,29 +1,109 @@
-<!DOCTYPE html
-  PUBLIC "'-//W3C//DTD XHTML 1.0 Strict//EN'" "'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:file="http://expath.org/ns/file" xmlns:x="http://www.w3.org/1999/xhtml" xmlns:xf="http://www.w3.org/2002/xforms">
+<?xml-stylesheet href="../assets/xsltforms/xsltforms.xsl" type="text/xsl"?><html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ahn="http://ahn2026/ns/1.0"
+      xmlns:ev="http://www.w3.org/2001/xml-events"
+      xmlns:file="http://expath.org/ns/file"
+      xmlns:tei="http://www.tei-c.org/ns/1.0"
+      xmlns:x="http://www.w3.org/1999/xhtml"
+      xmlns:xf="http://www.w3.org/2002/xforms"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:xs="http://www.w3.org/2001/XMLSchema"
+      xf:bogus="fix/Firefox/namespace/issue"
+      xs:bogus="fix/Firefox/namespace/issue"
+      xlink:bogus="fix/Firefox/namespace/issue"
+      ahn:bogus="fix/Firefox/namespace/issue"
+      tei:bogus="fix/Firefox/namespace/issue"
+      lang="fr">
    <head>
-      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+      <meta charset="utf-8"/>
       <title>AHN 2026Formation XForms</title>
-      <link rel="stylesheet" href="../assets/css/main.css" type="text/css" />
-      <link rel="stylesheet" href="//unpkg.com/@catppuccin/highlightjs@1.0.1/css/catppuccin-latte.css" /><script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js">/**/</script></head>
+      <link rel="stylesheet" href="../assets/css/main.css" type="text/css"/>
+      <link rel="stylesheet" href="../assets/css/tei.css" type="text/css"/>
+      <link rel="stylesheet"
+            href="//unpkg.com/@catppuccin/highlightjs@1.0.1/css/catppuccin-latte.css"/>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js">/**/</script>
+      <script src="../assets/js/generateid.js"/>
+      <xf:model xmlns="http://www.tei-c.org/ns/1.0">
+         <xf:instance>
+            <listPerson xmlns="">
+               <person>
+                  <name>Victor Hugo</name>
+                  <birthDate>1802</birthDate>
+                  <deathDate>1885</deathDate>
+               </person>
+               <person>
+                  <name>Juliette Drouet</name>
+                  <birthDate>1806</birthDate>
+                  <deathDate>1883</deathDate>
+               </person>
+            </listPerson>
+         </xf:instance>
+      </xf:model>
+   </head>
    <body>
-      <main class="slide titlePage">
-         
-         <h1>Exercice 01</h1>
-         
-         <p>Mettre en place un formulaire pour notice bibliographique</p>
-         
-         <p>Objectifs :</p>
-         
-         <ul>
-            
-            <li>Créer une instance contenant les données auteur, titre et date</li>
-            
-            <li>Ajouter un type pour la date</li>
-            
-            <li>Mettre en place les contrôles pour la saisie des données</li>
-            
-            <li>Afficher les données saisies</li>
-            </ul>
-         </main><script>hljs.highlightAll();</script></body>
+      <main class="slide ">
+         <h1 class="">Les listes itératives - <code>xf:repeat</code>
+         </h1>
+         <p>Imaginons l’instance suivante :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:instance&gt;
+    &lt;listPerson xmlns=""&gt;
+        &lt;person&gt;
+            &lt;name&gt;Victor Hugo&lt;/name&gt;
+            &lt;birthDate&gt;1802&lt;/birthDate&gt;
+            &lt;deathDate&gt;1885&lt;/deathDate&gt;
+        &lt;/person&gt;
+        &lt;person&gt;
+            &lt;name&gt;Juliette Drouet&lt;/name&gt;
+            &lt;birthDate&gt;1806&lt;/birthDate&gt;
+            &lt;deathDate&gt;1883&lt;/deathDate&gt;
+        &lt;/person&gt;
+    &lt;/listPerson&gt;
+&lt;/xf:instance&gt;
+                        </code>
+         </pre>
+         <p>Avec XForms, il est très facile de gérer une séquence d’éléments qui partagent une même structure (ou non d'ailleurs).</p>
+         <p>La balise <code>xf:repeat</code> permet de propager des règles communes à un ensemble de nœuds identifiés par l’attribut <code>@nodeset</code>.</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:repeat nodeset="person"&gt;
+    &lt;xf:output ref="name"/&gt; (&lt;xf:output ref="birthDate"/&gt; - &lt;xf:output ref="deathDate"/&gt;)
+&lt;/xf:repeat&gt;
+                        </code>
+         </pre>
+         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
+            <xf:repeat nodeset="person">
+               <xf:group>
+                  <xf:output ref="name"/> (<xf:output ref="birthDate"/> - <xf:output ref="deathDate"/>)
+                                </xf:group>
+            </xf:repeat>
+         </xf:group>
+         <p>À l'intérieur d’un <code>xf:repeat</code> on hérite du <strong>contexte</strong> défini par l’attribut <code>@nodeset</code>. On indique donc bien :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:output ref="name"/&gt;
+                        </code>
+         </pre>
+         <p>et non</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:output ref="person/name"/&gt;
+                        </code>
+         </pre>
+         <p>Ceci est généralement vrai partout dans un document XForms : les expressions utilisent le contexte fourni par l'élément parent.</p>
+         <p>Il est toutefois possible de définir le contexte explicitement, soit en utilisant un élément <code>xf:group</code> :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:group ref="person[1]"&gt;
+    &lt;xf:output ref="person/name"/&gt;
+&lt;/xf:group&gt;
+                        </code>
+         </pre>
+         <xf:group xmlns="http://www.tei-c.org/ns/1.0" ref="person[1]">
+            <xf:output ref="name"/>
+         </xf:group>
+         <p>soit en précisant le contexte directement sur certains éléments comme <code>xf:insert</code>, mais nous verrons cela un peu plus loin.</p>
+      </main>
+      <script>hljs.highlightAll();</script>
+   </body>
 </html>

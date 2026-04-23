@@ -88,9 +88,9 @@
    </head>
    <body>
       <main class="slide ">
-         <h1 class="">Détecter les changements dans une instance</h1>
-         <p>Nous avons ajouté un contrôle de sauvegarde pour permettre d'enregistrer les données dans un fichier, mais existe-t-il un moyen de savoir si les données doivent être sauvegardées, autrement dit si une instance a changé ?</p>
-         <p>Nous avons déjà rencontré l'événement <code>xforms-value-changed</code>, et comme nous l'avons mentionné, il est distribué au contrôle lié à la valeur, nous mettons donc le gestionnaire dans le contenu de cet élément :</p>
+         <h1 class="">Log</h1>
+         <p>Existe-t-il un moyen de savoir si les données ont été modifiées et doivent être sauvegardées, autrement dit, un moyen de savoir si une instance a changé ?</p>
+         <p>Nous avons vu que l’événement <code>xforms-value-changed</code> est propagé au contrôle attaché à la valeur du nœud. On doit donc placer l’écouteur à l’intérieur de cet élément :</p>
          <pre>
             <code class="language-xml">
 &lt;xf:input ref="name"&gt;
@@ -101,7 +101,7 @@
 &lt;/xf:input&gt;
                         </code>
          </pre>
-         <p>Cependant, de nombreux événements "remontent" (bubble) : à partir de l'élément auquel ils sont distribués, ils remontent l'arbre des éléments. Donc si nous faisons ceci :</p>
+         <p>Cependant, de nombreux événements "remontent" l’arbre de l’instance (p. ex, si la valeur du nœud fils change, alors celle du nœud parent aussi) :</p>
          <pre>
             <code class="language-xml">
 &lt;xf:action ev:event="xforms-value-changed"&gt;
@@ -111,7 +111,7 @@
 &lt;xf:input ref="birthDate"&gt;&lt;xf:label&gt;Année de naissance&lt;/xf:label&gt;&lt;/xf:input&gt;
                         </code>
          </pre>
-         <p>alors l'action recevra les événements des deux inputs. Elle ne pourra pas les distinguer, mais elle saura que quelque chose a changé. Voici comment nous faisons cela pour notre liste de personnes, avec l'action positionnée à l'intérieur du contrôle repeat :</p>
+         <p>L’action entendra bien les événements propagés par les deux inputs, mais en revanche elle ne pourra pas les distinguer. On peut faire la même chose à l’intérieur d’un <code>xf:repeat</code> :</p>
          <pre>
             <code class="language-xml">
 &lt;xf:repeat nodeset="person"&gt;
@@ -121,8 +121,8 @@
     ...
                         </code>
          </pre>
-         <p>Vous devez faire attention à le positionner de manière à capturer uniquement les événements qui vous intéressent. Si vous le placez au-dessus du <code>&lt;repeat&gt;</code>, vous capturerez également les événements des contrôles au même niveau que le repeat.</p>
-         <p>Essayez-le. Vous verrez que si vous modifiez l'un des contenus, comme le nom, cela enregistrera le changement, mais pas si vous ajoutez ou supprimez des éléments, car ceux-ci ne génèrent pas d'événements value-changed :</p>
+         <p>Il faut donc faire attention à l’emplacement où l’on place les écouteurs afin de ne capturer que les événements qui nous intéressent.</p>
+         <p>Il est également important de bien identifier ce qu’on écoute. Dans l’exemple ci-dessous, si l’un des contenus est modifié, comme le nom par exemple, cela enregistrera le changement ; en revanche cela ne sera pas le cas si l’on insère ou supprime des éléments car ceux-ci ne génèrent pas d’événements <code>xforms-value-changed</code> :</p>
          <xf:group xmlns="http://www.tei-c.org/ns/1.0" model="model_one">
             <xf:repeat nodeset="person">
                <xf:action ev:event="xforms-value-changed">
@@ -140,22 +140,26 @@
                   </xf:input>
                </xf:group>
             </xf:repeat>
+            <xf:trigger>
+               <xf:label>+</xf:label>
+               <xf:hint>Ajouter une personne</xf:hint>
+               <xf:action ev:event="DOMActivate">
+                  <xf:insert nodeset="person" origin="instance('blank2')/person"/>
+               </xf:action>
+            </xf:trigger>
             <xf:group>
                <p>Modification : </p>
                <xf:output class="inline" value="instance('admin')/changed"/>
             </xf:group>
          </xf:group>
-         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:label>Changements pour les insertions et suppressions</xf:label>
-            <x:p>Les événements pour les éléments insérés et supprimés sont envoyés à l'instance elle-même, et sont <code>xforms-insert</code> et <code>xforms-delete</code>. Évidemment, vous ne pouvez pas mettre l'action à l'intérieur du contenu de l'instance, car elle apparaîtrait alors comme faisant partie des données de l'instance, vous utilisez donc l'id de l'instance :</x:p>
-         </xf:group>
+         <p>Ces deux actions propagent les événements <code>xforms-insert</code> et <code>xforms-delete</code> et ces événements sont envoyés à l’instance elle-même : impossible donc de placer les écouteurs directement dans l’instance ! Pour les écouter on utilise l’identifiant de l’instance et l’attribut <code>@ev:listener</code> :</p>
          <pre>
             <code class="language-xml">
 &lt;xf:action ev:event="xforms-insert" ev:listener="list"&gt;
     ...
 </code>
          </pre>
-         <p>Cela fonctionne sinon de la même manière. (En fait, vous pouvez faire cela avec tous les éléments <code>&lt;action&gt;</code> si vous le souhaitez). Donc maintenant l'image complète est :</p>
+         <p>On peut utiliser cette méthode avec tous les éléments <code>xf:action</code> :</p>
          <pre>
             <code class="language-xml">
 &lt;xf:action ev:event="xforms-insert" ev:listener="list"&gt;
@@ -214,9 +218,6 @@
                </xf:action>
             </xf:trigger>
          </xf:group>
-         <div>
-            <h2 class="">Exercice</h2>
-         </div>
       </main>
       <script>hljs.highlightAll();</script>
    </body>

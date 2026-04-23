@@ -27,7 +27,6 @@
             <data xmlns="">
                <nom>Victor Hugo</nom>
                <dateNaissance>1802</dateNaissance>
-               <biographie/>
             </data>
          </xf:instance>
          <!--<xf:bind nodeset="age" type="integer"/>
@@ -36,65 +35,47 @@
    </head>
    <body>
       <main class="slide ">
-         <h1 class="">Champ texte (et pas uniquement) - <code>xf:input</code> &amp; <code>xf:textarea</code>
+         <h1 class="">Sortie - <code>xf:output</code>
          </h1>
-         <p>Avec XForms, on parle plutôt de <strong>contrôles</strong> que de champs de formulaire.</p>
-         <p>Le contrôle <code>xf:input</code> correspond, globalement, au champ texte. Ce type de contrôle est placé dans le corps du document XHTML (<code>body</code>). On le relie à un nœud d’une instance par l’intermédiaire d’un attribut <code>@ref</code> et d’une expression XPath.</p>
+         <p>L’élément <a href="https://www.w3.org/TR/xforms11/#ui-output" target="_blank">
+               <code>xf:output</code>
+            </a> ne dispose pas d’un équivalent HTML. Il permet d’afficher directement la valeur textuelle d’une donnée. Tout comme avec l’élément <code>xf:input</code>, on accède aux nœuds d’une instance par l’intermédiaire de l'attribut <code>@ref</code>.</p>
          <pre>
             <code class="language-xml">
-&lt;xf:input ref="nom"&gt;
-    &lt;xf:label&gt;Nom de famille&lt;/xf:label&gt;
-&lt;/xf:input&gt;
-&lt;xf:input ref="dateNaissance"&gt;
-    &lt;xf:label&gt;Date de naissance&lt;/xf:label&gt;
-&lt;/xf:input&gt;
+&lt;xf:output ref="nom"/&gt;
+&lt;xf:output ref="dateNaissance"/&gt;
                         </code>
          </pre>
          <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:output value="serialize(.)"/>
+            <xf:output ref="nom"/>
             <x:br/>
-            <xf:input ref="nom">
-               <xf:label>Nom de famille</xf:label>
-            </xf:input>
-            <x:br/>
-            <xf:input ref="dateNaissance">
-               <xf:label>Date de naissance</xf:label>
-            </xf:input>
+            <xf:output ref="dateNaissance"/>
          </xf:group>
-         <p>Par défaut, un champ met à jour l’instance lorsqu’on le quitte, mais ce comportement peut être modifié avec l’utilisation de l'attribut <code>@incremental="true"</code>. L’instance se mettra à jour au fur et à mesure que l’on frappe sur son clavier :</p>
+         <p>L’attribut <code>@value</code> permet quant à lui d’interpréter des expressions XPath :</p>
          <pre>
             <code class="language-xml">
-&lt;xf:input ref="nom" incremental="true"&gt;
-    &lt;xf:label&gt;Nom de famille&lt;/xf:label&gt;
-&lt;/xf:input&gt;
-&lt;xf:input ref="dateNaissance" incremental="true"&gt;
-    &lt;xf:label&gt;Date de naissance&lt;/xf:label&gt;
-&lt;/xf:input&gt;
+&lt;xf:output value="concat('Nom :', nom)"/&gt;
                         </code>
          </pre>
          <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:output value="serialize(.)"/>
-            <x:br/>
-            <xf:input ref="nom" incremental="true">
-               <xf:label>Nom de famille</xf:label>
-            </xf:input>
-            <x:br/>
-            <xf:input ref="dateNaissance" incremental="true">
-               <xf:label>Date de naissance</xf:label>
-            </xf:input>
+            <xf:output value="concat('Nom : ', nom)"/>
          </xf:group>
-         <p>Pour les zones de texte plus importantes, on utilisera l’élément <code>xf:textarea</code> de la même manière :</p>
+         <p>XSLTForms propose deux fonctions très utiles :</p>
+         <ul>
+            <li>
+               <code>serialize()</code> pour visualiser la sérialisation d’une donnée</li>
+            <li>
+               <code>transform()</code> pour effectuer transformer une instance à l’aide d’un feuille XSLT</li>
+         </ul>
          <pre>
             <code class="language-xml">
-&lt;xf:textarea ref="biographie" incremental="true"&gt;
-    &lt;xf:label&gt;Biographie&lt;/xf:label&gt;
-&lt;/xf:textarea&gt;
+&lt;xf:output value="serialize(.)"/&gt;
                         </code>
          </pre>
          <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:textarea ref="biographie" incremental="true">
-               <xf:label>Biographie</xf:label>
-            </xf:textarea>
+            <xf:output value="serialize(.)">
+               <xf:label>Sérialisation XML :</xf:label>
+            </xf:output>
          </xf:group>
       </main>
       <script>hljs.highlightAll();</script>

@@ -1,28 +1,123 @@
-<!DOCTYPE html
-  PUBLIC "'-//W3C//DTD XHTML 1.0 Strict//EN'" "'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:file="http://expath.org/ns/file" xmlns:x="http://www.w3.org/1999/xhtml" xmlns:xf="http://www.w3.org/2002/xforms">
+<?xml-stylesheet href="../assets/xsltforms/xsltforms.xsl" type="text/xsl"?><html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ahn="http://ahn2026/ns/1.0"
+      xmlns:ev="http://www.w3.org/2001/xml-events"
+      xmlns:file="http://expath.org/ns/file"
+      xmlns:tei="http://www.tei-c.org/ns/1.0"
+      xmlns:x="http://www.w3.org/1999/xhtml"
+      xmlns:xf="http://www.w3.org/2002/xforms"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:xs="http://www.w3.org/2001/XMLSchema"
+      xf:bogus="fix/Firefox/namespace/issue"
+      xs:bogus="fix/Firefox/namespace/issue"
+      xlink:bogus="fix/Firefox/namespace/issue"
+      ahn:bogus="fix/Firefox/namespace/issue"
+      tei:bogus="fix/Firefox/namespace/issue"
+      lang="fr">
    <head>
-      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+      <meta charset="utf-8"/>
       <title>AHN 2026Formation XForms</title>
-      <link rel="stylesheet" href="../assets/css/main.css" type="text/css" />
-      <link rel="stylesheet" href="//unpkg.com/@catppuccin/highlightjs@1.0.1/css/catppuccin-latte.css" /><script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js">/**/</script></head>
+      <link rel="stylesheet" href="../assets/css/main.css" type="text/css"/>
+      <link rel="stylesheet" href="../assets/css/tei.css" type="text/css"/>
+      <link rel="stylesheet"
+            href="//unpkg.com/@catppuccin/highlightjs@1.0.1/css/catppuccin-latte.css"/>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js">/**/</script>
+      <script src="../assets/js/generateid.js"/>
+      <xf:model xmlns="http://www.tei-c.org/ns/1.0">
+         <xf:action ev:event="xforms-ready">
+            <xf:setvalue ref="control/maintenancehistory/maintenanceevent/eventdatetime/@standarddatetime"
+                         value="local-dateTime()"/>
+         </xf:action>
+         <xf:instance>
+            <ead xmlns="">
+               <control>
+                  <recordid/>
+                  <filedesc>
+                     <titlestmt>
+                        <titleproper/>
+                     </titlestmt>
+                  </filedesc>
+                  <maintenancestatus value="new"/>
+                  <maintenanceagency>
+                     <agencyname/>
+                  </maintenanceagency>
+                  <maintenancehistory>
+                     <maintenanceevent>
+                        <eventtype value="created"/>
+                        <eventdatetime standarddatetime=""/>
+                        <agenttype value="human"/>
+                        <agent/>
+                     </maintenanceevent>
+                  </maintenancehistory>
+               </control>
+            </ead>
+         </xf:instance>
+      </xf:model>
+   </head>
    <body>
-      <main class="slide titlePage">
-         
-         <h1>Exercice 02</h1>
-         
-         <p>Formulaire liste de notices bibliographiques</p>
-         
-         
-         <p>Objectifs :</p>
-         
+      <main class="slide ">
+         <h1 class="">Événements et actions - <code>ev:event</code> &amp; <code>xf:action</code>
+         </h1>
+         <p>XForms prend en charge le standard W3C <a href="https://www.w3.org/TR/2003/REC-xml-events-20031014/"
+               target="_blank">XML Events</a> qui définit une syntaxe XML pour déclarer et gérer les événements dans les documents XML.</p>
+         <p>Ce standard définit des noms normalisés pour la quasi-totalité des événements courants utilisés dans le cycle de vie d'un formulaire.</p>
+         <p>Si la plupart des opérations dans un formulaire XForms se déroulent automatiquement, elles émettent cependant des événements qu'il est possible d’<strong>écouter</strong> afin de déclencher d’autres actions.</p>
+         <p>Voici quelques exemples concrets :</p>
          <ul>
-            
-            <li>Implémenter les répétitions</li>
-            
-            <li>Déclarer une seconde instance pour un liste d’auteurs</li>
-            
-            <li>Mettre en place une liste de choix à partir d’une instance</li>
-            </ul>
-         </main><script>hljs.highlightAll();</script></body>
+            <li>Initialiser des valeurs au démarrage avec <code>xforms-ready</code>
+            </li>
+            <li>Gérer une erreur de soumission avec <code>xforms-submit-error</code>
+            </li>
+            <li>Interagir aux actions de l’utilisateur avec <code>DOMActivate</code>
+            </li>
+            <li>Réagir aux modifications d’une instance :
+                                <ul>
+                  <li>sélection avec <code>xforms-select</code>
+                  </li>
+                  <li>insertion avec <code>xforms-insert</code>
+                  </li>
+                  <li>suppression avec <code>xforms-delete</code>
+                  </li>
+                  <li>changement de valeur <code>xforms-value-changed</code>
+                  </li>
+               </ul>
+            </li>
+         </ul>
+         <p>Voir le chapitre <a href="https://www.w3.org/TR/xforms11/#rpm" target="_blank">Xforms Processing Model</a> pour la liste complète.</p>
+         <p>Pour <strong>écouter</strong> un événement, on utilise généralement l’élément <code>xf:action</code>, en indiquant le nom de l'événement auquel on souhaite réagir avec l'attribut <code>ev:event</code> :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xf:action ev:event="xforms-ready"/&gt;
+    &lt;!-- ici on peut déclencher des actions --&gt;
+&lt;/xf:action&gt;
+                        </code>
+         </pre>
+         <p>À l'intérieur de l’élément <code>xf:action</code>, on peut placer des éléments qui déclenchent des actions :</p>
+         <ul>
+            <li>mettre à jour une valeur <code>xf:setvalue</code>
+            </li>
+            <li>supprimer un nœud <code>xf:delete</code>
+            </li>
+            <li>insérer un nœud <code>xf:insert</code>
+            </li>
+            <li>charger un document <code>xf:load</code>
+            </li>
+            <li/>
+         </ul>
+         <pre>
+            <code class="language-xml">
+&lt;xf:action ev:event="xforms-ready"&gt;
+    &lt;xf:setvalue ref="control/maintenancehistory/maintenanceevent/eventdatetime/@standarddatetime" value="local-dateTime()"/&gt;
+&lt;/xf:action&gt;
+                        </code>
+         </pre>
+         <xf:output xmlns="http://www.tei-c.org/ns/1.0"
+                    ref="control/maintenancehistory/maintenanceevent/eventdatetime/@standarddatetime">
+            <xf:label>Création du formulaire : </xf:label>
+         </xf:output>
+         <p>L’évènements <code>xforms-ready</code> signale que le formulaire XForms est initialisé. Lorsqu’il est émis, les actions qui écoutent cet événements sont exécutées.</p>
+         <p>Attention cependant, les événements ne sont pas distribués <strong>globalement</strong>. Par exemple, l’événement <code>xforms-ready</code> est dirigé vers le <code>xf:model</code>. Concrètement, cela signifie que si on place l’écouteur dans le formulaire il ne pourra jamais percevoir cet évènement, l'écouteur doit être placé au sein du <code>xf:model</code>.</p>
+         <p>NB : l’utilisation de l’attribut <code>@incremental="true"</code> peut modifier le comportement de certains événements comme <code>xforms-value-changed</code>.</p>
+      </main>
+      <script>hljs.highlightAll();</script>
+   </body>
 </html>

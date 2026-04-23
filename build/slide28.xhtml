@@ -61,42 +61,23 @@
    </head>
    <body>
       <main class="slide ">
-         <h1 class="">Suppression (<code>xf:delete</code>)</h1>
-         <p>Pour supprimer des éléments on procède plus où moins de la même manière, mais il faut faire attention à une chose :</p>
+         <h1 class="">Conditions et itérations - <code>@if</code> &amp; <code>@while</code>
+         </h1>
+         <p>Toutes les actions XForms disposent de deux attributs optionnels afin de conditionner (<code>@if</code>) ou d’itérer (<code>@while</code>) leur exécution.</p>
          <pre>
             <code class="language-xml">
-&lt;xf:delete nodeset="person"/&gt;
-                        </code>
-         </pre>
-         <p>Cette action supprime <strong>TOUS</strong> les éléments <code>person</code> (On n’utilise en effet pas <code>@ref</code>, mais <code>@nodeset</code>, tout comme avec <code>xf:repeat</code>). Si on est en présence d’une liste, il faut donc être en mesure de préciser quel élément nous souhaitons supprimer :</p>
-         <pre>
-            <code class="language-xml">
-&lt;xf:delete nodeset="person[1]"/&gt;
-&lt;xf:delete nodeset="person[last()]"/&gt;
-&lt;xf:delete nodeset="person[name = 'Victor Hugo']"/&gt;
-                        </code>
-         </pre>
-         <p>Une solution consiste à supprimer l’élément courant, dans le contexte d’un élément <code>xf:repeat</code> :</p>
-         <pre>
-            <code class="language-xml">
-&lt;xf:repeat nodeset="person"&gt;
-    &lt;xf:input class="inline" ref="name"/&gt;
-    &lt;xf:input class="inline" ref="birthDate"/&gt;
-    &lt;xf:input class="inline" ref="deathDate"/&gt;
-    &lt;xf:output class="inline" ref="age"/&gt;
-    &lt;xf:trigger&gt;
-        &lt;xf:label&gt;×&lt;/xf:label&gt;
-        &lt;xf:hint&gt;Supprimer&lt;/xf:hint&gt;
-        &lt;xf:action ev:event="DOMActivate"&gt;
-            &lt;xf:delete nodeset="."/&gt;
-        &lt;/xf:action&gt;
-    &lt;/xf:trigger&gt;
-&lt;/xf:repeat&gt;
+&lt;xf:trigger&gt;
+    &lt;xf:label&gt;×&lt;/xf:label&gt;
+    &lt;xf:hint&gt;Supprimer&lt;/xf:hint&gt;
+    &lt;xf:action ev:event="DOMActivate"&gt;
+        &lt;xf:delete nodeset="." if="count(../person) &amp;gt; 1"/&gt;
+    &lt;/xf:action&gt;
+&lt;/xf:trigger&gt;
 
 &lt;xf:trigger&gt;
     &lt;xf:label&gt;+&lt;/xf:label&gt;
-    &lt;xf:hint&gt;Ajouter&lt;/xf:hint&gt;
-    &lt;xf:action ev:event="DOMActivate"&gt;
+    &lt;xf:hint&gt;Ajouter une personne&lt;/xf:hint&gt;
+    &lt;xf:action xmlns:ev="http://www.w3.org/2001/xml-events" while="count(person) &amp;lt; 3" ev:event="DOMActivate"&gt;
         &lt;xf:insert nodeset="person" origin="instance('blank')/person"/&gt;
     &lt;/xf:action&gt;
 &lt;/xf:trigger&gt;
@@ -120,14 +101,14 @@
                   <xf:label>×</xf:label>
                   <xf:hint>Supprimer</xf:hint>
                   <xf:action ev:event="DOMActivate">
-                     <xf:delete nodeset="."/>
+                     <xf:delete nodeset="." if="count(../person) &gt; 1"/>
                   </xf:action>
                </xf:trigger>
             </xf:repeat>
             <xf:trigger>
                <xf:label>+</xf:label>
                <xf:hint>Ajouter une personne</xf:hint>
-               <xf:action ev:event="DOMActivate">
+               <xf:action while="count(person) &lt; 3" ev:event="DOMActivate">
                   <xf:insert nodeset="person" origin="instance('blank')/person"/>
                </xf:action>
             </xf:trigger>

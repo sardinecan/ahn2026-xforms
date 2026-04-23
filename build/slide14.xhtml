@@ -25,40 +25,109 @@
       <xf:model xmlns="http://www.tei-c.org/ns/1.0">
          <xf:instance>
             <data xmlns="">
-               <nom>Victor Hugo</nom>
-               <dateNaissance>1802</dateNaissance>
+               <nom/>
+               <dateNaissance/>
+               <age/>
             </data>
          </xf:instance>
-         <!--<xf:bind nodeset="age" type="integer"/>
-                            <xf:bind nodeset="dateNaissance" type="date"/>-->
+         <xf:bind nodeset="age" type="integer"/>
+         <xf:bind nodeset="dateNaissance" type="date"/>
+         <xf:instance id="contact">
+            <data xmlns="">
+               <contact type="email"/>
+               <contact type="phone"/>
+            </data>
+         </xf:instance>
+         <xs:schema targetNamespace="http://ahn2026/ns/1.0">
+            <xs:simpleType name="phone">
+               <xs:restriction base="xs:string">
+                  <xs:pattern value="^(\d{2}\s?){5}"/>
+               </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType name="email">
+               <xs:restriction base="xs:string">
+                  <xs:pattern value="^[^@]+@[^@]+"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:schema>
+         <xf:bind nodeset="instance('contact')//contact[@type='email']" type="ahn:email"/>
+         <xf:bind nodeset="instance('contact')//contact[@type='phone']" type="ahn:phone"/>
       </xf:model>
    </head>
    <body>
       <main class="slide ">
-         <h1 class="">
-            <code>xf:label</code>, <code>xf:hint</code>, <code>xf:help</code> et <code>xf:alert</code>
+         <h1 class="">Typer les données - <code>xf:bind</code>
          </h1>
-         <p>Les éléments <code>xf:label</code>, <code>xf:hint</code>, <code>xf:help</code> et <code>xf:alert</code> permettent d’attacher des métadonnées à une grande partie des contrôles XForms.</p>
-         <p>Ils sont utilisés comme des sous-éléments pour le contrôles <code>xf:input</code>, <code>xf:output</code>, <code>xf:group</code>, <code>xf:repeat</code>, etc.</p>
-         <p>Un label facultatif peut être associé à tous les champs ou contrôles XForms avec l’élément <code>xf:label</code>
-         </p>
+         <p>Au sein du <code>xf:model</code>, l’élément <a href="https://www.w3.org/TR/xforms11/#structure-bind-element"
+               target="_blank">
+               <code>xf:bind</code>
+            </a> est utilisé pour typer les données. Il est relié aux nœuds par l’intermédiaire de l’attribut <code>@nodeset</code> (groupe de nœuds) et le type est indiqué dans un attribut <code>@type</code> :</p>
          <pre>
             <code class="language-xml">
-&lt;xf:input ref="dateNaissance" incremental="true"&gt;
-    &lt;xf:label&gt;Date de naissance&lt;/xf:label&gt;
-    &lt;xf:help&gt;Date au format AAAA&lt;/xf:help&gt;
-    &lt;xf:hint&gt;Année de naissance de VH&lt;/xf:hint&gt;
-&lt;/xf:input&gt;
+&lt;xf:model&gt;
+    &lt;xf:instance&gt;
+        &lt;data xmlns=""&gt;
+            &lt;nom/&gt;
+            &lt;dateNaissance/&gt;
+            &lt;age/&gt;
+        &lt;/data&gt;
+    &lt;/xf:instance&gt;
+    &lt;xf:bind nodeset="age" type="integer"/&gt;
+    &lt;xf:bind nodeset="dateNaissance" type="date"/&gt;
+&lt;/xf:model&gt;
                         </code>
          </pre>
          <xf:group xmlns="http://www.tei-c.org/ns/1.0">
+            <xf:input ref="nom" incremental="true">
+               <xf:label>Nom : </xf:label>
+            </xf:input>
+            <x:br/>
             <xf:input ref="dateNaissance" incremental="true">
                <xf:label>Date de naissance</xf:label>
-               <xf:help>Date au format AAAA</xf:help>
-               <xf:hint>Année de naissance de VH</xf:hint>
+            </xf:input>
+            <x:br/>
+            <xf:input ref="age" incremental="true">
+               <xf:label>Age</xf:label>
+            </xf:input>
+            <x:br/>
+            <xf:output value="serialize(.)" incremental="true">
+               <xf:label>output :</xf:label>
+            </xf:output>
+         </xf:group>
+         <details>
+            <summary>Que remarque-t-on ?</summary>
+            <p>Les champs s’adaptent aux types. Cependant, la valeur affichée peut ne pas correspondre à la façon dont elle est stockée (cf. date). Le non respect du type entraîne l’affichage d’une alerte.</p>
+            <p>On remarque également que l’utilisation de l’attribut <code>@incremental="true"</code> modifie l’évaluation du typage, qui se fait alors en temps réel.</p>
+         </details>
+         <p>Le type par défaut est <code>string</code> (chaîne de caractères), mais tous les types XML peuvent être appelés ; on peut même définir des types avec XML Schema :</p>
+         <pre>
+            <code class="language-xml">
+&lt;xs:schema targetNamespace="http://ahn2026/ns/1.0"&gt;
+    &lt;xs:simpleType name="phone"&gt;
+        &lt;xs:restriction base="xs:string"&gt;
+            &lt;xs:pattern value="^(\d{2}\s?){5}"/&gt;
+        &lt;/xs:restriction&gt;
+    &lt;/xs:simpleType&gt;
+    &lt;xs:simpleType name="email"&gt;
+        &lt;xs:restriction base="xs:string"&gt;
+            &lt;xs:pattern value="^[^@]+@[^@]+"/&gt;
+        &lt;/xs:restriction&gt;
+    &lt;/xs:simpleType&gt;
+&lt;/xs:schema&gt;
+
+&lt;xf:bind nodeset="//contact[@type='email']" type="ahn:email"/&gt;
+&lt;xf:bind nodeset="//contact[@type='phone']" type="ahn:phone"/&gt;
+                        </code>
+         </pre>
+         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
+            <xf:input ref="instance('contact')/contact[@type='email']" incremental="true">
+               <xf:label>Email : </xf:label>
+            </xf:input>
+            <x:br/>
+            <xf:input ref="instance('contact')/contact[@type='phone']" incremental="true">
+               <xf:label>Téléphone : </xf:label>
             </xf:input>
          </xf:group>
-         <p>On peut y placer directement du texte ou charger du contenu depuis une instance de données en utilisant l'attribut <code>@ref</code>.</p>
       </main>
       <script>hljs.highlightAll();</script>
    </body>

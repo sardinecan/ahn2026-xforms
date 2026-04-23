@@ -1,154 +1,28 @@
-<?xml-stylesheet href="../assets/xsltforms/xsltforms.xsl" type="text/xsl"?><html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ahn="http://ahn2026/ns/1.0"
-      xmlns:ev="http://www.w3.org/2001/xml-events"
-      xmlns:file="http://expath.org/ns/file"
-      xmlns:tei="http://www.tei-c.org/ns/1.0"
-      xmlns:x="http://www.w3.org/1999/xhtml"
-      xmlns:xf="http://www.w3.org/2002/xforms"
-      xmlns:xlink="http://www.w3.org/1999/xlink"
-      xmlns:xs="http://www.w3.org/2001/XMLSchema"
-      xf:bogus="fix/Firefox/namespace/issue"
-      xs:bogus="fix/Firefox/namespace/issue"
-      xlink:bogus="fix/Firefox/namespace/issue"
-      ahn:bogus="fix/Firefox/namespace/issue"
-      tei:bogus="fix/Firefox/namespace/issue"
-      lang="fr">
+<!DOCTYPE html
+  PUBLIC "'-//W3C//DTD XHTML 1.0 Strict//EN'" "'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:file="http://expath.org/ns/file" xmlns:x="http://www.w3.org/1999/xhtml" xmlns:xf="http://www.w3.org/2002/xforms">
    <head>
-      <meta charset="utf-8"/>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
       <title>AHN 2026Formation XForms</title>
-      <link rel="stylesheet" href="../assets/css/main.css" type="text/css"/>
-      <link rel="stylesheet" href="../assets/css/tei.css" type="text/css"/>
-      <link rel="stylesheet"
-            href="//unpkg.com/@catppuccin/highlightjs@1.0.1/css/catppuccin-latte.css"/>
-      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js">/**/</script>
-      <script src="../assets/js/generateid.js"/>
-      <xf:model xmlns="http://www.tei-c.org/ns/1.0">
-         <xf:instance id="choice">
-            <data xmlns="">
-               <choice/>
-               <collection/>
-            </data>
-         </xf:instance>
-         <xf:instance id="listPerson">
-            <listPerson xmlns="">
-               <person>
-                  <name>Victor Hugo</name>
-                  <birthDate>1802</birthDate>
-                  <deathDate>1885</deathDate>
-               </person>
-               <person>
-                  <name>Alexandre Dumas</name>
-                  <birthDate>1802</birthDate>
-                  <deathDate>1870</deathDate>
-               </person>
-               <person>
-                  <name>George Sand</name>
-                  <birthDate>1804</birthDate>
-                  <deathDate>1876</deathDate>
-               </person>
-               <person>
-                  <name>Honoré de Balzac</name>
-                  <birthDate>1799</birthDate>
-                  <deathDate>1850</deathDate>
-               </person>
-            </listPerson>
-         </xf:instance>
-      </xf:model>
-   </head>
+      <link rel="stylesheet" href="../assets/css/main.css" type="text/css" />
+      <link rel="stylesheet" href="//unpkg.com/@catppuccin/highlightjs@1.0.1/css/catppuccin-latte.css" /><script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js">/**/</script></head>
    <body>
-      <main class="slide ">
-         <h1 class="">L’élément <code>xf:itemset</code>
-         </h1>
-         <p>Il est également possible de créer une liste de choix directement à partir d’une instance.</p>
-         <pre>
-            <code class="language-xml">
-&lt;xf:instance id="listPerson"&gt;
-    &lt;listPerson xmlns=""&gt;
-        &lt;person&gt;
-            &lt;name&gt;Victor Hugo&lt;/name&gt;
-            &lt;birthDate&gt;1802&lt;/birthDate&gt;
-            &lt;deathDate&gt;1885&lt;/deathDate&gt;
-        &lt;/person&gt;
-        &lt;person&gt;
-            &lt;name&gt;Alexandre Dumas&lt;/name&gt;
-            &lt;birthDate&gt;1802&lt;/birthDate&gt;
-            &lt;deathDate&gt;1870&lt;/deathDate&gt;
-        &lt;/person&gt;
-        &lt;person&gt;
-            &lt;name&gt;George Sand&lt;/name&gt;
-            &lt;birthDate&gt;1804&lt;/birthDate&gt;
-            &lt;deathDate&gt;1876&lt;/deathDate&gt;
-        &lt;/person&gt;
-        &lt;person&gt;
-            &lt;name&gt;Honoré de Balzac&lt;/name&gt;
-            &lt;birthDate&gt;1799&lt;/birthDate&gt;
-            &lt;deathDate&gt;1850&lt;/deathDate&gt;
-        &lt;/person&gt;
-    &lt;/listPerson&gt;
-&lt;/xf:instance&gt;
-                        </code>
-         </pre>
-         <p>On utilise pour cela l’élément <code>xf:itemset</code> :</p>
-         <pre>
-            <code class="language-xml">
-&lt;xf:select1 ref="choice"&gt;
-    &lt;xf:label&gt;Choisir une personne&lt;/xf:label&gt;
-    &lt;xf:itemset ref="instance('listPerson')/person"&gt;
-        &lt;xf:label ref="name"/&gt;
-        &lt;xf:value ref="name"/&gt;
-    &lt;/xf:itemset&gt;
-&lt;/xf:select1&gt;
-                        </code>
-         </pre>
-         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:select1 ref="choice" appearance="full">
-               <xf:label>Choisir une personne</xf:label>
-               <xf:itemset ref="instance('listPerson')/person">
-                  <xf:label ref="name"/>
-                  <xf:value value="name"/>
-               </xf:itemset>
-            </xf:select1>
-            <xf:output ref="choice">
-               <xf:label>Personne choisie : </xf:label>
-            </xf:output>
-         </xf:group>
-         <p>On notera l’utilisation de la fonction <code>instance()</code> avec <code>xf:itemset</code>.</p>
-         <p>Bien évidemment, il est possible d’interpréter des valeurs avec l’attribut <code>@value</code>, tout comme avec l’élément <code>xf:output</code> :</p>
-         <pre>
-            <code class="language-xml">
-&lt;!-- dans l’instance... --&gt;
-&lt;person id="vh"&gt;Victor Hugo&lt;/person&gt;
-                            
-&lt;xf:itemset ref="instance('listPerson')/person"&gt;
-    &lt;xf:label ref="."/&gt;
-    &lt;xf:value value="concat('#', @id)"/&gt;
-&lt;/xf:itemset&gt;
-                        </code>
-         </pre>
-         <p>Enfin, avec <code>xf:itemset</code> on peut préférer insérer un élément plutôt qu’une valeur. On utilisera à cet effet la balise <code>xf:copy</code> :</p>
-         <pre>
-            <code class="language-">
-&lt;xf:select ref="collection"&gt;
-    &lt;xf:label&gt;Choisir une personne&lt;/xf:label&gt;
-    &lt;xf:itemset ref="instance('listPerson')/person"&gt;
-        &lt;xf:label ref="name"/&gt;
-        &lt;xf:copy ref="name"/&gt;
-    &lt;/xf:itemset&gt;
-&lt;/xf:select&gt;
-                        </code>
-         </pre>
-         <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:output value="serialize(collection)"/>
-            <x:br/>
-            <xf:select ref="collection" appearance="full">
-               <xf:label>Choisir une personne</xf:label>
-               <xf:itemset ref="instance('listPerson')/person">
-                  <xf:label ref="name"/>
-                  <xf:copy ref="name"/>
-               </xf:itemset>
-            </xf:select>
-         </xf:group>
-      </main>
-      <script>hljs.highlightAll();</script>
-   </body>
+      <main class="slide titlePage">
+         
+         <h1>Exercice 02</h1>
+         
+         <p>Formulaire liste de notices bibliographiques</p>
+         
+         
+         <p>Objectifs :</p>
+         
+         <ul>
+            
+            <li>Implémenter les répétitions</li>
+            
+            <li>Déclarer une seconde instance pour un liste d’auteurs</li>
+            
+            <li>Mettre en place une liste de choix à partir d’une instance</li>
+            </ul>
+         </main><script>hljs.highlightAll();</script></body>
 </html>

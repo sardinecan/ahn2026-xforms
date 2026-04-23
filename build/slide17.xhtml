@@ -22,87 +22,72 @@
             href="//unpkg.com/@catppuccin/highlightjs@1.0.1/css/catppuccin-latte.css"/>
       <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js">/**/</script>
       <script src="../assets/js/generateid.js"/>
-      <xf:model xmlns="http://www.tei-c.org/ns/1.0">
-         <xf:instance>
-            <listPerson xmlns="">
-               <person>
-                  <name>Victor Hugo</name>
-                  <birthDate>1802</birthDate>
-                  <deathDate>1885</deathDate>
-               </person>
-               <person>
-                  <name>Juliette Drouet</name>
-                  <birthDate>1806</birthDate>
-                  <deathDate>1883</deathDate>
-               </person>
-            </listPerson>
+      <xf:model>
+         <xf:instance id="museum">
+            <museum xmlns="">
+               <artists>
+                  <artist id="a1">
+                     <name>Artemisia Gentileschi</name>
+                  </artist>
+                  <artist id="a2">
+                     <name>Goya</name>
+                  </artist>
+               </artists>
+               <artworks>
+                  <artwork artist="a1">
+                     <title>Judith décapitant Holopherne</title>
+                  </artwork>
+                  <artwork artist="a2">
+                     <title>El tres de mayo de 1808 en Madrid</title>
+                  </artwork>
+                  <artwork artist="a2">
+                     <title>Saturne dévorant un de ses fils</title>
+                  </artwork>
+               </artworks>
+            </museum>
          </xf:instance>
       </xf:model>
    </head>
    <body>
       <main class="slide ">
-         <h1 class="">L’élément <code>xf:repeat</code>
+         <h1 class="">Nœud contextuel - <code>current()</code>
          </h1>
-         <p>Imaginons l’instance suivante :</p>
+         <p>La fonction <code>current()</code> renvoie le nœud du contexte (par exemple l’item d’un repeat). Cette fonction est très utile pour écrire des expressions avec imbrication des contextes.</p>
          <pre>
-            <code class="language-xml">
-&lt;xf:instance&gt;
-    &lt;listPerson xmlns=""&gt;
-        &lt;person&gt;
-            &lt;name&gt;Victor Hugo&lt;/name&gt;
-            &lt;birthDate&gt;1802&lt;/birthDate&gt;
-            &lt;deathDate&gt;1885&lt;/deathDate&gt;
-        &lt;/person&gt;
-        &lt;person&gt;
-            &lt;name&gt;Juliette Drouet&lt;/name&gt;
-            &lt;birthDate&gt;1806&lt;/birthDate&gt;
-            &lt;deathDate&gt;1883&lt;/deathDate&gt;
-        &lt;/person&gt;
-    &lt;/listPerson&gt;
+            <code class="language-">
+&lt;xf:instance id="museum"&gt;
+    &lt;museum xmlns=""&gt;
+        &lt;artists&gt;
+            &lt;artist id="a1"&gt;&lt;name&gt;Artemisia Gentileschi&lt;/name&gt;&lt;/artist&gt;
+            &lt;artist id="a2"&gt;&lt;name&gt;Goya&lt;/name&gt;&lt;/artist&gt;
+        &lt;/artists&gt;
+        &lt;artworks&gt;
+            &lt;artwork artist="a1"&gt;&lt;title&gt;Judith décapitant Holopherne&lt;/title&gt;&lt;/artwork&gt;
+            &lt;artwork artist="a2"&gt;&lt;title&gt;El tres de mayo de 1808 en Madrid&lt;/title&gt;&lt;/artwork&gt;
+            &lt;artwork artist="a2"&gt;&lt;title&gt;Saturne dévorant un de ses fils&lt;/title&gt;&lt;/artwork&gt;
+        &lt;/artworks&gt;
+    &lt;/museum&gt;
 &lt;/xf:instance&gt;
-                        </code>
-         </pre>
-         <p>Avec XForms, il est très facile de gérer une séquence d’éléments qui partagent une même structure (ou non d'ailleurs).</p>
-         <p>La balise <code>xf:repeat</code> permet de propager des règles communes à un ensemble de nœuds identifiés par l’attribut <code>@nodeset</code>.</p>
-         <pre>
-            <code class="language-xml">
-&lt;xf:repeat nodeset="person"&gt;
-    &lt;xf:output ref="name"/&gt; (&lt;xf:output ref="birthDate"/&gt; - &lt;xf:output ref="deathDate"/&gt;)
-&lt;/xf:repeat&gt;
-                        </code>
+
+&lt;xf:repeat nodeset="instance('museum')/artists/artist"&gt;
+    &lt;xf:output value="concat(
+        name,
+        ', nombre d’oeuvres dans la collection : ',
+        count(instance('museum')/artworks/artwork[@artist = current()/@id]))"/&gt;
+&lt;/xf:repeat&gt;</code>
          </pre>
          <xf:group xmlns="http://www.tei-c.org/ns/1.0">
-            <xf:repeat nodeset="person">
-               <xf:group>
-                  <xf:output ref="name"/> (<xf:output ref="birthDate"/> - <xf:output ref="deathDate"/>)
-                                </xf:group>
+            <xf:repeat nodeset="instance('museum')/artists/artist">
+               <xf:output value="concat(                                     name,                                     ', nombre d’oeuvres dans la collection : ',                                     count(instance('museum')/artworks/artwork[@artist = current()/@id]))"/>
             </xf:repeat>
          </xf:group>
-         <p>À l'intérieur d’un <code>xf:repeat</code> on hérite du <strong>contexte</strong> défini par l’attribut <code>@nodeset</code>. On indique donc bien :</p>
-         <pre>
-            <code class="language-xml">
-&lt;xf:output ref="name"/&gt;
-                        </code>
-         </pre>
-         <p>et non</p>
-         <pre>
-            <code class="language-xml">
-&lt;xf:output ref="person/name"/&gt;
-                        </code>
-         </pre>
-         <p>Ceci est généralement vrai partout dans un document XForms : les expressions utilisent le contexte fourni par l'élément parent.</p>
-         <p>Il est toutefois possible de définir le contexte explicitement, soit en utilisant un élément <code>xf:group</code> :</p>
-         <pre>
-            <code class="language-xml">
-&lt;xf:group ref="person[1]"&gt;
-    &lt;xf:output ref="person/name"/&gt;
-&lt;/xf:group&gt;
-                        </code>
-         </pre>
-         <xf:group xmlns="http://www.tei-c.org/ns/1.0" ref="person[1]">
-            <xf:output ref="name"/>
-         </xf:group>
-         <p>soit en précisant le contexte directement sur certains éléments comme <code>xf:insert</code>, mais nous verrons cela un peu plus loin.</p>
+         <ul>
+            <li>Le <code>xf:repeat</code> parcourt les artistes</li>
+            <li>
+               <code>current()</code> désigne l’artiste de la ligne en cours</li>
+            <li>On peut alors compter les oeuvres dont l’attribut <code>@artist</code> correspond à l’artiste courant</li>
+         </ul>
+         <p>Sans <code>current()</code>, la comparaison perdrait le bon contexte.</p>
       </main>
       <script>hljs.highlightAll();</script>
    </body>

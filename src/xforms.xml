@@ -116,7 +116,7 @@
                         <item><ref target="https://jinntec.github.io/Fore/doc/index.html">Fore</ref> (le plus éloigné du standard)</item>
                     </list>
                 </div>
-                <div type="slide">
+                <!--<div type="slide">
                     <head>Configuration</head>
                     <p>Pour cette leçon nous utiliserons <ref target="">BaseX</ref> pour servir nos documents XForms.</p>
                     <p>Décompresser l’archive <code>ethap2025-atelier3-xforms.zip</code> dans <ref target="https://docs.basex.org/main/Web_Application#services">le répertoire <code>static</code> de BaseX</ref></p>
@@ -124,7 +124,7 @@
 <![CDATA[chemin/vers/basex/webapp/static/]]>
                     </egXML>
                     <p>Lancer BaseX et ouvrir le navigateur web à l’adresse <ref target="http://localhost/static/ethap2025-atelier3-xforms/">http://localhost/static/ethap2025-atelier3-xforms/</ref></p>
-                </div>
+                </div>-->
                 <div type="slide">
                     <head>Structure</head>
                     <p>Un document XForms est un document XHTML avec :</p>
@@ -157,7 +157,7 @@
                     <p>L’ensemble doit être servi comme un document XML (extension <code>.xml</code> ou <code>.xhtml</code>).</p>
                 </div>
                 <div type="slide" subtype="xforms">
-                    <head>Un exemple simple</head>
+                    <head>Hello, World!</head>
                     <div type="model">
                         <xf:model>
                             <xf:instance>
@@ -168,7 +168,7 @@
                         </xf:model>
                     </div>
                     <div type="content">
-                        <head>Un exemple simple</head>
+                        <head>Hello World!</head>
                         <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="xml" rendition="small">
 <![CDATA[<?xml-stylesheet href="xsltforms/xsltforms.xsl" type="text/xsl"?>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:xf="http://www.w3.org/2002/xforms" lang="fr">
@@ -214,11 +214,11 @@
                 </div>
                 <div type="slide" rend="titlePage">
                     <head>Exercice 00</head>
-                    <p>Déployer une premier formulaire</p>
+                    <p>Déployer un premier formulaire</p>
                     <p>Récupérer les exercices sur Github <ref target="https://github.com/sardinecan/ahn2026-xforms">sardinecan/ahn2026-xforms</ref></p>
                 </div>
                 <div type="slide" subtype="xforms">
-                    <head>Les instances de données (xf:instance)</head>
+                    <head>Instances de données - xf:instance</head>
                     <div type="model">
                         <xf:model>
                             <xf:instance>
@@ -233,7 +233,7 @@
                         </xf:model>
                     </div>
                     <div type="content">
-                        <head>Les instances de données (<code>xf:instance</code>)</head>
+                        <head>Instances de données - <code>xf:instance</code></head>
                         <p>L’élément <ref target="https://www.w3.org/TR/xforms11/#structure-model"><code>xf:model</code></ref> peut contenir une ou plusieurs instances XML (<ref target="https://www.w3.org/TR/xforms11/#structure-model-instance"><code>xf:instance</code></ref>) :</p>
                         <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="xml" rendition="small">
 <![CDATA[<html>
@@ -269,7 +269,7 @@
                     </div>
                 </div>
                 <div type="slide" subtype="xforms">
-                    <head>Saisir et visualiser (xf:input &amp; xf:output)</head>
+                    <head>Champs texte - xf:input &amp; xf:output</head>
                     <div type="model">
                         <xf:model>
                             <xf:instance>
@@ -284,7 +284,7 @@
                         </xf:model>
                     </div>
                     <div type="content">
-                        <head>Champ texte (et pas uniquement) - <code>xf:input</code> &amp; <code>xf:textarea</code></head>
+                        <head>Champs texte - <code>xf:input</code> &amp; <code>xf:textarea</code></head>
                         <p>Avec XForms, on parle plutôt de <hi rend="bold">contrôles</hi> que de champs de formulaire.</p>
                         <p>Le contrôle <code>xf:input</code> correspond, globalement, au champ texte. Ce type de contrôle est placé dans le corps du document XHTML (<code>body</code>). On le relie à un nœud d’une instance par l’intermédiaire d’un attribut <code>@ref</code> et d’une expression XPath.</p>
                         <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="xml" rendition="small">
@@ -340,7 +340,7 @@
                     </div>
                 </div>
                 <div type="slide" subtype="xforms">
-                    <head>Visualiser - xf:output</head>
+                    <head>Sortie - <code>xf:output</code></head>
                     <div type="model">
                         <xf:model>
                             <xf:instance>
@@ -354,7 +354,7 @@
                         </xf:model>
                     </div>
                     <div type="content">
-                        <head>Visualiser - <code>xf:output</code></head>
+                        <head>Sortie - <code>xf:output</code></head>
                         <p>L’élément <ref target="https://www.w3.org/TR/xforms11/#ui-output"><code>xf:output</code></ref> ne dispose pas d’un équivalent HTML. Il permet d’afficher directement la valeur textuelle d’une donnée. Tout comme avec l’élément <code>xf:input</code>, on accède aux nœuds d’une instance par l’intermédiaire de l'attribut <code>@ref</code>.</p>
                         <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="xml">
 <![CDATA[<xf:output ref="nom"/>
@@ -388,7 +388,7 @@
                     </div>
                 </div>
                 <div type="slide" subtype="xforms">
-                    <head>xf:label, xf:hint, xf:help et xf:alert</head>
+                    <head>Métadonnées des contrôles - xf:label, xf:hint, xf:help &amp; xf:alert</head>
                     <div type="model">
                         <xf:model>
                             <xf:instance>
@@ -402,7 +402,7 @@
                         </xf:model>
                     </div>
                     <div type="content">
-                        <head><code>xf:label</code>, <code>xf:hint</code>, <code>xf:help</code> et <code>xf:alert</code></head>
+                        <head>Métadonnées des contrôles - <code>xf:label</code>, <code>xf:hint</code>, <code>xf:help</code> &amp; <code>xf:alert</code></head>
                         <p>Les éléments <code>xf:label</code>, <code>xf:hint</code>, <code>xf:help</code> et <code>xf:alert</code> permettent d’attacher des métadonnées à une grande partie des contrôles XForms.</p>
                         <p>Ils sont utilisés comme des sous-éléments pour le contrôles <code>xf:input</code>, <code>xf:output</code>, <code>xf:group</code>, <code>xf:repeat</code>, etc.</p>
                         <p>Un label facultatif peut être associé à tous les champs ou contrôles XForms avec l’élément <code>xf:label</code></p>
@@ -424,7 +424,7 @@
                     </div>
                 </div>
                 <div type="slide" subtype="xforms">
-                    <head>Typer les données - xf:bind</head>
+                    <head>Typer les données - xf:bind</head>
                     <div type="model">
                         <xf:model>
                             <xf:instance>
@@ -459,7 +459,7 @@
                         </xf:model>
                     </div>
                     <div type="content">
-                        <head>Typer les données (<code>xf:bind</code>)</head>
+                        <head>Typer les données - <code>xf:bind</code></head>
                         <p>Au sein du <code>xf:model</code>, l’élément <ref target="https://www.w3.org/TR/xforms11/#structure-bind-element"><code>xf:bind</code></ref> est utilisé pour typer les données. Il est relié aux nœuds par l’intermédiaire de l’attribut <code>@nodeset</code> (groupe de nœuds) et le type est indiqué dans un attribut <code>@type</code> :</p>
                         <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="xml" rendition="small">
 <![CDATA[<xf:model>
@@ -537,7 +537,7 @@
                     </list>
                 </div>
                 <div type="slide" subtype="xforms">
-                    <head>L’élément xf:repeat</head>
+                    <head>Les listes itératives - xf:repeat</head>
                     <div type="model">
                         <xf:model>
                             <xf:instance>
@@ -557,7 +557,7 @@
                         </xf:model>
                     </div>
                     <div type="content">
-                        <head>L’élément <code>xf:repeat</code></head>
+                        <head>Les listes itératives - <code>xf:repeat</code></head>
                         <p>Imaginons l’instance suivante :</p>
                         <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="xml">
 <![CDATA[<xf:instance>
@@ -611,7 +611,7 @@
                     </div>
                 </div>
                 <div type="slide" subtype="xforms">
-                    <head>current()</head>
+                    <head>Nœud contextuel - current()</head>
                     <div type="model">
                         <xf:model xmlns="">
                             <xf:instance id="museum">
@@ -630,7 +630,7 @@
                         </xf:model>
                     </div>
                     <div type="content">
-                        <head><code>current()</code></head>
+                        <head>Nœud contextuel - <code>current()</code></head>
                         <p>La fonction <code>current()</code> renvoie le nœud du contexte (par exemple l’item d’un repeat). Cette fonction est très utile pour écrire des expressions avec imbrication des contextes.</p>
                         <egXML xmlns="http://www.tei-c.org/ns/Examples">
 <![CDATA[<xf:instance id="museum">
@@ -782,7 +782,7 @@
                     </div>
                 </div>
                 <div type="slide" subtype="xforms">
-                    <head>Les éléments xf:select et xf:select1</head>
+                    <head>Listes de choix - xf:select &amp; xf:select1</head>
                     <!-- @todo ajouter xf:copy -->
                     <div type="model">
                         <xf:model>
@@ -796,7 +796,7 @@
                         </xf:model>
                     </div>
                     <div type="content">
-                        <head>Les éléments <code>xf:select</code> et <code>xf:select1</code></head>
+                        <head>Listes de choix - <code>xf:select</code> &amp; <code>xf:select1</code></head>
                         <p>Ces deux éléments permettent de proposer à l’utilisateur de choisir parmi un ensemble de valeurs prédéfinies :</p>
                         <list>
                             <item><code>xf:select</code> : choix multiple</item>
@@ -865,7 +865,7 @@
                     </div>
                 </div>
                 <div type="slide" subtype="xforms">
-                    <head>L’élément xf:itemset</head>
+                    <head>Listes de choix dynamiques - xf:itemset</head>
                     <div type="model">
                         <xf:model>
                             <xf:instance id="choice">
@@ -901,7 +901,7 @@
                         </xf:model>
                     </div>
                     <div type="content">
-                        <head>L’élément <code>xf:itemset</code></head>
+                        <head>Listes de choix dynamiques - <code>xf:itemset</code></head>
                         <p>Il est également possible de créer une liste de choix directement à partir d’une instance.</p>
                         <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="xml">
 <![CDATA[<xf:instance id="listPerson">
@@ -997,7 +997,7 @@
                     </list>
                 </div>
                 <div type="slide" subtype="xforms">
-                    <head>ev:event et xf:action</head>
+                    <head>Événements et actions - ev:event &amp; xf:action</head>
                     <div type="model">
                         <xf:model>
                             <xf:action ev:event="xforms-ready">
@@ -1030,7 +1030,7 @@
                         </xf:model>
                     </div>
                     <div type="content">
-                        <head><code>ev:event</code> et <code>xf:action</code></head>
+                        <head>Événements et actions - <code>ev:event</code> &amp; <code>xf:action</code></head>
                         <p>XForms prend en charge le standard W3C <ref target="https://www.w3.org/TR/2003/REC-xml-events-20031014/">XML Events</ref> qui définit une syntaxe XML pour déclarer et gérer les événements dans les documents XML.</p>
                         <p>Ce standard définit des noms normalisés pour la quasi-totalité des événements courants utilisés dans le cycle de vie d'un formulaire.</p>
                         <p>Si la plupart des opérations dans un formulaire XForms se déroulent automatiquement, elles émettent cependant des événements qu'il est possible d’<hi rend="bold">écouter</hi> afin de déclencher d’autres actions.</p>
@@ -1061,6 +1061,7 @@
                             <item>supprimer un nœud <code>xf:delete</code></item>
                             <item>insérer un nœud <code>xf:insert</code></item>
                             <item>charger un document <code>xf:load</code></item>
+                            <item></item>
                         </list>
                         <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="xml">
 <![CDATA[<xf:action ev:event="xforms-ready">
@@ -1069,12 +1070,12 @@
                         </egXML>
                         <xf:output ref="control/maintenancehistory/maintenanceevent/eventdatetime/@standarddatetime"><xf:label>Création du formulaire : </xf:label></xf:output>
                         <p>L’évènements <code>xforms-ready</code> signale que le formulaire XForms est initialisé. Lorsqu’il est émis, les actions qui écoutent cet événements sont exécutées.</p>
-                        <p>Attention cependant, les événements ne sont pas distribués <hi rend="bold">globalement</hi>. Par exemple, l’événement <code>xforms-ready</code> est dirigé vers le <code>xf:model</code>.</p>
+                        <p>Attention cependant, les événements ne sont pas distribués <hi rend="bold">globalement</hi>. Par exemple, l’événement <code>xforms-ready</code> est dirigé vers le <code>xf:model</code>. Concrètement, cela signifie que si on place l’écouteur dans le formulaire il ne pourra jamais percevoir cet évènement, l'écouteur doit être placé au sein du <code>xf:model</code>.</p>
                         <p>NB : l’utilisation de l’attribut <code>@incremental="true"</code> peut modifier le comportement de certains événements comme <code>xforms-value-changed</code>.</p>
                     </div>
                 </div>
                 <div type="slide" subtype="xforms">
-                    <head>Les boutons (xf:trigger)</head>
+                    <head>Les boutons -xf:trigger</head>
                     <div type="model">
                         <xf:model>
                             <xf:instance>
@@ -1090,7 +1091,7 @@
                         </xf:model>
                     </div>
                     <div type="content">
-                        <head>Les boutons (<code>xf:trigger</code>)</head>
+                        <head>Les boutons -<code>xf:trigger</code></head>
                         <p>Un <code>xf:trigger</code> est un bouton qui déclenche un évènement <code>DOMActivate</code> lorsque l’on clique dessus.</p>
                         <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="xml">
 <![CDATA[<xf:instance>
@@ -1173,7 +1174,7 @@
                     </div>
                 </div>
                 <div type="slide" subtype="xforms">
-                    <head>Soumission - xf:submission</head>
+                    <head>Module de soumission - xf:submission</head>
                     <div type="model">
                         <xf:model>
                             <xf:instance id="text-from-jd">
@@ -1196,7 +1197,7 @@
                         </xf:model>
                     </div>
                     <div type="content">
-                        <head>Soumission - <code>xf:submission</code></head>
+                        <head>Module de soumission - <code>xf:submission</code></head>
                         <p>Le module de soumission d’XForms est très complet et couvre un large éventail d’actions pour collecter, envoyer et stocker des données.</p>
                         <p>Il permet notamment de définir :</p>
                         <list>
@@ -1274,6 +1275,16 @@
                             <x:br/>
                             <xf:output value="serialize(.)"/>
                         </xf:group>
+                        <p>En cas de soumissions multiple, il peut être préférable d’utiliser le mode de soumission synchrone (<code>synchronous</code>) (<code>asynchronous</code> par défaut) :</p>
+                        <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="xml">
+<![CDATA[<xf:submission
+    resource="https://juliettedrouet.univ-rouen.fr/lettres/jd.entry.3808"
+    serialization="none"
+    method="get"
+    replace="all"
+    mode="synchronous"/>]]>
+                        </egXML>
+                        <p>Ainsi, chaque soumission attendra que la précédente ait été finalisée avant de s’exécuter.</p>
                     </div>
                 </div>
                 <div type="slide" subtype="xforms">
@@ -1337,7 +1348,7 @@
                     </div>
                 </div>
                 <div type="slide" subtype="xforms">
-                    <head>Insertion (xf:insert)</head>
+                    <head>Insertion - xf:insert</head>
                     <div type="model">
                         <xf:model>
                             <xf:instance>
@@ -1371,7 +1382,7 @@
                         </xf:model>
                     </div>
                     <div type="content">
-                        <head>Insertion (<code>xf:insert</code>)</head>
+                        <head>Insertion - <code>xf:insert</code></head>
                         <p>Jusqu'ici, nous avons vu comme modifier des valeurs, voyons maintenant comment modifier une instance plus en profondeur. Supposons que nous ayons une liste de personnes :</p>
                         <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="xml">
 <![CDATA[<xf:instance>
@@ -1584,7 +1595,7 @@
                     </div>
                 </div>
                 <div type="slide" subtype="xforms">
-                    <head>Suppression (xf:delete)</head>
+                    <head>Suppression - xf:delete</head>
                     <div type="model">
                         <xf:model>
                             <xf:instance id="personnes">
@@ -1624,7 +1635,7 @@
                         </xf:model>
                     </div>
                     <div type="content">
-                        <head>Suppression (<code>xf:delete</code>)</head>
+                        <head>Suppression - <code>xf:delete</code></head>
                         <p>Pour supprimer des éléments on procède plus où moins de la même manière, mais il faut faire attention à une chose :</p>
                         <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="xml">
 <![CDATA[<xf:delete nodeset="person"/>]]>
@@ -1691,6 +1702,98 @@
                         </xf:group>
                     </div>
                 </div>
+                <div type="slide" subtype="xforms">
+                    <head>Conditions et itérations - @if &amp; @while</head>
+                    <div type="model">
+                        <xf:model>
+                            <xf:instance id="personnes">
+                                <personnes xmlns="">
+                                    <person>
+                                        <name>Victor Hugo</name>
+                                        <birthDate>1802</birthDate>
+                                        <deathDate>1885</deathDate>
+                                        <age/>
+                                    </person>
+                                    <person>
+                                        <name>Émile Zola</name>
+                                        <birthDate>1840</birthDate>
+                                        <deathDate>1902</deathDate>
+                                        <age/>
+                                    </person>
+                                    <person>
+                                        <name>Gustave Flaubert</name>
+                                        <birthDate>1821</birthDate>
+                                        <deathDate>1880</deathDate>
+                                        <age/>
+                                    </person>
+                                </personnes>
+                            </xf:instance>
+                            <xf:instance id="blank">
+                                <data xmlns="">
+                                    <person>
+                                        <name/>
+                                        <birthDate/>
+                                        <deathDate/>
+                                        <age/>
+                                    </person>
+                                </data>
+                            </xf:instance>
+                            <xf:bind nodeset="person/birthDate|person/deathDate|person/age" type="integer"/>
+                            <xf:bind nodeset="person/age" calculate="../deathDate - ../birthDate"/>
+                        </xf:model>
+                    </div>
+                    <div type="content">
+                        <head>Conditions et itérations - <code>@if</code> &amp; <code>@while</code></head>
+                        <p>Toutes les actions XForms disposent de deux attributs optionnels afin de conditionner (<code>@if</code>) ou d’itérer (<code>@while</code>) leur exécution.</p>                        
+                        <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="xml">
+<![CDATA[<xf:trigger>
+    <xf:label>×</xf:label>
+    <xf:hint>Supprimer</xf:hint>
+    <xf:action ev:event="DOMActivate">
+        <xf:delete nodeset="." if="count(../person) &gt; 1"/>
+    </xf:action>
+</xf:trigger>
+
+<xf:trigger>
+    <xf:label>+</xf:label>
+    <xf:hint>Ajouter une personne</xf:hint>
+    <xf:action xmlns:ev="http://www.w3.org/2001/xml-events" while="count(person) &lt; 3" ev:event="DOMActivate">
+        <xf:insert nodeset="person" origin="instance('blank')/person"/>
+    </xf:action>
+</xf:trigger>]]>
+                        </egXML>
+                        <xf:group>
+                            <xf:repeat nodeset="person">
+                                <xf:input class="inline" incremental="true" ref="name">
+                                    <xf:label>Nom</xf:label>
+                                </xf:input>
+                                <xf:input class="inline" incremental="true" ref="birthDate">
+                                    <xf:label>Naissance</xf:label>
+                                </xf:input>
+                                <xf:input class="inline" incremental="true" ref="deathDate">
+                                    <xf:label>Décès</xf:label>
+                                </xf:input>
+                                <xf:output class="inline" ref="age">
+                                    <xf:label>Âge</xf:label>
+                                </xf:output>
+                                <xf:trigger>
+                                    <xf:label>×</xf:label>
+                                    <xf:hint>Supprimer</xf:hint>
+                                    <xf:action xmlns:ev="http://www.w3.org/2001/xml-events" ev:event="DOMActivate">
+                                        <xf:delete nodeset="." if="count(../person) &gt; 1"/>
+                                    </xf:action>
+                                </xf:trigger>
+                            </xf:repeat>
+                            <xf:trigger>
+                                <xf:label>+</xf:label>
+                                <xf:hint>Ajouter une personne</xf:hint>
+                                <xf:action xmlns:ev="http://www.w3.org/2001/xml-events" while="count(person) &lt; 3" ev:event="DOMActivate">
+                                    <xf:insert nodeset="person" origin="instance('blank')/person"/>
+                                </xf:action>
+                            </xf:trigger>
+                        </xf:group>
+                    </div>
+                </div>
                 <div type="slide" rend="titlePage">
                     <head>Exercice 03</head>
                     <p>Insérer et supprimer des nœuds</p>
@@ -1698,7 +1801,7 @@
                     <list><item>Mettre en place un système pour ajouter/supprimer des notices</item></list>
                 </div>
                 <div type="slide" subtype="xforms">
-                    <head>Valeurs calculées - @calculate</head>
+                    <head>Valeurs calculées - @calculate</head>
                     <div type="model">
                         <xf:model>
                             <xf:instance>
@@ -1715,7 +1818,7 @@
                         </xf:model>
                     </div>
                     <div type="content">
-                        <head>Valeurs calculées - <code>@calculate</code></head>
+                        <head>Valeurs calculées - <code>@calculate</code></head>
                         <p>Il est possible de spécifier qu’une valeur dépend d’une ou plusieurs autres valeurs. Dès que l’une de ces valeurs change, la valeur <hi rend="bold">calculée</hi> est alors automatiquement mise à jour :</p>
                         <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="xml">
 <![CDATA[<xf:instance>
@@ -1749,7 +1852,7 @@
                     </div>
                 </div>
                 <div type="slide" subtype="xforms">
-                    <head>Lecture seule - @readonly</head>
+                    <head>Lecture seule - @readonly</head>
                     <div type="model">
                         <xf:model>
                             <xf:instance>
@@ -1767,7 +1870,7 @@
                         </xf:model>
                     </div>
                     <div type="content">
-                        <head>Lecture seule - <code>@readonly</code></head>
+                        <head>Lecture seule - <code>@readonly</code></head>
                         <p>Lorsqu'une valeur est associée à une propriété <code>calculate</code>, elle passe automatiquement en lecture seule (<code>readonly</code>).</p>
                         
                         <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="xml"><![CDATA[
@@ -1814,7 +1917,7 @@
                     </div>
                 </div>
                 <div type="slide" subtype="xforms">
-                    <head>Relevance (Pertinence)</head>
+                    <head>Pertinence - @relevance</head>
                     <div type="model">
                         <xf:model xmlns:xf="http://www.w3.org/2002/xforms">
                             <xf:instance>
@@ -1838,7 +1941,7 @@
                         </xf:model>
                     </div>
                     <div type="content">
-                        <head>Relevance (Pertinence)</head>
+                        <head>Pertinence - <code>@relevance</code></head>
                         <p>Vous pouvez spécifier les conditions dans lesquelles certaines données sont pertinentes. Par exemple, la date de décès n'est pertinente que si la personne est décédée :</p>
                         <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="xml">
 <![CDATA[<xf:bind nodeset="deathDate" relevant="../@dead = 'true'"/>]]>
@@ -2103,7 +2206,7 @@
                     </list>
                 </div>
                 <div type="slide" subtype="xforms">
-                    <head>Détecter les changements dans une instance</head>
+                    <head>Log</head>
                     <div type="model">
                         <xf:model xmlns:xf="http://www.w3.org/2002/xforms" id="model_one">
                             <xf:instance id="list">
@@ -2170,9 +2273,9 @@
                         </xf:model>
                     </div>
                     <div type="content">
-                        <head>Détecter les changements dans une instance</head>
-                        <p>Nous avons ajouté un contrôle de sauvegarde pour permettre d'enregistrer les données dans un fichier, mais existe-t-il un moyen de savoir si les données doivent être sauvegardées, autrement dit si une instance a changé ?</p>
-                        <p>Nous avons déjà rencontré l'événement <code>xforms-value-changed</code>, et comme nous l'avons mentionné, il est distribué au contrôle lié à la valeur, nous mettons donc le gestionnaire dans le contenu de cet élément :</p>
+                        <head>Log</head>
+                        <p>Existe-t-il un moyen de savoir si les données ont été modifiées et doivent être sauvegardées, autrement dit, un moyen de savoir si une instance a changé ?</p>
+                        <p>Nous avons vu que l’événement <code>xforms-value-changed</code> est propagé au contrôle attaché à la valeur du nœud. On doit donc placer l’écouteur à l’intérieur de cet élément :</p>
                         <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="xml">
 <![CDATA[<xf:input ref="name">
     <xf:label>Nom</xf:label>
@@ -2181,7 +2284,7 @@
     </xf:action>
 </xf:input>]]>
                         </egXML>
-                        <p>Cependant, de nombreux événements "remontent" (bubble) : à partir de l'élément auquel ils sont distribués, ils remontent l'arbre des éléments. Donc si nous faisons ceci :</p>
+                        <p>Cependant, de nombreux événements "remontent" l’arbre de l’instance (p. ex, si la valeur du nœud fils change, alors celle du nœud parent aussi) :</p>
                         <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="xml">
 <![CDATA[<xf:action ev:event="xforms-value-changed">
     <xf:setvalue ref="instance('admin')/changed">true</xf:setvalue>
@@ -2189,7 +2292,7 @@
 <xf:input ref="name"><xf:label>Nom</xf:label></xf:input>
 <xf:input ref="birthDate"><xf:label>Année de naissance</xf:label></xf:input>]]>
                         </egXML>
-                        <p>alors l'action recevra les événements des deux inputs. Elle ne pourra pas les distinguer, mais elle saura que quelque chose a changé. Voici comment nous faisons cela pour notre liste de personnes, avec l'action positionnée à l'intérieur du contrôle repeat :</p>
+                        <p>L’action entendra bien les événements propagés par les deux inputs, mais en revanche elle ne pourra pas les distinguer. On peut faire la même chose à l’intérieur d’un <code>xf:repeat</code> :</p>
                         <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="xml">
 <![CDATA[<xf:repeat nodeset="person">
     <xf:action ev:event="xforms-value-changed">
@@ -2197,8 +2300,8 @@
     </xf:action>
     ...]]>
                         </egXML>
-                        <p>Vous devez faire attention à le positionner de manière à capturer uniquement les événements qui vous intéressent. Si vous le placez au-dessus du <code>&lt;repeat&gt;</code>, vous capturerez également les événements des contrôles au même niveau que le repeat.</p>
-                        <p>Essayez-le. Vous verrez que si vous modifiez l'un des contenus, comme le nom, cela enregistrera le changement, mais pas si vous ajoutez ou supprimez des éléments, car ceux-ci ne génèrent pas d'événements value-changed :</p>
+                        <p>Il faut donc faire attention à l’emplacement où l’on place les écouteurs afin de ne capturer que les événements qui nous intéressent.</p>
+                        <p>Il est également important de bien identifier ce qu’on écoute. Dans l’exemple ci-dessous, si l’un des contenus est modifié, comme le nom par exemple, cela enregistrera le changement ; en revanche cela ne sera pas le cas si l’on insère ou supprime des éléments car ceux-ci ne génèrent pas d’événements <code>xforms-value-changed</code> :</p>
                         <xf:group xmlns:xf="http://www.w3.org/2002/xforms" model="model_one">
                             <xf:repeat nodeset="person">
                                 <xf:action ev:event="xforms-value-changed">
@@ -2216,24 +2319,24 @@
                                     </xf:input>
                                 </xf:group>
                             </xf:repeat>
+                            <xf:trigger>
+                                <xf:label>+</xf:label>
+                                <xf:hint>Ajouter une personne</xf:hint>
+                                <xf:action xmlns:ev="http://www.w3.org/2001/xml-events" ev:event="DOMActivate">
+                                    <xf:insert nodeset="person" origin="instance('blank2')/person"/>
+                                </xf:action>
+                            </xf:trigger>
                             <xf:group>
                                 <p>Modification : </p>
                                 <xf:output class="inline" value="instance('admin')/changed"/>
                             </xf:group>
                         </xf:group>
-                        
-                        <xf:group xmlns:xf="http://www.w3.org/2002/xforms">
-                            <xf:label>Changements pour les insertions et suppressions</xf:label>
-                            <x:p>Les événements pour les éléments insérés et supprimés sont envoyés à l'instance elle-même, et sont <code>xforms-insert</code> et <code>xforms-delete</code>. Évidemment, vous ne pouvez pas mettre l'action à l'intérieur du contenu de l'instance, car elle apparaîtrait alors comme faisant partie des données de l'instance, vous utilisez donc l'id de l'instance :</x:p>
-                        </xf:group>
-                        
+                        <p>Ces deux actions propagent les événements <code>xforms-insert</code> et <code>xforms-delete</code> et ces événements sont envoyés à l’instance elle-même : impossible donc de placer les écouteurs directement dans l’instance ! Pour les écouter on utilise l’identifiant de l’instance et l’attribut <code>@ev:listener</code> :</p>
                         <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="xml"><![CDATA[
 <xf:action ev:event="xforms-insert" ev:listener="list">
     ...
 ]]></egXML>
-                        
-                        <p>Cela fonctionne sinon de la même manière. (En fait, vous pouvez faire cela avec tous les éléments <code>&lt;action&gt;</code> si vous le souhaitez). Donc maintenant l'image complète est :</p>
-                        
+                        <p>On peut utiliser cette méthode avec tous les éléments <code>xf:action</code> :</p>
                         <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="xml"><![CDATA[
 <xf:action ev:event="xforms-insert" ev:listener="list">
     <xf:setvalue ref="instance('admin')/changed">true</xf:setvalue>
@@ -2248,7 +2351,6 @@
     </xf:action>
     ...
 ]]></egXML>
-                        
                         <xf:group xmlns:xf="http://www.w3.org/2002/xforms" model="model_two">
                             <xf:repeat nodeset="instance('list2')/person">
                                 <xf:action xmlns:ev="http://www.w3.org/2001/xml-events" ev:event="xforms-value-changed">
@@ -2291,10 +2393,6 @@
                                 </xf:action>
                             </xf:trigger>
                         </xf:group>
-                        
-                        <div>
-                            <head>Exercice</head>
-                        </div>
                     </div>
                 </div>
                 <div type="slide" subtype="xforms">
@@ -2541,7 +2639,7 @@
                     </div>
                 </div>
                 <div type="slide" subtype="xforms">
-                    <head>Distribuer vos propres événements</head>
+                    <head>Événements personnalisés - xf:dispatch</head>
                     <!-- @todo faire des dialog qui s'ouvrent avec retard + compte à rebour -->
                     <div type="model">
                         <xf:model xmlns:xf="http://www.w3.org/2002/xforms" id="M">
@@ -2558,7 +2656,7 @@
                         </xf:model>
                     </div>
                     <div type="content">
-                        <head>Distribuer vos propres événements</head>
+                        <head>Événements personnalisés - <code>xf:dispatch</code></head>
                         <p>Nous avons parlé de la façon dont XForms distribue des événements à différents moments. Il est également possible de distribuer et capturer vos propres événements. Vous les distribuez avec l'action <code>&lt;dispatch&gt;</code> vers un élément avec un id particulier :</p>
                         <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="xml">
 <![CDATA[<xf:dispatch name="SAVE" targetid="element"/>]]>
