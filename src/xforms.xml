@@ -215,7 +215,7 @@
                 <div type="slide" rend="titlePage">
                     <head>Exercice 00</head>
                     <p>Déployer un premier formulaire</p>
-                    <p>Récupérer les exercices sur Github <ref target="https://github.com/sardinecan/ahn2026-xforms">sardinecan/ahn2026-xforms</ref></p>
+                    <p>Récupérer les exercices sur Github <ref target="https://github.com/sardinecan/ahn2026-xforms/releases">sardinecan/ahn2026-xforms/releases</ref></p>
                 </div>
                 <div type="slide" subtype="xforms">
                     <head>Instances de données - xf:instance</head>
