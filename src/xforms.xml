@@ -601,7 +601,7 @@
                         <p>Il est toutefois possible de définir le contexte explicitement, soit en utilisant un élément <code>xf:group</code> :</p>
                         <egXML xmlns="http://www.tei-c.org/ns/Examples" rend="xml">
 <![CDATA[<xf:group ref="person[1]">
-    <xf:output ref="person/name"/>
+    <xf:output ref="name"/>
 </xf:group>]]>
                         </egXML>
                         <xf:group ref="person[1]">
