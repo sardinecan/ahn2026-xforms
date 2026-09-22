@@ -150,7 +150,7 @@
     </head>
     <body>
         <xf:group xmlns="http://www.w3.org/2002/xforms">
-            <!-- 'Contrôles' du formulaire : champs, boutons, afficage des données, etc. -->
+            <!-- 'Contrôles' du formulaire : champs, boutons, affichage des données, etc. -->
         </xf:group>
     </body>
 </html>]]></egXML>
