@@ -21,7 +21,7 @@
     <xsl:variable name="title" select="/tei:TEI/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:title"/>
     
     <xsl:template match="tei:TEI" mode="form">
-        <xsl:result-document href="../build/index.xhtml">
+        <xsl:result-document href="./build/index.xhtml">
             <xsl:processing-instruction name="xml-stylesheet" >href="../assets/xsltforms/xsltforms.xsl" type="text/xsl"</xsl:processing-instruction>
             <html
                 xmlns="http://www.w3.org/1999/xhtml"
@@ -49,7 +49,7 @@
                                 <xsl:for-each select="descendant::tei:div[@type='slide']">
                                     <entry>
                                         <title><xsl:value-of select="./tei:head"/></title>
-                                        <file>slide<xsl:value-of select="position()"/>.xhtml</file>
+                                        <file>slide<xsl:value-of select="position()"/>.html</file>
                                     </entry>
                                 </xsl:for-each>
                             </tutorial>
@@ -137,7 +137,8 @@
         <xsl:variable name="n">
             <xsl:number count="tei:div[@type='slide']" from="tei:body" level="any"/>
         </xsl:variable>
-        <xsl:result-document href="../build/slide{$n}.xhtml" method="xhtml" doctype-public="'-//W3C//DTD XHTML 1.0 Strict//EN'" doctype-system="'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'">
+        <!--<xsl:result-document href="./build/slide{$n}.xhtml" method="xhtml" doctype-public="'-//W3C//DTD XHTML 1.0 Strict//EN'" doctype-system="'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'">-->
+        <xsl:result-document href="./build/slide{$n}.xhtml" method="xhtml">
             <html xmlns="http://www.w3.org/1999/xhtml">
                 <head>
                     <meta charset="utf-8"/>
@@ -162,7 +163,7 @@
         <xsl:variable name="n">
             <xsl:number count="tei:div[@type='slide']" from="tei:body" level="any"/>
         </xsl:variable>
-        <xsl:result-document href="../build/slide{$n}.xhtml">
+        <xsl:result-document href="./build/slide{$n}.xhtml">
             <xsl:processing-instruction name="xml-stylesheet" >href="../assets/xsltforms/xsltforms.xsl" type="text/xsl"</xsl:processing-instruction>
             <html
                 xmlns="http://www.w3.org/1999/xhtml"
