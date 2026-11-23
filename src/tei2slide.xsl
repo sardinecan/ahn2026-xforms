@@ -12,6 +12,8 @@
     version="3.0">
     
     <xsl:output method="xml" indent="yes" omit-xml-declaration="true"/>
+    <xsl:param name="outputDir" select="'public'"/>
+    <xsl:param name="assetsDir" select="'assets'"/>
     
     <xsl:template match="/">
         <xsl:apply-templates select="tei:TEI" mode="form"/>
@@ -21,8 +23,8 @@
     <xsl:variable name="title" select="/tei:TEI/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:title"/>
     
     <xsl:template match="tei:TEI" mode="form">
-        <xsl:result-document href="./build/index.xhtml">
-            <xsl:processing-instruction name="xml-stylesheet" >href="../assets/xsltforms/xsltforms.xsl" type="text/xsl"</xsl:processing-instruction>
+        <xsl:result-document href="./{$outputDir}/index.xhtml">
+            <xsl:processing-instruction name="xml-stylesheet" >href="<xsl:value-of select="$assetsDir"/>/xsltforms/xsltforms.xsl" type="text/xsl"</xsl:processing-instruction>
             <html
                 xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:h="http://www.w3.org/1999/xhtml"
@@ -42,7 +44,7 @@
                 <head>
                     <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover" charset="utf8"/>
                     <title><xsl:apply-templates select="$title"></xsl:apply-templates></title>
-                    <link rel="stylesheet" href="../assets/css/main.css" type="text/css"/>
+                    <link rel="stylesheet" href="{$assetsDir}/css/main.css" type="text/css"/>
                     <model xmlns="http://www.w3.org/2002/xforms">
                         <instance id="tutorial">
                             <tutorial>
@@ -137,13 +139,13 @@
         <xsl:variable name="n">
             <xsl:number count="tei:div[@type='slide']" from="tei:body" level="any"/>
         </xsl:variable>
-        <!--<xsl:result-document href="./build/slide{$n}.xhtml" method="xhtml" doctype-public="'-//W3C//DTD XHTML 1.0 Strict//EN'" doctype-system="'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'">-->
-        <xsl:result-document href="./build/slide{$n}.xhtml" method="xhtml">
+        <!--<xsl:result-document href="./{$outputDir}/slide{$n}.xhtml" method="xhtml" doctype-public="'-//W3C//DTD XHTML 1.0 Strict//EN'" doctype-system="'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'">-->
+        <xsl:result-document href="./{$outputDir}/slide{$n}.xhtml" method="xhtml">
             <html xmlns="http://www.w3.org/1999/xhtml">
                 <head>
                     <meta charset="utf-8"/>
                     <title><xsl:apply-templates select="$title"/></title>
-                    <link rel="stylesheet" href="../assets/css/main.css" type="text/css"/>
+                    <link rel="stylesheet" href="{$assetsDir}/css/main.css" type="text/css"/>
                     <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/atom-one-light.min.css" integrity="sha512-o5v54Kh5PH0dgnf9ei0L+vMRsbm5fvIvnR/XkrZZjN4mqdaeH7PW66tumBoQVIaKNVrLCZiBEfHzRY4JJSMK/Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />-->
                     <link rel="stylesheet" href="//unpkg.com/@catppuccin/highlightjs@1.0.1/css/catppuccin-latte.css"/>
                     <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/atom-one-dark-reasonable.min.css" integrity="sha512-RwXJS3k4Z0IK6TGoL3pgQlA9g2THFhKL7z9TYWdAI8u6xK0AUuMWieJuWgTRayywC9A94ifUj1RzjDa1NIlUIg==" crossorigin="anonymous" referrerpolicy="no-referrer" />-->
@@ -163,8 +165,8 @@
         <xsl:variable name="n">
             <xsl:number count="tei:div[@type='slide']" from="tei:body" level="any"/>
         </xsl:variable>
-        <xsl:result-document href="./build/slide{$n}.xhtml">
-            <xsl:processing-instruction name="xml-stylesheet" >href="../assets/xsltforms/xsltforms.xsl" type="text/xsl"</xsl:processing-instruction>
+        <xsl:result-document href="./{$outputDir}/slide{$n}.xhtml">
+            <xsl:processing-instruction name="xml-stylesheet" >href="<xsl:value-of select="$assetsDir"/>/xsltforms/xsltforms.xsl" type="text/xsl"</xsl:processing-instruction>
             <html
                 xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:xf="http://www.w3.org/2002/xforms"
@@ -183,12 +185,12 @@
                 <head>
                     <meta charset="utf-8"/>
                     <title><xsl:apply-templates select="$title"/></title>
-                    <link rel="stylesheet" href="../assets/css/main.css" type="text/css"/>
-                    <link rel="stylesheet" href="../assets/css/tei.css" type="text/css"/>
+                    <link rel="stylesheet" href="{$assetsDir}/css/main.css" type="text/css"/>
+                    <link rel="stylesheet" href="{$assetsDir}/css/tei.css" type="text/css"/>
                     <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/atom-one-dark-reasonable.min.css" integrity="sha512-RwXJS3k4Z0IK6TGoL3pgQlA9g2THFhKL7z9TYWdAI8u6xK0AUuMWieJuWgTRayywC9A94ifUj1RzjDa1NIlUIg==" crossorigin="anonymous" referrerpolicy="no-referrer" />-->
                     <link rel="stylesheet" href="//unpkg.com/@catppuccin/highlightjs@1.0.1/css/catppuccin-latte.css"/>
                     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js">/**/</script>
-                    <script src="../assets/js/generateid.js"/>
+                    <script src="{$assetsDir}/js/generateid.js"/>
                     <xsl:apply-templates select="tei:div[@type='model']"/>
                 </head>
                 <body>

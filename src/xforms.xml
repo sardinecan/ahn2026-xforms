@@ -94,7 +94,7 @@
                         <p>Il est ainsi possible d’indiquer comment ils doivent être représentés sur différents terminaux.</p>
                     </div>
                     <figure>
-                        <graphic url="../assets/images/arch2.png"/>
+                        <graphic url="assets/images/arch2.png"/>
                     </figure>
                 </div>
                 <!--<div type="slide">
@@ -2112,7 +2112,7 @@
                                     resource-uri: <xf:output value="event('resource-uri')"/>
                                 </xf:message>
                             </xf:submission>
-                            <xf:submission id="restore" method="get" resource="../assets/instances/personnes.xml" replace="instance" serialization="none"/>
+                            <xf:submission id="restore" method="get" resource="assets/instances/personnes.xml" replace="instance" serialization="none"/>
                             <xf:submission id="saveLocal" method="put" resource="file:personnes.xml" mediatype="application/xml">
                                 <xf:action ev:event="xforms-submit-done">
                                     <xf:message>
