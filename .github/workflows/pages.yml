@@ -14,11 +14,11 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy:
+  upload:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+    
+    outputs:
+      artifact_name: github-pages-${{ github.run_attempt }}
 
     steps:
       - uses: actions/checkout@v4
@@ -28,7 +28,17 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: ./public
-
+          name: github-pages-${{ github.run_attempt }}
+  deploy:
+    needs: upload
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - name: Publier
         id: deployment
-        uses: actions/deploy-pages@v4
+
+      uses: actions/deploy-pages@v4
+      with:
+        artifact_name: ${{ needs.upload.outputs.artifact_name }}
