@@ -15,20 +15,29 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  upload:
     runs-on: ubuntu-latest
     steps:
       - name: Récupérer le code
         uses: actions/checkout@v4
+
+      - name: Vérifier les fichiers du site
+        run: |
+          test -f public/index.html
+          test -f public/assets/xsltforms/xsltforms.js
 
       - name: Préparer l'artefact Pages depuis le dossier cible
         uses: actions/upload-pages-artifact@v3
         with:
           path: "./public"
 
+  deploy:
+    needs: upload
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
       - name: Déployer sur GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
